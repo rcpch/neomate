@@ -244,7 +244,7 @@ class NicuCalc extends StatelessWidget {
         header: Text(style: headerStyle, 'Intubation'),
         content: const CalcIntubation(),
       ),
-      (
+      AccordionSection(
         isOpen: false,
         contentHorizontalPadding: 0,
         leftIcon: headerIcon(CustomIcons.droplet),
