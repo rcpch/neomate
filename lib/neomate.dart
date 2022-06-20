@@ -72,37 +72,9 @@ Map<FluidType, String> stringFluid = {
   FluidType.D10W: '10% dextrose',
 };
 
-main() {
-  var myInfusion = DrugInfusion(
-      types: [DrugType.cardiac],
-      name: 'dopamine',
-      deliveryUnits: DeliveryUnits.microgramsPerKg,
-      deliveryTime: DeliveryTime.perMinute,
-      startDose: 5,
-      fluids: [FluidType.D5W, FluidType.NS],
-      desiredRate: 1,
-      syringe: 50,
-      minConc: 0,
-      maxConc: 80,
-      minConcMsg: '',
-      maxConcMsg:
-          'Concentrations higher than 1.6 mg/ml are not recommended, unless infused centrally (BNFc 2015).',
-      minDose: 5,
-      maxDose: 20,
-      doseMsg: 'Usual dose 5-20 mcg/kg/min, <b>via central line</b>.');
-  var boundInfusion = myInfusion.bindWeight(4.534);
-  print('Narrative: ${boundInfusion.calcPreNarrative}');
-  print('Top: ${boundInfusion.calcTop}');
-  print('Bottom: ${boundInfusion.calcBottom}');
-  print('Right: ${boundInfusion.calcRight}');
-  print('Drug to add: ${boundInfusion.calcDrugToAdd}');
-  print('Postnarrative: ${boundInfusion.calcPostNarrative}');
-  return;
-}
-
 abstract class Drug {
   // This base class allows us to have a few different types of drugs
-  // that can be manged through the same interface
+  // that can be managed through the same interface
 
   final List<DrugType> types;
   final String name;
@@ -137,7 +109,6 @@ class DrugMultiplier extends Drug {
   @override
   // ignore: overridden_fields
   final DrugMultiplier? followOn;
-  //final double? weight;
 
   static final invalid = DrugMultiplier(
     // We will use this static instance if we need to 'delete' a drug object
@@ -320,7 +291,7 @@ class DrugBanded extends Drug {
 }
 
 class DrugInfo extends Drug {
-  // Implements "Info" drugs: this is where we returb some strings
+  // Implements "Info" drugs: this is where we return some strings
   // that might have the weight substituted in for the user to do the calc
 
   @override
