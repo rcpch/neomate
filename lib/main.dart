@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'neomate.dart';
 import 'neomate_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,15 +13,15 @@ import 'package:async/async.dart';
 
 class AppConstants {
   static var green = const Color.fromRGBO(27, 126, 90, 1);
-  static var green_highlight = const Color.fromRGBO(11, 231, 135, 1);
+  static var greenHighlight = const Color.fromRGBO(11, 231, 135, 1);
   static var redRow = const Color.fromARGB(255, 254, 222, 222);
   static var colIcon = const Color.fromARGB(255, 255, 255, 255);
-  static var blueList = Color.fromRGBO(3, 148, 148, 1);
-  static var greyRow = Color.fromRGBO(198, 234, 252, 1);
-  static var colChecklistCard = Color.fromRGBO(69, 123, 135, 1);
-  static var colChecklistAbstract = Color.fromRGBO(236, 241, 243, 1);
+  static var blueList = const Color.fromRGBO(3, 148, 148, 1);
+  static var greyRow = const Color.fromRGBO(198, 234, 252, 1);
+  static var colChecklistCard = const Color.fromRGBO(69, 123, 135, 1);
+  static var colChecklistAbstract = const Color.fromRGBO(236, 241, 243, 1);
 
-  static List<Color> colChecklist = [
+  static List<Color> colChecklist = const [
     Color.fromRGBO(255, 246, 235, 1),
     Color.fromRGBO(218, 230, 239, 1),
     Color.fromRGBO(232, 253, 241, 1),
@@ -46,7 +47,7 @@ class CustomIcons {
       IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData heart =
       IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData head_side_virus =
+  static const IconData headSideVirus =
       IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData edit =
       IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -56,7 +57,7 @@ class CustomIcons {
       IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData book =
       IconData(0xf02d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData exclamation_circle =
+  static const IconData exclamationCircle =
       IconData(0xf06a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData coffee =
       IconData(0xf0f4, fontFamily: _kFontFam, fontPackage: _kFontPkg);
@@ -66,41 +67,37 @@ class CustomIcons {
       IconData(0xf236, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData snowflake =
       IconData(0xf2dc, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData balance_scale_left =
+  static const IconData balanceScaleLeft =
       IconData(0xf515, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData lungs =
       IconData(0xf604, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
 
-// This is the top level object instance with all the Neomate logic
-final neomate = Neomate();
-
-// This is the top level notifer for the above
+// This is the top level notifer for the neomate object
 final neomateNotifier = ChangeNotifierProvider<NeomateModel>(
   (ref) => NeomateModel(),
 );
 
 class NeomateModel extends ChangeNotifier {
   bool setWeightGrams(double newWeight) {
-    bool retVal = neomate.setWeightGrams(newWeight);
+    bool retVal = _neomate.setWeightGrams(newWeight);
     notifyListeners();
     debugPrint('notified');
     return retVal;
   }
 
-  IVInfusionDetails maintIV(
-      {required double dex,
-      required double sodium,
-      required double potassium,
-      required double total}) {
-    return neomate.maintIV(
-        dex: dex, sodium: sodium, potassium: potassium, total: total);
-  }
+  final _neomate = Neomate();
 
-  get weightStringShort => neomate.weightStringShort();
-  get weightValid => neomate.weightValid;
-  get weightNumGrams => neomate.weightNumGrams();
-  List<Drug> drugList(DrugType myType) => neomate.drugList(myType);
+  CalcResults dailyFluids(
+          double dex, double sodium, double potassium, double total) =>
+      _neomate.dailyFluids(
+          dex: dex, sodium: sodium, potassium: potassium, total: total);
+
+  get weightStringShort => _neomate.weightStringShort();
+  get weightValid => _neomate.weightValid;
+  get weightNumGrams => _neomate.weightNumGrams();
+  get weightNumKg => _neomate.weightNumKg();
+  List<Drug> drugList(DrugType myType) => _neomate.drugList(myType);
 }
 
 void main() {
@@ -126,6 +123,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+/// -------- Main Structure -------- ///
 
 class NeomateHome extends ConsumerStatefulWidget {
   const NeomateHome({Key? key}) : super(key: key);
@@ -247,6 +246,7 @@ class NeomateHomeState extends ConsumerState<NeomateHome> {
         builder: (context) {
           return AlertDialog(
             title: const Text('Set baby weight'),
+            insetPadding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
             content: WeightDialog(key: weightDialogKey),
             actions: <Widget>[
               TextButton(
@@ -292,7 +292,7 @@ class NeomateHomeState extends ConsumerState<NeomateHome> {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       backgroundColor: Colors.black,
-      selectedItemColor: AppConstants.green_highlight,
+      selectedItemColor: AppConstants.greenHighlight,
       unselectedItemColor: Colors.white,
       selectedFontSize: 12,
       unselectedFontSize: 12,
@@ -329,7 +329,7 @@ class NeomateHomeState extends ConsumerState<NeomateHome> {
   }
 }
 
-// Popup dialog for weight selection
+/// -------- Weight Selection -------- ///
 
 class WeightDialog extends StatefulWidget {
   const WeightDialog({Key? key}) : super(key: key);
@@ -381,15 +381,14 @@ class WeightDialogState extends State<WeightDialog> {
     Neomate.weightEstimates.forEach((weeks, estWeight) => {
           estimateButtons.add(
             Padding(
-              padding: const EdgeInsets.fromLTRB(4, 2, 4, 2),
+              padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
               child: SizedBox(
                 height: 32,
                 width: 42,
                 child: TextButton(
                   style: TextButton.styleFrom(
-                      side:
-                          const BorderSide(color: Colors.blueAccent, width: 2),
-                      backgroundColor: Colors.lightBlue),
+                      side: const BorderSide(color: Colors.indigo, width: 2),
+                      backgroundColor: AppConstants.colIcons[1]),
                   child: Text(
                     weeks.toString(),
                     style: const TextStyle(color: Colors.white),
@@ -420,59 +419,64 @@ class WeightDialogState extends State<WeightDialog> {
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Padding(padding: EdgeInsets.fromLTRB(15, 0, 0, 0)),
-            SizedBox(
-              width: 80,
-              height: 40,
-              child: TextField(
-                autofocus: true,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.fromLTRB(0, 5, 10, 0),
-                    suffixText: 'g'),
-                controller: weightController,
-                textAlign: TextAlign.right,
-                keyboardType: const TextInputType.numberWithOptions(
-                  signed: false,
-                  decimal: false,
-                ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(4),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
-              child: Visibility(
-                visible: weightMessage.isNotEmpty,
-                maintainAnimation: true,
-                maintainState: true,
-                maintainSize: true,
-                child: SizedBox(
-                  width: 150,
-                  height: 50,
-                  child: Text(
-                    weightMessage,
-                    style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.redAccent,
-                        fontWeight: FontWeight.w600),
+        Flexible(
+            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Padding(padding: EdgeInsets.fromLTRB(15, 0, 0, 0)),
+                SizedBox(
+                  width: 80,
+                  height: 40,
+                  child: TextField(
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.fromLTRB(0, 5, 10, 0),
+                        suffixText: 'g'),
+                    controller: weightController,
+                    textAlign: TextAlign.right,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      signed: false,
+                      decimal: false,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(4),
+                    ],
                   ),
                 ),
-              ),
-            ),
-          ],
-        ),
-        const Padding(
-          padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-          child: Text('Estimate weight from gestation '),
-        ),
-        Wrap(runSpacing: 4, children: estimateButtons),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  child: Visibility(
+                    visible: weightMessage.isNotEmpty,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    maintainSize: true,
+                    child: SizedBox(
+                      width: 150,
+                      height: 30,
+                      child: Text(
+                        weightMessage,
+                        style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.redAccent,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )),
+        const Flexible(
+            flex: 2,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
+              child: Text('Estimate weight from gestation '),
+            )),
+        Flexible(
+            flex: 5, child: Wrap(runSpacing: 4, children: estimateButtons)),
       ],
     );
   }
@@ -484,6 +488,8 @@ class WeightDialogState extends State<WeightDialog> {
     super.dispose();
   }
 }
+
+/// -------- Nicu Calculator Page -------- ///
 
 class NicuCalc extends StatefulWidget {
   const NicuCalc({Key? key}) : super(key: key);
@@ -602,29 +608,29 @@ class NicuCalcState extends State<NicuCalc> {
             calcItem(
               itemBody: const CalcNeurology(),
               itemTitle: 'Neurology Drugs',
-              itemIcon: CustomIcons.head_side_virus,
+              itemIcon: CustomIcons.headSideVirus,
             ),
             calcItem(
                 itemBody: const CalcEmergency(),
                 itemTitle: 'Emergency Drugs',
-                itemIcon: CustomIcons.exclamation_circle),
+                itemIcon: CustomIcons.exclamationCircle),
             calcItem(
               itemBody: const CalcCooling(),
               itemTitle: 'Cooling Criteria',
               itemIcon: CustomIcons.snowflake,
             ),
             calcItem(
-              itemBody: CalcIVFluids(),
+              itemBody: const CalcIVFluids(),
               itemTitle: 'Intravenous Fluids',
               itemIcon: CustomIcons.coffee,
             ),
             calcItem(
-              itemBody: OICalc(),
-              itemTitle: 'Oxygenation Index',
+              itemBody: const Ventilation(),
+              itemTitle: 'Ventilation and OI',
               itemIcon: CustomIcons.lungs,
             ),
             calcItem(
-              itemBody: Container(),
+              itemBody: const AnyDrug(),
               itemTitle: 'Infusion Calculators',
               itemIcon: CustomIcons.wrench,
             ),
@@ -679,11 +685,13 @@ class CalcCooling extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-        child: htmlWidget(NeomateHtml.cooling),
+        child: HtmlWidget(data: NeomateHtml.cooling),
       ),
     );
   }
 }
+
+/// -------- Daily Infusion Calculator -------- ///
 
 class CalcIVFluids extends ConsumerStatefulWidget {
   const CalcIVFluids({Key? key}) : super(key: key);
@@ -697,7 +705,7 @@ class CalcIVFluidsState extends ConsumerState<CalcIVFluids> {
   var _sodium = 0.0;
   var _potassium = 0.0;
   var _total = 0.0;
-  String? _errorText = null;
+  String? _errorText;
   var fluidController = TextEditingController();
   var valid = false;
   Map<String, String> calculations = {};
@@ -718,394 +726,218 @@ class CalcIVFluidsState extends ConsumerState<CalcIVFluids> {
         thickness: 1,
       ),
       const Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
-      Card(
-        color: AppConstants.colChecklist[1],
-        margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 14, 0, 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(14, 0, 0, 15),
-                child: TextHeading(
-                  text: 'Daily infusion calculator',
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
-                child: Text('Dextrose'),
-              ),
-              Row(
+      GestureDetector(
+          onTap: (() => {FocusScope.of(context).unfocus()}),
+          child: Card(
+            color: AppConstants.colChecklist[1],
+            margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 14, 0, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 3,
-                    child: Slider(
-                      min: 5.0,
-                      max: 30.0,
-                      divisions: 10,
-                      value: _dex,
-                      onChanged: (value) {
-                        setState(() {
-                          _dex = value;
-                          valid = false;
-                        });
-                      },
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(14, 0, 0, 15),
+                    child: TextHeading(
+                      text: 'Daily infusion calculator',
                     ),
                   ),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 2,
-                    child: Text('${_dex.toString().replaceAll('.0', '')} %'),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
+                    child: Text('Dextrose'),
                   ),
-                ],
-              ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
-                child: Text('Sodium'),
-              ),
-              Row(
-                children: [
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 3,
-                    child: Slider(
-                      min: 0.0,
-                      max: 10.0,
-                      divisions: 20,
-                      value: _sodium,
-                      onChanged: (value) {
-                        setState(() {
-                          _sodium = value;
-                          valid = false;
-                        });
-                      },
-                    ),
-                  ),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 2,
-                    child: Text(
-                        '${_sodium.toString().replaceAll('.0', '')} mmol/kg/day'),
-                  ),
-                ],
-              ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
-                child: Text('Potassium'),
-              ),
-              Row(
-                children: [
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 3,
-                    child: Slider(
-                      min: 0.0,
-                      max: 8.0,
-                      divisions: 16,
-                      value: _potassium,
-                      onChanged: (value) {
-                        setState(() {
-                          _potassium = value;
-                          valid = false;
-                        });
-                      },
-                    ),
-                  ),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    flex: 2,
-                    child: Text(
-                        '${_potassium.toString().replaceAll('.0', '')} mmol/kg/day'),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 135,
-                      height: 55,
-                      child: TextField(
-                        onChanged: (text) => {
-                          setState(() {
-                            valid = false;
-                            double? tempTotal = double.tryParse(text);
-                            if (tempTotal is double) {
-                              _total = tempTotal;
-                              print('temp $tempTotal');
-                            } else {
-                              _total = 0;
-                            }
-                            print('total $_total');
-                          })
-                        },
-                        autofocus: true,
-                        decoration: InputDecoration(
-                            errorText: _errorText,
-                            labelText: 'Total daily fluid',
-                            //border: OutlineInputBorder(),
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(0, 0, 10, 6),
-                            suffixText: 'mL/kg/day'),
-                        controller: fluidController,
-                        textAlign: TextAlign.right,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          signed: false,
-                          decimal: false,
-                        ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(3),
-                        ],
-                      ),
-                    ),
-                    Visibility(
-                        visible: !notifier.weightValid,
-                        child: const Padding(
-                            padding: EdgeInsets.fromLTRB(10, 0, 20, 0),
-                            child: Text('Please enter weight'))),
-                    Visibility(
-                      visible: notifier.weightValid,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 0, 20, 0),
-                        child: ElevatedButton.icon(
-                          onPressed: () => {
+                  Row(
+                    children: [
+                      Flexible(
+                        fit: FlexFit.tight,
+                        flex: 3,
+                        child: Slider(
+                          min: 5.0,
+                          max: 30.0,
+                          divisions: 10,
+                          value: _dex,
+                          onChanged: (value) {
                             setState(() {
-                              valid = true;
-                              if (_total < 30) {
-                                setState(() {
-                                  _errorText = 'too low';
-                                });
-                              } else if (_total > 250) {
-                                setState(() {
-                                  _errorText = 'too high';
-                                });
-                              } else {
-                                setState(() {
-                                  _errorText = null;
-                                });
-                                FocusScope.of(context).unfocus();
-                                print(_total);
-
-                                Navigator.of(context).push(
-                                  PageTransition(
-                                    type: PageTransitionType.rightToLeft,
-                                    child: IVFluidDetail(
-                                        dex: _dex,
-                                        sodium: _sodium,
-                                        potassium: _potassium,
-                                        total: _total),
-                                  ),
-                                );
-                              }
-                            })
+                              _dex = value;
+                              valid = false;
+                            });
                           },
-                          icon: const Icon(Icons.calculate),
-                          label: const Text('calculate'),
                         ),
                       ),
+                      Flexible(
+                        fit: FlexFit.tight,
+                        flex: 2,
+                        child:
+                            Text('${_dex.toString().replaceAll('.0', '')} %'),
+                      ),
+                    ],
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
+                    child: Text('Sodium'),
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                        fit: FlexFit.tight,
+                        flex: 3,
+                        child: Slider(
+                          min: 0.0,
+                          max: 10.0,
+                          divisions: 20,
+                          value: _sodium,
+                          onChanged: (value) {
+                            setState(() {
+                              _sodium = value;
+                              valid = false;
+                            });
+                          },
+                        ),
+                      ),
+                      Flexible(
+                        fit: FlexFit.tight,
+                        flex: 2,
+                        child: Text(
+                            '${_sodium.toString().replaceAll('.0', '')} mmol/kg/day'),
+                      ),
+                    ],
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
+                    child: Text('Potassium'),
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                        fit: FlexFit.tight,
+                        flex: 3,
+                        child: Slider(
+                          min: 0.0,
+                          max: 8.0,
+                          divisions: 16,
+                          value: _potassium,
+                          onChanged: (value) {
+                            setState(() {
+                              _potassium = value;
+                              valid = false;
+                            });
+                          },
+                        ),
+                      ),
+                      Flexible(
+                        fit: FlexFit.tight,
+                        flex: 2,
+                        child: Text(
+                            '${_potassium.toString().replaceAll('.0', '')} mmol/kg/day'),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 135,
+                          height: 55,
+                          child: TextField(
+                            onChanged: (text) => {
+                              setState(() {
+                                valid = false;
+                                double? tempTotal = double.tryParse(text);
+                                if (tempTotal is double) {
+                                  _total = tempTotal;
+                                } else {
+                                  _total = 0;
+                                }
+                              })
+                            },
+                            autofocus: true,
+                            decoration: InputDecoration(
+                                errorText: _errorText,
+                                labelText: 'Total daily fluid',
+                                //border: OutlineInputBorder(),
+                                contentPadding:
+                                    const EdgeInsets.fromLTRB(0, 0, 10, 6),
+                                suffixText: 'mL/kg/day'),
+                            controller: fluidController,
+                            textAlign: TextAlign.right,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              signed: false,
+                              decimal: false,
+                            ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(3),
+                            ],
+                          ),
+                        ),
+                        Visibility(
+                            visible: !notifier.weightValid,
+                            child: const Padding(
+                                padding: EdgeInsets.fromLTRB(10, 0, 20, 0),
+                                child: Text('Please enter weight'))),
+                        Visibility(
+                          visible: notifier.weightValid,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 20, 0),
+                            child: ElevatedButton.icon(
+                              onPressed: () => {
+                                setState(() {
+                                  valid = true;
+                                  if (_total < 10) {
+                                    setState(() {
+                                      _errorText = 'too low';
+                                    });
+                                  } else if (_total > 250) {
+                                    setState(() {
+                                      _errorText = 'too high';
+                                    });
+                                  } else {
+                                    setState(() {
+                                      _errorText = null;
+                                    });
+                                    FocusScope.of(context).unfocus();
+
+                                    var fluidResult = notifier.dailyFluids(
+                                        _dex, _sodium, _potassium, _total);
+
+                                    Navigator.of(context).push(
+                                      PageTransition(
+                                          type: PageTransitionType.leftToRight,
+                                          child:
+                                              CalcDetail(results: fluidResult)),
+                                    );
+                                  }
+                                })
+                              },
+                              icon: const Icon(Icons.calculate),
+                              label: const Text('calculate'),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-      )
+            ),
+          ))
     ]);
   }
 }
 
-class IVFluidDetail extends ConsumerWidget {
-  final double dex;
-  final double sodium;
-  final double potassium;
-  final double total;
+/// -------- Ventilation and Oxygenation Index -------- ///
 
-  const IVFluidDetail({
-    Key? key,
-    required this.dex,
-    required this.sodium,
-    required this.potassium,
-    required this.total,
-  }) : super(key: key);
+class Ventilation extends StatelessWidget {
+  const Ventilation({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final notifier = ref.watch(neomateNotifier);
-    String weight = notifier.weightStringShort;
-
-    if (weight.isEmpty) {
-      return Container();
-    }
-
-    var fluid = notifier.maintIV(
-      dex: dex,
-      sodium: sodium,
-      potassium: potassium,
-      total: total,
-    );
-
-    var dexString = '${dex} %';
-    dexString = dexString.replaceAll('.0 ', ' ');
-    dexString = dexString.replaceAll(' ', '');
-
-    return Container(
-      color: Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(children: [
-            const BackButton(),
-            Expanded(
-              child: Text(
-                'Infusion calculation at ${total.toStringAsFixed(0)} mL/kg/day',
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ]),
-          Expanded(
-              child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Card(
-                  color: AppConstants.colChecklist[0],
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextHeading(text: 'Calculations for a $weight baby'),
-                        TextStandard(text: fluid.total),
-                        TextSubHeading(
-                            text:
-                                'Glucose infusion rate for $dexString dextrose'),
-                        CalcFormulaColumn(
-                          topLine: fluid.girTop,
-                          bottomLine: fluid.girBottom,
-                        ),
-                        TextResult(text: fluid.girResult),
-                        const TextMiniAdvisory(
-                            text:
-                                '(not accounting for added electolytes and other infusions)'),
-                        Visibility(
-                          visible: dex > 12.5,
-                          child: const Padding(
-                              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                              child: TextAlert(
-                                text:
-                                    'Fluids with dextrose concentration greater than 12.5% should be infused via a central line',
-                              )),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: (dex != 10 && dex != 5),
-                  child: Card(
-                    color: AppConstants.colChecklist[3],
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextHeading(text: 'To prepare $dexString dextrose'),
-                          CalcFormulaColumn(
-                            topLine: fluid.dexTop,
-                            bottomLine: fluid.dexBottom,
-                          ),
-                          const Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 5)),
-                          TextResult(text: fluid.dexSummary)
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Card(
-                  color: AppConstants.colChecklist[1],
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const TextHeading(text: 'Electrolytes per 500mL bag'),
-                        Visibility(
-                          visible: sodium == 0,
-                          child: const TextStandard(text: '(No sodium added)'),
-                        ),
-                        Visibility(
-                            visible: sodium != 0,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextSubHeading(
-                                    text: 'Sodium at $sodium mmol/kg/day'),
-                                CalcFormulaColumn(
-                                  topLine: fluid.sodiumTop,
-                                  bottomLine: fluid.electrolyteBottom,
-                                ),
-                                TextResult(text: fluid.sodium),
-                              ],
-                            )),
-                        Visibility(
-                          visible: potassium == 0,
-                          child:
-                              const TextStandard(text: '(No potassium added)'),
-                        ),
-                        Visibility(
-                          visible: potassium != 0,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
-                              TextSubHeading(
-                                text: 'Potassium at $potassium mmol/kg/day',
-                              ),
-                              CalcFormulaColumn(
-                                topLine: fluid.potassiumTop,
-                                bottomLine: fluid.electrolyteBottom,
-                              ),
-                              TextResult(
-                                text: fluid.potassium,
-                              ),
-                              Visibility(
-                                visible: potassium > 4.5,
-                                child: const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                  child: Text(
-                                    'Fluids with potassium concentration greater than 0.2 mmol/kg/hour (>4.8 mmol/kg/day) should be infused via a central line',
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.redAccent),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                )
-              ],
-            ),
-          ))
-        ],
-      ),
-    );
+  Widget build(BuildContext context) {
+    return Column(children: const [
+      OICalc(),
+      CalcVentilation(),
+    ]);
   }
 }
 
@@ -1201,7 +1033,7 @@ class _OICalcState extends State<OICalc> {
                               decoration: InputDecoration(
                                   errorText: _mapErrorText,
                                   labelText: 'Mean airway pressure (MAP)',
-                                  labelStyle: TextStyle(fontSize: 13),
+                                  labelStyle: const TextStyle(fontSize: 13),
                                   contentPadding:
                                       const EdgeInsets.fromLTRB(0, 0, 10, 6),
                                   suffixText: _mapUnitsString[_mapSelUnits]),
@@ -1210,11 +1042,12 @@ class _OICalcState extends State<OICalc> {
                               keyboardType:
                                   const TextInputType.numberWithOptions(
                                 signed: false,
-                                decimal: false,
+                                decimal: true,
                               ),
                               inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                                LengthLimitingTextInputFormatter(2),
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'\d*\.?\d*')),
+                                LengthLimitingTextInputFormatter(4),
                               ],
                             ),
                           ),
@@ -1262,7 +1095,6 @@ class _OICalcState extends State<OICalc> {
                                   double? tempPaO2 = double.tryParse(text);
                                   if (tempPaO2 is double) {
                                     _paO2 = tempPaO2;
-                                    print('PaO2 $tempPaO2');
                                   } else {
                                     _paO2 = 0;
                                   }
@@ -1273,7 +1105,7 @@ class _OICalcState extends State<OICalc> {
                                   errorText: _paO2ErrorText,
                                   labelText:
                                       'Partial pressure oxygen (PaO\u2082)',
-                                  labelStyle: TextStyle(fontSize: 13),
+                                  labelStyle: const TextStyle(fontSize: 13),
 
                                   //border: OutlineInputBorder(),
                                   contentPadding:
@@ -1284,11 +1116,12 @@ class _OICalcState extends State<OICalc> {
                               keyboardType:
                                   const TextInputType.numberWithOptions(
                                 signed: false,
-                                decimal: false,
+                                decimal: true,
                               ),
                               inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                                LengthLimitingTextInputFormatter(3),
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'\d*\.?\d*')),
+                                LengthLimitingTextInputFormatter(4),
                               ],
                             ),
                           ),
@@ -1351,21 +1184,22 @@ class _OICalcState extends State<OICalc> {
                           if (valid) {
                             FocusScope.of(context).unfocus();
 
+                            var oiResult = Neomate.oiCalculator(
+                              inspiredO2: _inspired,
+                              map: _map,
+                              paO2: _paO2,
+                              mapUnits: (_mapSelUnits == 0)
+                                  ? MapUnits.cmH2O
+                                  : MapUnits.mmHg,
+                              paO2Units: (_o2SelUnits == 0)
+                                  ? PaO2Units.kPa
+                                  : PaO2Units.mmHg,
+                            );
+
                             Navigator.of(context).push(
                               PageTransition(
-                                type: PageTransitionType.rightToLeft,
-                                child: OIDetail(
-                                  inspiredO2: _inspired,
-                                  map: _map,
-                                  paO2: _paO2,
-                                  mapUnits: (_mapSelUnits == 0)
-                                      ? MapUnits.cmH2O
-                                      : MapUnits.mmHg,
-                                  paO2Units: (_o2SelUnits == 0)
-                                      ? PaO2Units.kPa
-                                      : PaO2Units.mmHg,
-                                ),
-                              ),
+                                  type: PageTransitionType.leftToRight,
+                                  child: CalcDetail(results: oiResult)),
                             );
                           }
                         })
@@ -1380,138 +1214,594 @@ class _OICalcState extends State<OICalc> {
           ),
         ),
       ),
-      const Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
     ]);
   }
 }
 
-class OIDetail extends StatelessWidget {
-  final double inspiredO2;
-  final double map;
-  final double paO2;
-  final MapUnits mapUnits;
-  final PaO2Units paO2Units;
+class CalcVentilation extends StatefulWidget {
+  const CalcVentilation({Key? key}) : super(key: key);
 
-  const OIDetail({
-    Key? key,
-    required this.inspiredO2,
-    required this.map,
-    required this.paO2,
-    required this.mapUnits,
-    required this.paO2Units,
-  }) : super(key: key);
+  @override
+  CalcVentilationState createState() => CalcVentilationState();
+}
+
+class CalcVentilationState extends State<CalcVentilation> {
+  var _ti = 0.4;
+  var _te = 0.6;
+  var _rate = 60.0;
+  var _pip = 18.0;
+  var _peep = 4.0;
 
   @override
   Widget build(BuildContext context) {
-    var oiResult = Neomate.oiCalculator(
-      inspiredO2: inspiredO2,
-      map: map,
-      paO2: paO2,
-      mapUnits: mapUnits,
-      paO2Units: paO2Units,
-    );
-
-    return Container(
-      color: Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(children: const [
-            BackButton(),
-            Expanded(
-              child: Text(
-                'Oxygenation Index (OI) Calculation',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ]),
-          Expanded(
-              child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Card(
-                  color: AppConstants.colChecklist[2],
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(children: [
+      Card(
+          color: AppConstants.colChecklist[1],
+          margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 14, 0, 10),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(14, 0, 0, 15),
+                      child: TextHeading(
+                        text: 'Ventilation setting calculator',
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(15, 0, 10, 10),
+                      child: TextStandard(
+                        text:
+                            'If you have a basic ventilator you can use this calculator to help with settings and to calculate mean airway pressure (MAP)',
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
+                      child: Text('Ventilator rate'),
+                    ),
+                    Row(
                       children: [
-                        const TextStandard(
-                          text:
-                              '''The oxygenation index (OI) measures the fraction of inspired oxygen and its usage within the body. A lower OI is better: as oxygenation improves, a baby will be able to achieve a higher PaO\u2082 at a lower FiO\u2082.
-
-					OI > 25: indicates severe respiratory failure
-					OI > 40: consider ECMO''',
-                        ),
-                        const Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 20)),
-                        const TextSubHeading(
-                          text: 'Calculation',
-                        ),
-                        Visibility(
-                          visible: oiResult.mmHgToCmH2O.isNotEmpty,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                            child: TextCondensed(
-                              text: oiResult.mmHgToCmH2O,
-                            ),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 3,
+                          child: Slider(
+                            min: 10.0,
+                            max: 70.0,
+                            divisions: 60,
+                            value: _rate,
+                            onChanged: (value) {
+                              setState(() {
+                                _rate = value;
+                                var tempTe = ((60 - (_ti * _rate)) / _rate)
+                                    .toPrecision(2);
+                                if (tempTe < 0.1) {
+                                  _te = 0.1;
+                                  _rate = (60 / (_ti + _te)).toPrecision(0);
+                                } else {
+                                  _te = tempTe;
+                                }
+                              });
+                            },
                           ),
                         ),
-                        Visibility(
-                          visible: oiResult.kPaToMmHg.isNotEmpty,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                            child: TextCondensed(
-                              text: oiResult.kPaToMmHg,
-                            ),
-                          ),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 2,
+                          child: Text(
+                              '${_rate.toString().replaceAll('.0', '')} breaths/min'),
                         ),
-                        CalcFormulaColumn(
-                            topLine: oiResult.formulaTop,
-                            bottomLine: oiResult.formulaBottom),
-                        const Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
-                        Text(
-                          '= Oxygenation Index ${oiResult.resultString}',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            height: 1.5,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Visibility(
-                          visible:
-                              oiResult.result > 25 && oiResult.result <= 40,
-                          child: const Padding(
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                            child: TextAlert(
-                              text:
-                                  'OI > 25 indicates severe respiratory failure',
-                            ),
-                          ),
-                        ),
-                        Visibility(
-                          visible: oiResult.result > 40,
-                          child: const Padding(
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                            child: TextAlert(
-                              text: 'OI > 40 indicates consideration of ECMO',
-                            ),
-                          ),
-                        )
                       ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
+                      child: Text('Inspiratory time (Ti)'),
+                    ),
+                    Row(
+                      children: [
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 3,
+                          child: Slider(
+                            min: 0.1,
+                            max: 2.0,
+                            divisions: 19,
+                            value: _ti,
+                            onChanged: (value) {
+                              setState(() {
+                                _ti = value.toPrecision(1);
+                                var tempTe = ((60 - (_ti * _rate)) / _rate)
+                                    .toPrecision(2);
+                                if (tempTe < 0.1) {
+                                  _te = 0.1;
+                                  _ti = ((60 - (_rate * _te)) / _rate)
+                                      .toPrecision(2);
+                                } else {
+                                  _te = tempTe;
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 2,
+                          child: Text(
+                              '${_ti.toString().replaceAll('.0', '')} secs'),
+                        ),
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
+                      child: Text('Expiratory time (Te)'),
+                    ),
+                    Row(
+                      children: [
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 3,
+                          child: Slider(
+                            min: 0.1,
+                            max: 10.0,
+                            divisions: 99,
+                            value: _te,
+                            onChanged: (value) {
+                              setState(() {
+                                _te = value.toPrecision(1);
+                                var tempRate =
+                                    (60 / (_ti + _te)).toPrecision(0);
+                                if (tempRate < 10) {
+                                  _rate = 10;
+                                  _te = ((60 - (_ti * _rate)) / _rate)
+                                      .toPrecision(2);
+                                } else {
+                                  _rate = tempRate;
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 2,
+                          child: Text(
+                              '${_te.toString().replaceAll('.0', '')} secs'),
+                        ),
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
+                      child: Text('Inspiratory Pressure (PIP)'),
+                    ),
+                    Row(
+                      children: [
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 3,
+                          child: Slider(
+                            min: 4,
+                            max: 40.0,
+                            divisions: 72,
+                            value: _pip,
+                            onChanged: (value) {
+                              setState(() {
+                                if (value < _peep) {
+                                  _pip = _peep + 0.5;
+                                } else {
+                                  _pip = value.toPrecision(1);
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 2,
+                          child: Text(
+                              '${_pip.toString().replaceAll('.0', '')} cmH\u2082O'),
+                        ),
+                      ],
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
+                      child: Text('Expiratory Pressure (PEEP)'),
+                    ),
+                    Row(
+                      children: [
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 3,
+                          child: Slider(
+                            min: 0,
+                            max: 15.0,
+                            divisions: 30,
+                            value: _peep,
+                            onChanged: (value) {
+                              setState(() {
+                                if (value > _pip) {
+                                  _peep = _pip - 0.5;
+                                } else {
+                                  _peep = value.toPrecision(1);
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 2,
+                          child: Text(
+                              '${_peep.toString().replaceAll('.0', '')} cmH\u2082O'),
+                        ),
+                      ],
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 20, 0),
+                        child: ElevatedButton.icon(
+                          onPressed: () => {
+                            setState(() {
+                              FocusScope.of(context).unfocus();
+                              var results = Neomate.mapCalc(
+                                  rate: _rate,
+                                  ti: _ti,
+                                  te: _te,
+                                  pip: _pip,
+                                  peep: _peep);
+                              Navigator.of(context).push(
+                                PageTransition(
+                                  type: PageTransitionType.leftToRight,
+                                  child: CalcDetail(results: results),
+                                ),
+                              );
+                            })
+                          },
+                          icon: const Icon(Icons.calculate),
+                          label: const Text('calculate'),
+                        ),
+                      ),
+                    ),
+                  ])))
+    ]);
+  }
+}
+
+/// -------- Any Drug infusion calculator -------- ///
+
+class AnyDrug extends ConsumerStatefulWidget {
+  const AnyDrug({Key? key}) : super(key: key);
+
+  @override
+  AnyDrugState createState() => AnyDrugState();
+}
+
+class AnyDrugState extends ConsumerState<AnyDrug> {
+  var _infusionRate = 1.0;
+  var _syringeSize = 50.0;
+  var _dose = 0.0;
+  var _units = 'mg';
+  var _timescale = 'hour';
+  String? _errorMessage;
+
+  final controllerMAP = TextEditingController();
+  final controllerPaO2 = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // "ref" can be used in all life-cycles of a StatefulWidget.
+    ref.read(neomateNotifier);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final notifier = ref.watch(neomateNotifier);
+    final babyWeight = notifier.weightNumKg;
+
+    return Column(children: [
+      const Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
+      GestureDetector(
+        onTap: (() => {FocusScope.of(context).unfocus()}),
+        child: Card(
+          color: AppConstants.colChecklist[1],
+          margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 14, 0, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(14, 0, 0, 20),
+                  child: Text('Any drug infusion calculator',
+                      style: TextStyle(fontSize: 15)),
+                ),
+                Row(
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: 60,
+                                height: 55,
+                                child: TextField(
+                                  onChanged: (text) => {
+                                    setState(() {
+                                      double? doseTemp = double.tryParse(text);
+                                      if (doseTemp is double) {
+                                        _dose = doseTemp;
+                                      } else {
+                                        _dose = 0;
+                                      }
+                                    })
+                                  },
+                                  autofocus: true,
+                                  decoration: InputDecoration(
+                                    labelText: 'Dose',
+                                    errorText: _errorMessage,
+                                    labelStyle: const TextStyle(fontSize: 13),
+                                    contentPadding:
+                                        const EdgeInsets.fromLTRB(0, 0, 10, 6),
+                                  ),
+                                  controller: controllerMAP,
+                                  textAlign: TextAlign.right,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                    signed: false,
+                                    decimal: false,
+                                  ),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    LengthLimitingTextInputFormatter(4),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 45,
+                                width: 105,
+                                child: DropdownButton<String>(
+                                  value: _units,
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    size: 18,
+                                    color: Colors.black54,
+                                  ),
+                                  elevation: 16,
+                                  style: const TextStyle(
+                                      fontSize: 13, color: Colors.black),
+                                  underline: Container(),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _units = newValue!;
+                                    });
+                                  },
+                                  items: <String>[
+                                    'g',
+                                    'mg',
+                                    'mmol',
+                                    'micrograms',
+                                    'nanograms'
+                                  ].map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: SizedBox(
+                                          width: 75,
+                                          child: Text(
+                                            value,
+                                            textAlign: TextAlign.right,
+                                          )),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                              const Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                  child: Text('/ kg /')),
+                              SizedBox(
+                                height: 45,
+                                width: 100,
+                                child: DropdownButton<String>(
+                                  value: _timescale,
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    size: 18,
+                                    color: Colors.black54,
+                                  ),
+                                  elevation: 16,
+                                  style: const TextStyle(
+                                      fontSize: 13, color: Colors.black),
+                                  underline: Container(),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      _timescale = newValue!;
+                                    });
+                                  },
+                                  items: <String>[
+                                    'minute',
+                                    'hour',
+                                    'day',
+                                  ].map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ])),
+                  ],
+                ),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
+                  child: Text('Infusion Rate'),
+                ),
+                Row(
+                  children: [
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 3,
+                      child: Slider(
+                        min: 0.1,
+                        max: 5.0,
+                        divisions: 49,
+                        value: _infusionRate,
+                        onChanged: (value) {
+                          setState(() {
+                            _infusionRate = value.toPrecision(2);
+                          });
+                        },
+                      ),
+                    ),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 2,
+                      child: Text('$_infusionRate mL/h'),
+                    ),
+                  ],
+                ),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(22, 0, 0, 0),
+                  child: Text('Syringe size'),
+                ),
+                Row(
+                  children: [
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 3,
+                      child: Slider(
+                        min: 5.0,
+                        max: 50.0,
+                        divisions: 45,
+                        value: _syringeSize,
+                        onChanged: (value) {
+                          setState(() {
+                            _syringeSize = value;
+                          });
+                        },
+                      ),
+                    ),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 2,
+                      child: Text('${_syringeSize.toStringAsFixed(0)} mL'),
+                    ),
+                  ],
+                ),
+                Visibility(
+                    visible: !notifier.weightValid,
+                    child: const Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                            child: Text('Please enter weight')))),
+                Visibility(
+                  visible: notifier.weightValid,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: ElevatedButton.icon(
+                        onPressed: () => {
+                          setState(() {
+                            if (_dose > 0) {
+                              FocusScope.of(context).unfocus();
+                              var myUnits = DeliveryUnits.invalid;
+                              switch (_units) {
+                                case 'g':
+                                  {
+                                    myUnits = DeliveryUnits.gPerKg;
+                                    break;
+                                  }
+                                case 'mg':
+                                  {
+                                    myUnits = DeliveryUnits.mgPerKg;
+                                    break;
+                                  }
+                                case 'mmol':
+                                  {
+                                    myUnits = DeliveryUnits.mmolPerKg;
+                                    break;
+                                  }
+                                case 'micrograms':
+                                  {
+                                    myUnits = DeliveryUnits.microgramsPerKg;
+                                    break;
+                                  }
+                                case 'nanograms':
+                                  {
+                                    myUnits = DeliveryUnits.nanogramsPerKg;
+                                    break;
+                                  }
+                              }
+                              var myTime = DeliveryTime.invalid;
+                              switch (_timescale) {
+                                case 'minute':
+                                  {
+                                    myTime = DeliveryTime.perMinute;
+                                    break;
+                                  }
+                                case 'hour':
+                                  {
+                                    myTime = DeliveryTime.perHour;
+                                    break;
+                                  }
+                                case 'day':
+                                  {
+                                    myTime = DeliveryTime.perDay;
+                                    break;
+                                  }
+                              }
+                              var myDrug = DrugInfusion(
+                                types: [DrugType.generic],
+                                name: 'your drug',
+                                deliveryUnits: myUnits,
+                                deliveryTime: myTime,
+                                startDose: _dose,
+                                fluids: [FluidType.any],
+                                desiredRate: _infusionRate,
+                                syringe: _syringeSize,
+                                minConc: 0,
+                                maxConc: 9999,
+                                minConcMsg: 'minConcMsg',
+                                maxConcMsg: 'maxConcMsg',
+                                minDose: 0,
+                                maxDose: 9999,
+                                generic: true,
+                                doseMsg: '',
+                                doseRange: 'doseRange',
+                                weight: babyWeight,
+                              );
+
+                              Navigator.of(context).push(
+                                PageTransition(
+                                  type: PageTransitionType.leftToRight,
+                                  child: CalcDetail(results: myDrug.results),
+                                ),
+                              );
+                            }
+                          })
+                        },
+                        icon: const Icon(Icons.calculate),
+                        label: const Text('calculate'),
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
-          ))
-        ],
+          ),
+        ),
       ),
-    );
+      const Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
+    ]);
   }
 }
+
+/// -------- Remaining NICU Calc Rows -------- ///
 
 class CalcIntubation extends StatelessWidget {
   const CalcIntubation({Key? key}) : super(key: key);
@@ -1567,7 +1857,7 @@ class CalcEmergency extends StatelessWidget {
   }
 }
 
-/// * Widgets for displaying lists of bolus drugs and infusions *
+/// -------- Drug Calculation Pages -------- ///
 
 class BolusDrugs extends ConsumerWidget {
   // Build a list of drugs and return a column of rows that contain the formatted drug information
@@ -1587,290 +1877,75 @@ class BolusDrugs extends ConsumerWidget {
     bool redRow = true;
 
     for (var drug in myDrugs) {
+      Widget myRow = Container();
       if (drug is DrugMultiplier) {
         // Row to display drug based on a multiple of the weight
-        drugRows.add(Container(
-          color: redRow ? AppConstants.redRow : Colors.transparent,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Name and dose column
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        drug.name,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const Padding(padding: EdgeInsets.fromLTRB(0, 3, 0, 2)),
-                      Text(
-                        '(${drug.dose})',
-                        style: const TextStyle(fontSize: 13),
-                      ),
-                    ],
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.fromLTRB(3, 0, 3, 0)),
-                // Calculated dose and instructions column
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    //children: drugDetail(drug),
-                    children: List.from(drugDetailInner(drug))
-                      ..addAll([
-                        const Padding(padding: EdgeInsets.fromLTRB(0, 3, 0, 2)),
-                        Text(
-                          drug.notes,
-                          style: const TextStyle(
-                              fontSize: 12, fontStyle: FontStyle.italic),
-                        )
-                      ]),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ));
-        redRow = !redRow;
+        myRow = DrugMultiplierRow(
+          drug: drug,
+        );
       }
       if (drug is DrugBanded && !drug.weight!.isNaN) {
         // Row to display drug based on bandings of the weight
-        drugRows.add(Container(
-          color: redRow ? AppConstants.redRow : Colors.transparent,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Name and dose column
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        drug.name,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const Padding(padding: EdgeInsets.fromLTRB(0, 3, 0, 2)),
-                    ],
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.fromLTRB(3, 0, 3, 0)),
-                // Calculated dose and instructions column
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: List.from(drugDetailInner(drug))
-                      ..addAll([
-                        const Padding(padding: EdgeInsets.fromLTRB(0, 3, 0, 2)),
-                        Text(
-                          drug.notes,
-                          style: const TextStyle(
-                              fontSize: 12, fontStyle: FontStyle.italic),
-                        )
-                      ]),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ));
-        redRow = !redRow;
+        myRow = DrugBandedRow(
+          drug: drug,
+        );
       }
       if (drug is DrugInfo && !drug.weight!.isNaN) {
         // Row to display drug that's information only
-        drugRows.add(Container(
-          color: redRow ? AppConstants.redRow : Colors.transparent,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Name and dose column
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        drug.name,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const Padding(padding: EdgeInsets.fromLTRB(0, 3, 0, 2)),
-                      Text(
-                        drug.qualifier,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.fromLTRB(3, 0, 3, 0)),
-                // Calculated dose and instructions column
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text.rich(TextSpan(children: [
-                          TextSpan(
-                            text: '${drug.calcString} ',
-                            style: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500),
-                          ),
-                          TextSpan(
-                            text: '${drug.units} ',
-                            style: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500),
-                          ),
-                          TextSpan(
-                            text: drug.instructions,
-                            style: const TextStyle(fontSize: 13),
-                          ),
-                        ])),
-                        const Padding(padding: EdgeInsets.fromLTRB(0, 3, 0, 2)),
-                        Text(
-                          drug.notes,
-                          style: const TextStyle(
-                              fontSize: 12, fontStyle: FontStyle.italic),
-                        )
-                      ]),
-                ),
-              ],
-            ),
-          ),
-        ));
-        redRow = !redRow;
+        myRow = DrugInfoRow(
+          drug: drug,
+        );
       }
       if (drug is DrugFormula && !drug.weight!.isNaN) {
-        // Row to display drug that's information only
-        drugRows.add(Container(
-          color: redRow ? AppConstants.redRow : Colors.transparent,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Name and dose column
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        drug.name,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const Padding(padding: EdgeInsets.fromLTRB(0, 3, 0, 2)),
-                      Text(
-                        drug.qualifier,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.fromLTRB(3, 0, 3, 0)),
-                // Calculated dose and instructions column
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(drug.calcFormula),
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(0, 4, 0, 0),
-                      ),
-                      Text.rich(TextSpan(children: [
-                        TextSpan(
-                          text: '= ${drug.calcString} ',
-                          style: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w500),
-                        ),
-                        TextSpan(
-                          text: '${drug.units} ',
-                          style: const TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w500),
-                        ),
-                        TextSpan(
-                          text: '${drug.instructions}',
-                          style: const TextStyle(fontSize: 13),
-                        ),
-                      ]))
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ));
-        redRow = !redRow;
+        myRow = DrugFormulaRow(
+          drug: drug,
+        );
       }
       if (drug is DrugInfusion && !drug.weight!.isNaN) {
-        // Row to display drug that's information only
+        myRow = DrugInfusionRow(drug: drug);
+      }
+      if (myRow is! Container && drug.jumpReference.isEmpty) {
         drugRows.add(Container(
-          color: redRow ? AppConstants.redRow : Colors.transparent,
-          child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${drug.name} infusion',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          const Padding(
-                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0)),
-                          Text(
-                            drug.doseRange,
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                        ]),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          child: ElevatedButton.icon(
-                            onPressed: () => {
-                              Navigator.of(context).push(
-                                PageTransition(
-                                  type: PageTransitionType.rightToLeft,
-                                  child: InfusionDrugDetail(drug: drug),
-                                ),
-                              )
-                            },
-                            icon: const Icon(Icons.calculate),
-                            label: const Text('calculate'),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
-                  ])),
-        ));
+            color: redRow ? AppConstants.redRow : Colors.transparent,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 24, 10),
+              child: myRow,
+            )));
+        redRow = !redRow;
+      }
+      if (myRow is! Container && drug.jumpReference.isNotEmpty) {
+        Widget myJump;
+        if (drug.jumpReference.contains('neomate://')) {
+          // This is a 'neomate URL' so we want to link to a checklist or reference
+          // so extract the actual link text
+          myJump = JumpReference(
+              reference: drug.jumpReference.replaceAll('neomate://', ''));
+        } else {
+          // Assume it's a normal webpage and try to launch
+          myJump = WebReference(reference: drug.jumpReference);
+        }
+        drugRows.add(
+          Container(
+              color: redRow ? AppConstants.redRow : Colors.transparent,
+              child: Stack(
+                alignment: Alignment.bottomRight,
+                fit: StackFit.loose,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 24, 10),
+                    child: myRow,
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: myJump)
+                      ]),
+                ],
+              )),
+        );
         redRow = !redRow;
       }
     }
@@ -1883,163 +1958,362 @@ class BolusDrugs extends ConsumerWidget {
       children: drugRows,
     );
   }
-
-  List<Widget> drugDetailInner(Drug drug) {
-    if (drug.weight!.isNaN) {
-      return ([const Text('Please enter weight')]);
-    }
-    // Recursive method to unwrap a list of follow-on doses and display nicely
-    List<Widget> ret = [
-      Text.rich(TextSpan(children: [
-        (drug.qualifier == '')
-            ? const TextSpan(text: '')
-            : TextSpan(
-                text: '${drug.qualifier}:\n',
-                style: const TextStyle(fontSize: 13),
-              ),
-        TextSpan(
-          text: '${drug.calcString} ',
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-        ),
-        TextSpan(
-          text: '${drug.units} ',
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-        ),
-        TextSpan(
-          text: drug.instructions,
-          style: const TextStyle(fontSize: 13),
-        ),
-      ]))
-    ];
-    if (drug.followOn is Drug) {
-      ret.add(const Padding(padding: EdgeInsets.fromLTRB(0, 2, 0, 2)));
-      ret.addAll(drugDetailInner(drug.followOn!));
-    }
-    return ret;
-  }
 }
 
-class InfusionDrugDetail extends ConsumerWidget {
+class DrugInfusionRow extends StatelessWidget {
   final DrugInfusion drug;
-
-  const InfusionDrugDetail({
-    Key? key,
-    required this.drug,
-  }) : super(key: key);
+  const DrugInfusionRow({Key? key, required this.drug}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final notifier = ref.watch(neomateNotifier);
-    String weight = notifier.weightStringShort;
-
-    if (weight.isEmpty) {
-      return Container();
-    }
-
-    return Container(
-      color: Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(children: [
-            const BackButton(),
-            Expanded(
-              child: Text(
-                '${drug.name} infusion calculation',
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${drug.name} infusion',
+                style: const TextStyle(fontSize: 16),
               ),
-            ),
-          ]),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Card(
-                      color: AppConstants.colChecklist[0],
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextHeading(
-                                text: 'Calculations for a $weight baby',
-                              ),
-                              TextStandard(
-                                text: drug.calcPreNarrative,
-                              ),
-                              CalcFormulaColumn(
-                                topLine: drug.calcTop,
-                                bottomLine: drug.calcBottom,
-                              ),
-                              Visibility(
-                                visible: drug.calcRight.isNotEmpty,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                  child: Text(
-                                    drug.calcRight,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              TextResult(
-                                text: drug.calcPostNarrative,
-                              ),
-                              TextResult(
-                                text: drug.doseMsg,
-                              ),
-                            ]),
-                      )),
-                  Visibility(
-                    visible: drug.dilute,
-                    child: Card(
-                      color: AppConstants.colChecklist[1],
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const TextHeading(
-                              text: 'To make a more concentrated solution',
-                            ),
-                            const Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
-                            const TextStandard(
-                              text:
-                                  '''This drug calculation is for a dilute solution. That means it runs at a faster rate so that the fluid runs through the line dead space more quickly and is delivered to the patient sooner.
-      
-This is useful in the acute situation but can lead to fluid overload in the longer term. Once stable it may be appropriate to write up a more concentrated solution.''',
-                            ),
-                            const Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 0, 14)),
-                            const TextStandard(
-                              text:
-                                  '''To achieve this you need to multiply the added drug dose by a factor, and divide the rate by the same factor (usually 10).
-  
-For example:''',
-                            ),
-                            TextResult(
-                              text: drug.concentratedCalc,
-                            ),
-                            TextResult(
-                              text: drug.concentratedDoseRange,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              const Padding(padding: EdgeInsets.fromLTRB(0, 5, 0, 0)),
+              Text(
+                drug.doseRange,
+                style: const TextStyle(fontSize: 14),
+              ),
+            ]),
+        Expanded(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: ElevatedButton.icon(
+                onPressed: () => {
+                  Navigator.of(context).push(
+                    PageTransition(
+                        type: PageTransitionType.leftToRight,
+                        child: CalcDetail(results: drug.results)),
+                  )
+                },
+                icon: const Icon(Icons.calculate),
+                label: const Text('calculate'),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+        const Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
+      ],
     );
+  }
+}
+
+class DrugFormulaRow extends StatelessWidget {
+  final DrugFormula drug;
+  const DrugFormulaRow({Key? key, required this.drug}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Name and dose column
+        Expanded(
+          flex: 2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                drug.name,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const Padding(padding: EdgeInsets.fromLTRB(0, 3, 0, 2)),
+              Text(
+                drug.qualifier,
+                style: const TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+        const Padding(padding: EdgeInsets.fromLTRB(3, 0, 3, 0)),
+        // Calculated dose and instructions column
+        Expanded(
+          flex: 3,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(drug.calcFormula),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(0, 4, 0, 0),
+              ),
+              Text.rich(TextSpan(children: [
+                TextSpan(
+                  text: '= ${drug.calcString} ',
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w500),
+                ),
+                TextSpan(
+                  text: '${drug.units} ',
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w500),
+                ),
+                TextSpan(
+                  // ignore: unnecessary_string_interpolations
+                  text: '${drug.instructions}',
+                  style: const TextStyle(fontSize: 13),
+                ),
+              ]))
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class DrugInfoRow extends StatelessWidget {
+  final DrugInfo drug;
+  const DrugInfoRow({Key? key, required this.drug}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Name and dose column
+        Expanded(
+          flex: 2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                drug.name,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const Padding(padding: EdgeInsets.fromLTRB(0, 3, 0, 2)),
+              Text(
+                drug.qualifier,
+                style: const TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+        const Padding(padding: EdgeInsets.fromLTRB(3, 0, 3, 0)),
+        // Calculated dose and instructions column
+        Expanded(
+          flex: 3,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text.rich(TextSpan(children: [
+                  TextSpan(
+                    text: '${drug.calcString} ',
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w500),
+                  ),
+                  TextSpan(
+                    text: '${drug.units} ',
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w500),
+                  ),
+                  TextSpan(
+                    text: drug.instructions,
+                    style: const TextStyle(fontSize: 13),
+                  ),
+                ])),
+                const Padding(padding: EdgeInsets.fromLTRB(0, 3, 0, 2)),
+                Text(
+                  drug.notes,
+                  style: const TextStyle(
+                      fontSize: 12, fontStyle: FontStyle.italic),
+                )
+              ]),
+        ),
+      ],
+    );
+  }
+}
+
+class DrugBandedRow extends StatelessWidget {
+  final DrugBanded drug;
+  const DrugBandedRow({Key? key, required this.drug}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Name and dose column
+        Expanded(
+          flex: 2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                drug.name,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const Padding(padding: EdgeInsets.fromLTRB(0, 3, 0, 2)),
+            ],
+          ),
+        ),
+        const Padding(padding: EdgeInsets.fromLTRB(3, 0, 3, 0)),
+        // Calculated dose and instructions column
+        Expanded(
+          flex: 3,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: List.from(drugDetailInner(drug))
+              ..addAll([
+                const Padding(padding: EdgeInsets.fromLTRB(0, 3, 0, 2)),
+                Visibility(
+                  visible: drug.notes.isNotEmpty,
+                  child: Text(
+                    drug.notes,
+                    style: const TextStyle(
+                        fontSize: 12, fontStyle: FontStyle.italic),
+                  ),
+                ),
+              ]),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class DrugMultiplierRow extends StatelessWidget {
+  final DrugMultiplier drug;
+  const DrugMultiplierRow({Key? key, required this.drug}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Name and dose column
+        Expanded(
+          flex: 2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                drug.name,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const Padding(padding: EdgeInsets.fromLTRB(0, 3, 0, 2)),
+              Text(
+                drug.dose,
+                style: const TextStyle(fontSize: 13),
+              ),
+            ],
+          ),
+        ),
+        const Padding(padding: EdgeInsets.fromLTRB(3, 0, 3, 0)),
+        // Calculated dose and instructions column
+        Expanded(
+          flex: 3,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            //children: drugDetail(drug),
+            children: List.from(drugDetailInner(drug))
+              ..addAll([
+                const Padding(padding: EdgeInsets.fromLTRB(0, 3, 0, 2)),
+                Text(
+                  drug.notes,
+                  style: const TextStyle(
+                      fontSize: 12, fontStyle: FontStyle.italic),
+                )
+              ]),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+List<Widget> drugDetailInner(Drug drug) {
+  if (drug.weight!.isNaN) {
+    return ([const Text('Please enter weight')]);
+  }
+  // Recursive method to unwrap a list of follow-on doses and display nicely
+  List<Widget> ret = [
+    Text.rich(TextSpan(children: [
+      (drug.qualifier == '')
+          ? const TextSpan(text: '')
+          : TextSpan(
+              text: '${drug.qualifier}:\n',
+              style: const TextStyle(fontSize: 13),
+            ),
+      TextSpan(
+        text: '${drug.calcString} ',
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+      ),
+      TextSpan(
+        text: '${drug.units} ',
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+      ),
+      TextSpan(
+        text: drug.instructions,
+        style: const TextStyle(fontSize: 13),
+      ),
+    ]))
+  ];
+  if (drug.followOn is Drug) {
+    ret.add(const Padding(padding: EdgeInsets.fromLTRB(0, 2, 0, 2)));
+    ret.addAll(drugDetailInner(drug.followOn!));
+  }
+  return ret;
+}
+
+class JumpReference extends StatelessWidget {
+  final String reference;
+
+  // Display a jump reference
+
+  const JumpReference({Key? key, required this.reference}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        padding: const EdgeInsets.fromLTRB(18, 0, 0, 0),
+        icon: const Icon(
+          Icons.book,
+          color: Color.fromRGBO(50, 100, 255, 0.6),
+        ),
+        onPressed: () => {jumpTo(reference, context)});
+  }
+}
+
+class WebReference extends StatelessWidget {
+  final String reference;
+
+  // Display a jump reference
+
+  const WebReference({Key? key, required this.reference}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        padding: const EdgeInsets.fromLTRB(18, 0, 0, 0),
+        icon: const Icon(
+          Icons.article_rounded,
+          color: Color.fromRGBO(50, 100, 255, 0.6),
+        ),
+        onPressed: () => {doLaunchUrl(Uri.parse(reference))});
   }
 }
 
@@ -2048,7 +2322,7 @@ class Clinic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("Clinic");
+    return const Text("Clinic");
   }
 }
 
@@ -2057,7 +2331,7 @@ class Checklists extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ChecklistPage();
+    return const ChecklistMenuPage();
   }
 }
 
@@ -2066,11 +2340,13 @@ class References extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ReferencePage();
+    return const ReferenceMenuPage();
   }
 }
 
 class About extends StatelessWidget {
+  // Displays the About page
+
   const About({Key? key}) : super(key: key);
 
   @override
@@ -2078,7 +2354,7 @@ class About extends StatelessWidget {
     return SingleChildScrollView(
         child: Column(
       children: [
-        htmlWidget(NeomateHtml.aboutPage),
+        HtmlWidget(data: NeomateHtml.aboutPage),
         ElevatedButton(
             onPressed: () {
               showLicensePage(
@@ -2096,23 +2372,25 @@ class About extends StatelessWidget {
   }
 }
 
-// Checklists
+/// -------- Checklist Pages -------- ///
 
-class ChecklistPage extends StatefulWidget {
-  const ChecklistPage({Key? key}) : super(key: key);
+class ChecklistMenuPage extends StatefulWidget {
+  const ChecklistMenuPage({Key? key}) : super(key: key);
 
   @override
-  State<ChecklistPage> createState() => _ChecklistPageState();
+  State<ChecklistMenuPage> createState() => ChecklistMenuPageState();
 }
 
-class _ChecklistPageState extends State<ChecklistPage> {
+class ChecklistMenuPageState extends State<ChecklistMenuPage> {
+  // Creates a page to show a list of all the checklists
+
   final checklistNavKey = GlobalKey<NavigatorState>();
 
   Widget _menu(BuildContext context) {
     List<Widget> checklistPages = [
       Container(
         padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
-        child: htmlWidget(NeomateHtml.checklistPreamble),
+        child: HtmlWidget(data: NeomateHtml.checklistPreamble),
       ),
     ];
     for (var checklist in checklistDb) {
@@ -2135,9 +2413,11 @@ class _ChecklistPageState extends State<ChecklistPage> {
             onTap: () {
               Navigator.of(context).push(
                 PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: _checklistPage(checklist),
-                ),
+                    type: PageTransitionType.leftToRight,
+                    //child: _checklistPage(checklist),
+                    child: ChecklistPage(
+                      checklist: checklist,
+                    )),
               );
             },
           ),
@@ -2162,13 +2442,33 @@ class _ChecklistPageState extends State<ChecklistPage> {
     );
   }
 
-  Widget _checklistPage(Checklist checklist) {
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async => !await checklistNavKey.currentState!.maybePop(),
+      child: Navigator(
+          key: checklistNavKey,
+          onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+              builder: (context) => _menu(context),
+            );
+          }),
+    );
+  }
+}
+
+class ChecklistPage extends StatelessWidget {
+  final Checklist checklist;
+  const ChecklistPage({Key? key, required this.checklist}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     List<Widget> checklistSections = [
       Container(
         color: AppConstants.colChecklistAbstract,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-          child: htmlWidget(checklist.abstract),
+          child: HtmlWidget(data: checklist.abstract),
         ),
       ),
       const Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
@@ -2194,9 +2494,9 @@ class _ChecklistPageState extends State<ChecklistPage> {
             const Padding(
               padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
             ),
-            _checklistItems(
-                section,
-                AppConstants.colChecklist[
+            ChecklistItems(
+                section: section,
+                color: AppConstants.colChecklist[
                     sectionNum % AppConstants.colChecklist.length]),
             const Padding(padding: EdgeInsets.fromLTRB(0, 5, 0, 0)),
           ],
@@ -2208,16 +2508,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
       color: Colors.white,
       child: Column(
         children: [
-          Row(children: [
-            const BackButton(),
-            Expanded(
-              child: Text(
-                checklist.heading,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ]),
+          SubpageHeader(text: checklist.heading),
           Flexible(
             child: ListView(children: checklistSections),
           ),
@@ -2225,12 +2516,21 @@ class _ChecklistPageState extends State<ChecklistPage> {
       ),
     );
   }
+}
 
-  Widget _checklistItems(ChecklistSection section, Color color) {
+class ChecklistItems extends StatelessWidget {
+  final ChecklistSection section;
+  final Color color;
+
+  const ChecklistItems({Key? key, required this.section, required this.color})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     List<Widget> items = [];
 
     for (var item in section.items) {
-      var myKey = GlobalKey<_ChecklistCheckboxState>();
+      var myKey = GlobalKey<ChecklistCheckboxState>();
       items.add(
         Card(
           margin: const EdgeInsets.fromLTRB(12, 5, 12, 5),
@@ -2249,7 +2549,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    child: htmlWidget(item),
+                    child: HtmlWidget(data: item),
                   ),
                 ),
               ],
@@ -2261,30 +2561,19 @@ class _ChecklistPageState extends State<ChecklistPage> {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch, children: items);
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => !await checklistNavKey.currentState!.maybePop(),
-      child: Navigator(
-          key: checklistNavKey,
-          onGenerateRoute: (routeSettings) {
-            return MaterialPageRoute(
-              builder: (context) => _menu(context),
-            );
-          }),
-    );
-  }
 }
 
 class ChecklistCheckbox extends StatefulWidget {
   const ChecklistCheckbox({Key? key}) : super(key: key);
 
   @override
-  State<ChecklistCheckbox> createState() => _ChecklistCheckboxState();
+  State<ChecklistCheckbox> createState() => ChecklistCheckboxState();
 }
 
-class _ChecklistCheckboxState extends State<ChecklistCheckbox> {
+class ChecklistCheckboxState extends State<ChecklistCheckbox> {
+// Creates a check box that remembers whether it's been ticked or not
+// until we leave the current page, in which case it resets
+
   bool isChecked = false;
 
   void flip() {
@@ -2322,23 +2611,25 @@ class _ChecklistCheckboxState extends State<ChecklistCheckbox> {
   }
 }
 
-// Reference pages
+/// -------- Reference Pages -------- ///
 
-class ReferencePage extends StatefulWidget {
-  const ReferencePage({Key? key}) : super(key: key);
+class ReferenceMenuPage extends StatefulWidget {
+  const ReferenceMenuPage({Key? key}) : super(key: key);
+
+  // Creates a menu of all the reference HTML objects
 
   @override
-  State<ReferencePage> createState() => _ReferencePageState();
+  State<ReferenceMenuPage> createState() => ReferenceMenuPageState();
 }
 
-class _ReferencePageState extends State<ReferencePage> {
+class ReferenceMenuPageState extends State<ReferenceMenuPage> {
   final referenceNavKey = GlobalKey<NavigatorState>();
 
   Widget _menu(BuildContext context) {
     List<Widget> referencePages = [
       Container(
         padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-        child: htmlWidget(NeomateHtml.checklistPreamble),
+        child: HtmlWidget(data: NeomateHtml.checklistPreamble),
       ),
     ];
     for (var reference in referenceDb) {
@@ -2361,8 +2652,8 @@ class _ReferencePageState extends State<ReferencePage> {
             onTap: () {
               Navigator.of(context).push(
                 PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: _referencePage(reference),
+                  type: PageTransitionType.leftToRight,
+                  child: ReferencePage(reference: reference),
                 ),
               );
             },
@@ -2376,7 +2667,7 @@ class _ReferencePageState extends State<ReferencePage> {
         Container(
           padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
           child: const Text(
-            'Neonatal References',
+            'Quick Reference',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),
@@ -2387,13 +2678,34 @@ class _ReferencePageState extends State<ReferencePage> {
     );
   }
 
-  Widget _referencePage(Reference reference) {
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async => !await referenceNavKey.currentState!.maybePop(),
+      child: Navigator(
+          key: referenceNavKey,
+          onGenerateRoute: (routeSettings) {
+            return MaterialPageRoute(
+              builder: (context) => _menu(context),
+            );
+          }),
+    );
+  }
+}
+
+class ReferencePage extends StatelessWidget {
+  // Create a page with all the html sections of a reference page inside Cards
+  final Reference reference;
+  const ReferencePage({Key? key, required this.reference}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     List<Widget> referenceSections = [
       Container(
         color: AppConstants.colChecklistAbstract,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-          child: htmlWidget(reference.abstract),
+          child: HtmlWidget(data: reference.abstract),
         ),
       ),
       const Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
@@ -2414,7 +2726,7 @@ class _ReferencePageState extends State<ReferencePage> {
                     sectionNum % AppConstants.colChecklist.length],
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                  child: htmlWidget(section),
+                  child: HtmlWidget(data: section),
                 ),
               ),
             ),
@@ -2430,16 +2742,7 @@ class _ReferencePageState extends State<ReferencePage> {
       color: Colors.white,
       child: Column(
         children: [
-          Row(children: [
-            const BackButton(),
-            Flexible(
-              child: Text(
-                reference.heading,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ]),
+          SubpageHeader(text: reference.heading),
           Flexible(
             child: ListView(children: referenceSections),
           ),
@@ -2447,25 +2750,99 @@ class _ReferencePageState extends State<ReferencePage> {
       ),
     );
   }
+}
+
+/// -------- Calculation Detail Page for Any Calculation Result -------- ///
+
+class CalcDetail extends StatelessWidget {
+  // Displays a page for a drug infusion detail - calculations, advisories etc.
+  // This should be pushed onto the navigator so it can be popped off again
+  // when we're done
+
+  final CalcResults results;
+
+  const CalcDetail({
+    Key? key,
+    required this.results,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> nextCard = [];
+    List<Widget> resultsColumn = [];
+    int cardColor = 0;
+
+    for (var resultLine in results.resultLines) {
+      if (resultLine is CalcHeading) {
+        // This is a new heading so start a new card
+        if (nextCard.isNotEmpty) {
+          resultsColumn.add(resultCard(nextCard, cardColor));
+          nextCard = [];
+          cardColor++;
+        }
+        nextCard.add(TextHeading(
+          text: resultLine.result,
+        ));
+      }
+      if (resultLine is CalcCommentary) {
+        nextCard.add(TextStandard(
+          text: resultLine.result,
+        ));
+      }
+      if (resultLine is CalcWarning) {
+        nextCard.add(TextWarning(
+          text: resultLine.result,
+        ));
+      }
+      if (resultLine is CalcAdvisory) {
+        nextCard.add(TextAdvisory(
+          text: resultLine.result,
+        ));
+      }
+      if (resultLine is CalcFormula) {
+        nextCard.add(CalcFormulaColumn(
+          topLine: resultLine.top,
+          bottomLine: resultLine.bottom,
+        ));
+        nextCard.add(TextResult(text: resultLine.result));
+      }
+      if (resultLine is CalcResult) {
+        nextCard.add(TextResult(text: resultLine.result));
+      }
+    }
+    resultsColumn.add(resultCard(nextCard, cardColor));
+
     return Container(
-      child: WillPopScope(
-        onWillPop: () async => !await referenceNavKey.currentState!.maybePop(),
-        child: Navigator(
-            key: referenceNavKey,
-            onGenerateRoute: (routeSettings) {
-              return MaterialPageRoute(
-                builder: (context) => _menu(context),
-              );
-            }),
-      ),
-    );
+        color: Colors.white,
+        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+          SubpageHeader(text: results.heading),
+          Expanded(
+              child: SingleChildScrollView(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: resultsColumn)))
+        ]));
+  }
+
+  Widget resultCard(List<Widget> resultsColumn, int cardColor) {
+    return Card(
+        color: AppConstants.colChecklist[cardColor],
+        child: Padding(
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: resultsColumn)));
   }
 }
 
+/// -------- Utililty classes -------- ///
+
 class CalcFormulaColumn extends StatelessWidget {
+  // Creates a column to display a formula calculation
+  // uses the bottom of the top line's box as the diving line
+  // at some point may need to calculate line lengths and decide
+  // which one shold draw the box in case the bottom line is longer
+
   const CalcFormulaColumn(
       {Key? key, required this.topLine, required this.bottomLine})
       : super(key: key);
@@ -2504,9 +2881,32 @@ class CalcFormulaColumn extends StatelessWidget {
               style: const TextStyle(fontSize: 12),
             ),
           ),
-        )
+        ),
+        const Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 4)),
       ],
     );
+  }
+}
+
+class SubpageHeader extends StatelessWidget {
+// For subpages that are pushed onto a Navigator
+// Creates a header row with back button and page title
+
+  final String text;
+
+  const SubpageHeader({Key? key, required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      const BackButton(),
+      Expanded(
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      ),
+    ]);
   }
 }
 
@@ -2560,7 +2960,7 @@ class TextStandard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+      padding: const EdgeInsets.fromLTRB(0, 4, 0, 5),
       child: Text(
         text,
         style: const TextStyle(
@@ -2580,7 +2980,7 @@ class TextResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+      padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
       child: Text(
         text,
         style: const TextStyle(
@@ -2630,72 +3030,165 @@ class TextCondensed extends StatelessWidget {
   }
 }
 
-class TextAlert extends StatelessWidget {
+class TextWarning extends StatelessWidget {
   final String text;
-  const TextAlert({required this.text, Key? key}) : super(key: key);
+  const TextWarning({required this.text, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 2, 5),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 14,
-          color: Colors.redAccent,
-          fontWeight: FontWeight.w600,
-          height: 1.3,
+      child: Row(children: [
+        const Flexible(
+          flex: 1,
+          child: Padding(
+              padding: EdgeInsets.fromLTRB(5, 0, 15, 0),
+              child: Icon(
+                Icons.warning_rounded,
+                color: Colors.redAccent,
+                size: 30,
+              )),
         ),
-      ),
+        Flexible(
+          flex: 6,
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.redAccent,
+              fontWeight: FontWeight.w600,
+              height: 1.3,
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
+}
+
+class TextAdvisory extends StatelessWidget {
+  final String text;
+  const TextAdvisory({required this.text, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 8, 2, 5),
+      child: Row(children: [
+        const Flexible(
+          flex: 1,
+          child: Padding(
+              padding: EdgeInsets.fromLTRB(5, 0, 15, 0),
+              child: Icon(
+                Icons.info_rounded,
+                color: Colors.blueAccent,
+                size: 24,
+              )),
+        ),
+        Flexible(
+          flex: 6,
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+              height: 1.2,
+            ),
+          ),
+        ),
+      ]),
     );
   }
 }
 
 // Classes for rendering html widgets and handling urls
 
-Widget htmlWidget(data) {
-  return Html(
-      data: data,
-      style: {
-        // p tag with text_size
-        "p": Style(
-          fontSize: const FontSize(13),
+void jumpTo(String jumpLink, BuildContext context) {
+  // Pushes a new page as a "jump" from a previous page so that
+  // checklists and reference pages can be displayed inline
+
+  for (var checklist in checklistDb) {
+    if (checklist.jumpTitle == jumpLink) {
+      Navigator.of(context).push(
+        PageTransition(
+          type: PageTransitionType.leftToRight,
+          child: ChecklistPage(checklist: checklist),
         ),
-        "h1": Style(
-          fontSize: const FontSize(15),
+      );
+      return;
+    }
+  }
+
+  for (var reference in referenceDb) {
+    if (reference.jumpTitle == jumpLink) {
+      Navigator.of(context).push(
+        PageTransition(
+          type: PageTransitionType.leftToRight,
+          child: ReferencePage(reference: reference),
         ),
-        "h2": Style(
-          fontSize: const FontSize(14),
-        ),
-        "h3": Style(
-          fontSize: const FontSize(14),
-        ),
-        "ul": Style(
-          fontSize: const FontSize(13),
-        ),
-        "ul": Style(
-          fontSize: const FontSize(13),
-          padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
-        ),
-        "ol": Style(
-          fontSize: const FontSize(13),
-          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-        ),
-        "li": Style(
-          fontSize: const FontSize(13),
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
-        ),
-        "img": Style(
-          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-        ),
-      },
-      onLinkTap: (String? url, RenderContext context,
-          Map<String, String> attributes, dom.Element? element) {
-        print("tap");
-        if (url is String) {
-          doLaunchUrl(Uri.parse(url));
-        }
-      });
+      );
+      return;
+    }
+  }
+}
+
+class HtmlWidget extends StatelessWidget {
+  final String data;
+
+  const HtmlWidget({Key? key, required this.data}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var buildContext = context;
+    return Html(
+        data: data,
+        style: {
+          // p tag with text_size
+          "p": Style(
+            fontSize: const FontSize(13),
+            lineHeight: LineHeight.percent(106),
+          ),
+          "h1": Style(
+            fontSize: const FontSize(15),
+          ),
+          "h2": Style(
+            fontSize: const FontSize(14),
+          ),
+          "h3": Style(
+            fontSize: const FontSize(14),
+          ),
+          "ul": Style(
+            fontSize: const FontSize(13),
+            padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
+          ),
+          "ol": Style(
+            fontSize: const FontSize(13),
+            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+          ),
+          "li": Style(
+            fontSize: const FontSize(13),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
+          ),
+          "img": Style(
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+          ),
+        },
+        onLinkTap: (String? url, RenderContext context,
+            Map<String, String> attributes, dom.Element? element) {
+          if (url is String) {
+            if (url.contains('neomate://')) {
+              // This is a 'neomate URL' so we want to link to a checklist or reference
+              // so extract the actual link text
+              url = url.replaceAll('neomate://', '');
+              jumpTo(url, buildContext);
+            } else {
+              // Assume it's a normal webpage and try to launch
+              doLaunchUrl(Uri.parse(url));
+            }
+          }
+        });
+  }
 }
 
 void doLaunchUrl(Uri url) async {

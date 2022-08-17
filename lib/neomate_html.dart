@@ -14,14 +14,15 @@ class Reference {
   String heading;
   String subheading;
   String abstract;
+  String? jumpTitle;
   List<String> sections;
 
-  Reference({
-    required this.heading,
-    required this.subheading,
-    required this.abstract,
-    required this.sections,
-  });
+  Reference(
+      {required this.heading,
+      required this.subheading,
+      required this.abstract,
+      required this.sections,
+      this.jumpTitle});
 }
 
 List<Reference> referenceDb = [
@@ -69,6 +70,7 @@ List<Reference> referenceDb = [
   ),
   Reference(
     heading: 'Cerebral Function Monitoring',
+    jumpTitle: 'cfm',
     subheading: 'A brief introduction to CFM interpretation in the term baby',
     abstract:
         'The Cerebral Function Monitor (CFM) records a single channel of EEG and provides information about global cerebral activity. CFM can be helpful in assessing hypoxic-ischaemic encephalopathy after an asphyxial insult, and for providing information about duration, intensity and frequence of neonatal seizures.',
@@ -139,7 +141,66 @@ List<Reference> referenceDb = [
 
 '''
     ],
-  )
+  ),
+  Reference(
+    heading: 'Endotracheal tube length',
+    jumpTitle: 'ETTlength',
+    subheading:
+        'A reference table showing gestation, estimated weight and recommended ETT length at the lips.',
+    abstract:
+        'Use the following table to insert the ET tube to the optimum length. Always confirm position by chest x-ray: tube tip should be seen at level of T1-T2.',
+    sections: [
+      '''
+<table  border="0" style="table-layout: fixed; width: 280px;"> 
+  <tr style="font-weight:bold;padding-left:10px;padding-bottom:5px;">
+    <td style="width:100px; height:50px;">ETT Length<br/>at Lips (cm)</td>
+    <td style="width:100px; height:50px;">Gestation<br/>(weeks)</td>
+    <td style="width:80px; height:50px;">Weight<br/>(kg)</td>
+  </tr>
+  <tr style="background-color:rgb(235,200,210);line-height:20px;padding-left:10px;padding-bottom:5px;">
+    <td style="vertical-align:center" >5.5</td>
+    <td style="vertical-align:center">23-24</td>
+    <td style="vertical-align:center">0.5-0.6</td>
+  </tr>
+  <tr style="line-height:20px;;padding-left:10px;padding-bottom:5px;">
+    <td>6.0</td>
+    <td>25-26</td>
+    <td>0.7-0.8</td>
+  </tr>
+ <tr style="background-color:rgb(235,200,210);line-height:20px;padding-left:10px;padding-bottom:5px;">
+    <td>6.5</td>
+    <td>27-29</td>
+    <td>0.9-1.0</td>
+  </tr>
+  <tr style="line-height:20px;padding-left:10px;padding-bottom:5px;">
+    <td>7.0</td>
+    <td>30-32</td>
+    <td>1.1-1.4</td>
+  </tr>
+ <tr style="background-color:rgb(235,200,210);line-height:20px;padding-left:10px;padding-bottom:5px;">
+    <td>7.5</td>
+    <td>33-34</td>
+    <td>1.5-1.8</td>
+  </tr>
+  <tr style="line-height:20px;padding-left:10px;padding-bottom:5px;">
+    <td>8.0</td>
+    <td>35-37</td>
+    <td>1.9-2.4</td>
+  </tr>
+ <tr style="background-color:rgb(235,200,210);line-height:20px;padding-left:10px;padding-bottom:5px;">
+    <td>8.5</td>
+    <td>38-40</td>
+    <td>2.5-3.1</td>
+  </tr>
+  <tr style="line-height:20px;padding-left:10px;padding-bottom:5px;">
+    <td>9.0</td>
+    <td>41-43</td>
+    <td>3.2-4.2</td>
+  </tr>
+</table>
+    <p><strong>Endotracheal tube length for neonatal intubation</strong> Kempley, S.T., Moreiras, J.W., Petrone, F.L., 2008. Resuscitation, 77, pp.369–373. <br><br>Available at: <a href="http://dx.doi.org/10.1016/j.resuscitation.2008.02.002" target="_system" class="external">ScienceDirect</a> | <a href="http://www.ncbi.nlm.nih.gov/pubmed/18372092" target="_system" class="external">Pubmed</a><br><br></p>'''
+    ],
+  ),
 ];
 
 class NeomateHtml {
@@ -164,9 +225,12 @@ class NeomateHtml {
 	<ul><li>Altered state of consciousness (reduced response to stimulation or absent 
 	response to stimulation) and</li>
 	<li>Abnormal tone (focal or general hypotonia, or flaccid) and</li>
-	<li>Abnormal primitive reflexes (weak or absent suck or Moro response).</li></ul>
+	<li>Abnormal primitive reflexes (weak or absent suck or Moro response).</li>
+  </ul>
 
-	<p>Infants who meet criteria A and B may be considered for treatment with cooling.</p>	
+	<p>Infants who meet criteria A and B may be considered for treatment with cooling.</p>
+
+  <p>Once baby is stabilised and cooling started, you should consider <a href='neomate://cfm'>CFM monitoring.</a></p>
   ''';
   static var checklistPreamble =
       '''These checklists are concise and simple tools, aimed to support the skills of expert neonatal staff.
@@ -176,6 +240,8 @@ class NeomateHtml {
       <h1>About NeoMate</h1>
 
       <p><i>Version 2.0 July 2022</i></p>
+
+      <p>Development Build: 1.0.0.11</p>
 
 			<p><b>Neomate</b> original app created by Dr Chris Kelly &nbsp;<a href="http://www.twitter.com/chrisck"><img src="images/twitter.png" width="15">@chrisck</a></p>
 

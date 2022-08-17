@@ -16,12 +16,14 @@ class Checklist {
   String subheading;
   String abstract;
   List<ChecklistSection> sections;
+  String? jumpTitle;
 
   Checklist({
     required this.heading,
     required this.subheading,
     required this.abstract,
     required this.sections,
+    this.jumpTitle,
   });
 }
 
@@ -188,6 +190,7 @@ List<Checklist> checklistDb = [
   ),
   Checklist(
     heading: 'Term Baby with Encephalopathy',
+    jumpTitle: 'encephalopathy',
     subheading:
         'Starting care for a term baby with a suspected hypoxic insult at birth',
     abstract:
@@ -220,6 +223,7 @@ List<Checklist> checklistDb = [
   ),
   Checklist(
     heading: 'The Underventilated Baby',
+    jumpTitle: 'underventilated',
     subheading:
         'Checklist to help optimise a baby with suboptimal blood gases or oxygen saturations',
     abstract:
@@ -264,6 +268,7 @@ List<Checklist> checklistDb = [
   ),
   Checklist(
     heading: 'Acute Deterioration of a Ventilated Baby',
+    jumpTitle: 'ventilated_deterioration',
     subheading: 'Using the DOPE approach to assess a sudden deterioration',
     abstract:
         '''<p>This checklist helps assess a baby using the "DOPE" approach.  Consider ordering a chest x-ray whilst assessing clinically.</p>

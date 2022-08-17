@@ -36,6 +36,7 @@ enum DeliveryUnits {
   invalid,
   gPerKg,
   mgPerKg,
+  mmolPerKg,
   microgramsPerKg,
   nanogramsPerKg,
 }
@@ -50,29 +51,52 @@ enum PaO2Units {
   mmHg,
 }
 
-class OIResults {
-  String formulaTop;
-  String formulaBottom;
-  double result;
-  String resultString;
-  String mmHgToCmH2O;
-  String kPaToMmHg;
-  String warning;
+/// -------- Classes for building lists of calculation results to return to the UI --------
 
-  OIResults({
-    required this.formulaTop,
-    required this.formulaBottom,
-    required this.result,
-    required this.resultString,
-    required this.mmHgToCmH2O,
-    required this.kPaToMmHg,
-    required this.warning,
-  });
+class CalcResults {
+  String heading;
+  List<CalcResultLine> resultLines;
+
+  CalcResults({required this.heading, required this.resultLines});
+}
+
+abstract class CalcResultLine {
+  String result;
+  CalcResultLine({required this.result});
+}
+
+class CalcResult extends CalcResultLine {
+  CalcResult({required result}) : super(result: result);
+}
+
+class CalcHeading extends CalcResultLine {
+  CalcHeading({required result}) : super(result: result);
+}
+
+class CalcCommentary extends CalcResultLine {
+  CalcCommentary({required result}) : super(result: result);
+}
+
+class CalcAdvisory extends CalcResultLine {
+  CalcAdvisory({required result}) : super(result: result);
+}
+
+class CalcWarning extends CalcResultLine {
+  CalcWarning({required result}) : super(result: result);
+}
+
+class CalcFormula extends CalcResultLine {
+  String top;
+  String bottom;
+
+  CalcFormula({required this.top, required this.bottom, required String result})
+      : super(result: result);
 }
 
 Map<DeliveryUnits, double> mgFactor = {
   DeliveryUnits.gPerKg: 1000,
   DeliveryUnits.mgPerKg: 1,
+  DeliveryUnits.mmolPerKg: 1,
   DeliveryUnits.microgramsPerKg: 0.001,
   DeliveryUnits.nanogramsPerKg: 0.000001,
   DeliveryUnits.invalid: 0,
@@ -81,6 +105,7 @@ Map<DeliveryUnits, double> mgFactor = {
 Map<DeliveryUnits, String> stringUnits = {
   DeliveryUnits.gPerKg: 'g/kg',
   DeliveryUnits.mgPerKg: 'mg/kg',
+  DeliveryUnits.mmolPerKg: 'mmol/kg',
   DeliveryUnits.microgramsPerKg: 'micrograms/kg',
   DeliveryUnits.nanogramsPerKg: 'nanograms/kg',
   DeliveryUnits.invalid: 'invalid',
@@ -89,6 +114,7 @@ Map<DeliveryUnits, String> stringUnits = {
 Map<DeliveryUnits, String> stringShortUnits = {
   DeliveryUnits.gPerKg: 'g/kg',
   DeliveryUnits.mgPerKg: 'mg/kg',
+  DeliveryUnits.mmolPerKg: 'mmol/kg',
   DeliveryUnits.microgramsPerKg: 'mcg/kg',
   DeliveryUnits.nanogramsPerKg: 'ng/kg',
   DeliveryUnits.invalid: 'invalid',
@@ -113,13 +139,15 @@ enum FluidType {
   // ignore: constant_identifier_names
   D5W,
   // ignore: constant_identifier_names
-  D10W
+  D10W,
+  any
 }
 
 Map<FluidType, String> stringFluid = {
   FluidType.NS: '0.9% saline',
   FluidType.D5W: '5% dextrose',
   FluidType.D10W: '10% dextrose',
+  FluidType.any: 'an appropriate diluent'
 };
 
 class IVInfusionDetails {
@@ -165,7 +193,9 @@ abstract class Drug {
   final String notes;
   final Drug? followOn;
   final double? weight;
+  String jumpReference;
   var calcString = 'Not calculated';
+  var results = CalcResults(heading: 'invalid', resultLines: []);
 
   Drug({
     required this.types,
@@ -175,6 +205,7 @@ abstract class Drug {
     required this.instructions,
     this.followOn,
     this.notes = '',
+    this.jumpReference = '',
     this.weight,
   });
 
@@ -211,6 +242,7 @@ class DrugMultiplier extends Drug {
     required instructions,
     this.followOn,
     notes = '',
+    jumpReference = '',
     weight,
   }) : super(
             types: types,
@@ -219,7 +251,8 @@ class DrugMultiplier extends Drug {
             units: units,
             qualifier: qualifier,
             notes: notes,
-            weight: weight) {
+            weight: weight,
+            jumpReference: jumpReference) {
     if (weight is double) {
       if (weight.isNaN) {
         calcString = '?';
@@ -271,6 +304,7 @@ class DrugMultiplier extends Drug {
         units: units,
         instructions: instructions,
         notes: notes,
+        jumpReference: jumpReference,
         followOn: (followOn == null) ? null : followOn!.bindWeight(myWeight),
         weight: myWeight,
       );
@@ -279,8 +313,9 @@ class DrugMultiplier extends Drug {
 }
 
 enum FormulaType {
-  UVC,
-  UAC,
+  uvc,
+  uac,
+  halfcorrection,
   invalid,
 }
 
@@ -297,6 +332,7 @@ class DrugFormula extends Drug {
     required instructions,
     followOn,
     notes = '',
+    jumpReference = '',
     weight,
   }) : super(
             types: types,
@@ -305,6 +341,7 @@ class DrugFormula extends Drug {
             units: units,
             qualifier: qualifier,
             notes: notes,
+            jumpReference: jumpReference,
             weight: weight) {
     if (weight is double) {
       if (weight.isNaN) {
@@ -312,11 +349,12 @@ class DrugFormula extends Drug {
         return;
       } else {
         switch (formulaType) {
-          case FormulaType.UAC:
+          case FormulaType.uac:
             calcFormula = '($weight kg x 3) + 9';
             calcString = ((weight * 3) + 9).toStringAsFixed(1);
+            jumpReference = 'https://fn.bmj.com/content/104/2/F165.full';
             break;
-          case FormulaType.UVC:
+          case FormulaType.uvc:
             calcFormula = '($weight kg x 1.5) + 5.5';
             calcString = ((weight * 1.5) + 5.5).toStringAsFixed(1);
             break;
@@ -348,6 +386,78 @@ class DrugFormula extends Drug {
         units: units,
         instructions: instructions,
         notes: notes,
+        jumpReference: jumpReference,
+        followOn: (followOn == null) ? null : followOn!.bindWeight(myWeight),
+        weight: myWeight,
+      );
+    }
+  }
+}
+
+class DrugParameter extends Drug {
+  FormulaType formulaType;
+  String calcFormula = '';
+  double param = 0;
+
+  DrugParameter({
+    required types,
+    required this.formulaType,
+    required name,
+    qualifier = '',
+    required units,
+    required instructions,
+    followOn,
+    notes = '',
+    jumpReference = '',
+    weight,
+  }) : super(
+            types: types,
+            name: name,
+            instructions: instructions,
+            units: units,
+            qualifier: qualifier,
+            notes: notes,
+            jumpReference: jumpReference,
+            weight: weight) {
+    if (weight is double) {
+      if (weight.isNaN) {
+        calcString = '?';
+        return;
+      } else {
+        switch (formulaType) {
+          case FormulaType.halfcorrection:
+            calcFormula = '($weight kg x 3) + 9';
+            calcString = ((weight * 3) + 9).toStringAsFixed(1);
+            break;
+          default:
+        }
+      }
+    }
+  }
+
+  static final invalid = DrugParameter(
+      formulaType: FormulaType.invalid,
+      types: [],
+      name: '',
+      instructions: '',
+      units: '');
+
+  @override
+  DrugParameter bindWeight(double myWeight) {
+    if (weight is double) {
+      // If a weight is already bound then something is wrong, so return the invalid static instance
+      return invalid;
+    } else {
+      // Build a new instance with the weight bound in
+      return DrugParameter(
+        formulaType: formulaType,
+        types: types,
+        name: name,
+        qualifier: qualifier,
+        units: units,
+        instructions: instructions,
+        notes: notes,
+        jumpReference: jumpReference,
         followOn: (followOn == null) ? null : followOn!.bindWeight(myWeight),
         weight: myWeight,
       );
@@ -376,6 +486,7 @@ class DrugBanded extends Drug {
       required instructions,
       this.followOn,
       notes = '',
+      jumpReference = '',
       weight,
       required this.bands})
       : super(
@@ -385,6 +496,7 @@ class DrugBanded extends Drug {
             units: units,
             qualifier: qualifier,
             notes: notes,
+            jumpReference: jumpReference,
             weight: weight) {
     if (weight is double) {
       if (weight.isNaN) {
@@ -440,6 +552,7 @@ class DrugBanded extends Drug {
         units: units,
         instructions: instructions,
         notes: notes,
+        jumpReference: jumpReference,
         followOn: (followOn == null) ? null : followOn!.bindWeight(myWeight),
         weight: myWeight,
         bands: bands,
@@ -466,6 +579,7 @@ class DrugInfo extends Drug {
     required instructions,
     this.followOn,
     notes = '',
+    jumpReference = '',
     weight,
   }) : super(
             types: types,
@@ -474,6 +588,7 @@ class DrugInfo extends Drug {
             units: units,
             qualifier: qualifier,
             notes: notes,
+            jumpReference: jumpReference,
             weight: weight) {
     if (weight is double) {
       if (weight.isNaN) {
@@ -503,6 +618,7 @@ class DrugInfo extends Drug {
           units: units,
           instructions: instructions,
           notes: notes,
+          jumpReference: jumpReference,
           followOn: (followOn == null) ? null : followOn!.bindWeight(myWeight),
           weight: myWeight,
           info: info);
@@ -532,6 +648,7 @@ class DrugInfusion extends Drug {
   String calcRight = '';
   String calcDrugToAdd = 'Not calculated';
   bool dilute;
+  bool generic;
   String concentratedCalc = '';
   String concentratedDoseRange = '';
 
@@ -541,6 +658,7 @@ class DrugInfusion extends Drug {
     instructions = '',
     units = '',
     notes = '',
+    jumpReference = '',
     qualifier = '',
     required this.deliveryUnits,
     required this.deliveryTime,
@@ -558,6 +676,7 @@ class DrugInfusion extends Drug {
     required this.doseRange,
     weight,
     this.dilute = false,
+    this.generic = false,
     this.concentratedDoseRange = '',
   }) : super(
             types: types,
@@ -566,6 +685,7 @@ class DrugInfusion extends Drug {
             units: units,
             qualifier: qualifier,
             notes: notes,
+            jumpReference: jumpReference,
             weight: weight) {
     if (weight is double) {
       if (weight.isNaN) {
@@ -580,8 +700,13 @@ class DrugInfusion extends Drug {
       // Dose is the running total of the drug to be added to the syringe
       // calcPreNarrative is a description of the calculation
 
-      calcPreNarrative =
-          '$desiredRate mL/h = $startDose ${stringUnits[deliveryUnits]}${stringTime[deliveryTime]}';
+      List<CalcResultLine> resultLines = [];
+
+      resultLines.add(CalcCommentary(
+          result:
+              '$desiredRate mL/h = $startDose ${stringUnits[deliveryUnits]}${stringTime[deliveryTime]}'
+                  .replaceAll('.0 ', ' ')));
+
       double dose = 0.0;
 
       calcTop =
@@ -606,23 +731,34 @@ class DrugInfusion extends Drug {
       var doseUnits = 'mg';
       var doseFactor = mgFactor[deliveryUnits]!;
 
-      if (dose > 1000) {
-        //it's a large number so convert to grams
-        doseFactor = mgFactor[deliveryUnits]! / 1000;
-        dose /= 1000;
-        doseUnits = 'grams';
-      } else if (dose < 0.1) {
-        //it's a small number so convert to micrograms
-        doseFactor = mgFactor[deliveryUnits]! * 1000;
-        dose *= 1000;
-        doseUnits = 'micrograms';
-      }
+      if (deliveryUnits == DeliveryUnits.mmolPerKg) {
+        //mmol isn't scaled
+        doseUnits = 'mmol';
+      } else {
+        if (dose > 1000) {
+          //it's a large number so convert to grams
+          doseFactor = mgFactor[deliveryUnits]! / 1000;
+          dose /= 1000;
+          doseUnits = 'grams';
+        } else if (dose < 0.1) {
+          //it's a small number so convert to micrograms
+          doseFactor = mgFactor[deliveryUnits]! * 1000;
+          dose *= 1000;
+          doseUnits = 'micrograms';
+          if (dose < 0.1) {
+            //it's a REALLY small number so convert to nano
+            doseFactor = mgFactor[deliveryUnits]! * 1000 * 1000;
+            dose *= 1000;
+            doseUnits = 'nanograms';
+          }
+        }
 
-      if (doseFactor < 1) {
-        calcBottom += ' x ${(1 / doseFactor).toString()} (for $doseUnits)';
-      }
-      if (doseFactor > 1) {
-        calcRight += ' x ${doseFactor.toString()} (for $doseUnits)';
+        if (doseFactor < 1) {
+          calcBottom += ' x ${(1 / doseFactor).toString()} (for $doseUnits)';
+        }
+        if (doseFactor > 1) {
+          calcBottom += ' \u00d7 ${doseFactor.toString()} (for $doseUnits)';
+        }
       }
 
       // Make a string of the appropriate fluid types
@@ -633,25 +769,31 @@ class DrugInfusion extends Drug {
             : '${stringFluid[fluid]}';
       }
 
-      // Create dilute solution
-      if (dilute) {
-        var concentratedRate = desiredRate / 10;
-        var concentratedDose = dose * 10;
-
-        concentratedCalc =
-            '$dose $doseUnits x 10 = $concentratedDose $doseUnits in 50mL syringe';
-      }
-
       // Throw away some precision depending on the size of the number
       var doseString = dose.toStringAsFixed(2);
-      if (doseString.length > 5) {
-        doseString = dose.toStringAsFixed(1);
-      }
+
       if (doseString.length > 4) {
-        doseString = dose.toStringAsFixed(0);
+        doseString = dose.toStringAsFixed(1);
+
+        if (doseString.length > 4) {
+          doseString = dose.toStringAsFixed(0);
+        }
       }
 
       calcDrugToAdd = '$doseString $doseUnits';
+
+      resultLines.add(CalcFormula(
+        top: calcTop.replaceAll('.0 ', ' '),
+        bottom: calcBottom.replaceAll('.0 ', ' '),
+        result: '= $calcDrugToAdd'.replaceAll('.0 ', ' '),
+      ));
+
+      resultLines.add(CalcCommentary(
+          result:
+              'Add $doseString $doseUnits of $name to the syringe, then make up to $syringe mL with $stringFluids'
+                  .replaceAll('.0 ', ' ')));
+
+      resultLines.add(CalcResult(result: doseMsg));
 
       // Create dilute solution
       if (dilute) {
@@ -667,21 +809,32 @@ class DrugInfusion extends Drug {
           concentratedDoseString = concentratedDose.toStringAsFixed(0);
         }
 
-        concentratedCalc =
-            '${dose.toStringAsFixed(2)} $doseUnits x 10 = $concentratedDoseString $doseUnits in 50mL syringe';
+        resultLines.add(CalcHeading(result: 'To make a concentrated solution'));
+        resultLines.add(CalcAdvisory(
+            result:
+                'This is a dilute solution which means it will run through faster and get to the patient quicker in the acute scenario. For longer term use a more concentrated solution may be more appropriate to avoid fluid overload.'));
+        resultLines.add(CalcCommentary(
+            result:
+                'To calculate this, multiply the dose by a fixed amount (usully 10) and divide the rate by the same amount'));
+        resultLines.add(CalcResult(
+            result:
+                '${dose.toStringAsFixed(2)} $doseUnits x 10 = $concentratedDoseString $doseUnits in 50mL syringe'
+                    .replaceAll('.0 ', ' ')));
+        resultLines.add(CalcResult(
+            result:
+                '$concentratedRate mL/h = $startDose ${stringUnits[deliveryUnits]}${stringTime[deliveryTime]}'
+                    .replaceAll('.0 ', ' ')));
       }
 
-      calcPostNarrative =
-          'Add $doseString $doseUnits of $name to the syringe, then make up to $syringe mL with $stringFluids';
+      if (generic) {
+        resultLines.add(CalcAdvisory(
+            result:
+                'This is a generic calculation and is therefore more prone to error. Drug doses and units should be carefully checked against a formulary for correct dosing and to ensure that maximum concentrations and infusion rates are not exceeded.'));
+      }
 
-      // Strip trailing zeros throghout
+      results = CalcResults(
+          heading: 'Infusion calculation for $name', resultLines: resultLines);
 
-      calcPreNarrative = calcPreNarrative.replaceAll('.0 ', ' ');
-      calcTop = calcTop.replaceAll('.0 ', ' ');
-      calcBottom = calcBottom.replaceAll('.0 ', ' ');
-      calcRight = calcRight.replaceAll('.0 ', ' ');
-      calcDrugToAdd = calcDrugToAdd.replaceAll('.0 ', ' ');
-      calcPostNarrative = calcPostNarrative.replaceAll('.0 ', ' ');
       return;
     }
   }
@@ -738,7 +891,7 @@ class DrugInfusion extends Drug {
 
 class Neomate {
   double fiO2 = double.nan;
-  double MAP = double.nan;
+  double map = double.nan;
   double paO2 = double.nan;
   double babyWeight = double.nan;
   bool weightIsEst = false;
@@ -798,6 +951,7 @@ class Neomate {
       maxWeight: double.nan,
       units: 'cm',
       instructions: 'at lips',
+      jumpReference: 'neomate://ETTlength',
       bands: {
         0: "5.5",
         0.7: "6.0",
@@ -819,6 +973,7 @@ class Neomate {
       multiplier: 5,
       units: 'micrograms',
       instructions: 'by slow IV push',
+      jumpReference: 'https://bnfc.nice.org.uk/drugs/fentanyl',
       notes: 'preferred drug for intubation',
     ),
     DrugMultiplier(
@@ -831,14 +986,16 @@ class Neomate {
       multiplier: 100,
       units: 'micrograms',
       instructions: 'by slow IV push',
+      jumpReference: 'https://bnfc.nice.org.uk/drugs/morphine',
       notes: 'onset of action approx 15 minutes; peak action at 15-30 mins',
     ),
     DrugMultiplier(
       types: [DrugType.intubation],
       name: 'Atropine',
-      dose: '20 mcg/kg',
-      multiplier: 20,
+      dose: '10 mcg/kg',
+      multiplier: 10,
       units: 'micrograms',
+      jumpReference: 'https://bnfc.nice.org.uk/drugs/atropine-sulfate',
       instructions: 'by slow IV push',
     ),
     DrugMultiplier(
@@ -847,6 +1004,7 @@ class Neomate {
       dose: '2 mg/kg',
       multiplier: 2,
       units: 'mg',
+      jumpReference: 'https://bnfc.nice.org.uk/drugs/suxamethonium-chloride',
       instructions: 'by slow IV push',
     ),
     DrugMultiplier(
@@ -857,6 +1015,7 @@ class Neomate {
       multiplier: 200,
       units: 'mg',
       instructions: 'via ET tube',
+      jumpReference: 'https://bnfc.nice.org.uk/drugs/poractant-alfa',
       notes: 'consider giving nearest whole vial',
       followOn: DrugMultiplier(
         types: [DrugType.intubation],
@@ -871,7 +1030,7 @@ class Neomate {
     // Central line drugs
     DrugFormula(
       types: [DrugType.central],
-      formulaType: FormulaType.UVC,
+      formulaType: FormulaType.uvc,
       name: 'UVC',
       qualifier: 'Umbilical Venous Catheter',
       units: 'cm',
@@ -879,7 +1038,7 @@ class Neomate {
     ),
     DrugFormula(
       types: [DrugType.central],
-      formulaType: FormulaType.UAC,
+      formulaType: FormulaType.uac,
       name: 'UAC',
       qualifier: 'Umbilical Arterial Catheter',
       units: 'cm',
@@ -900,12 +1059,15 @@ class Neomate {
         instructions: ''),
     // Cardiac Drugs
     DrugMultiplier(
-        types: [DrugType.cardiac],
-        name: '0.9% NaCl Bolus',
-        dose: '10 mL/kg',
-        multiplier: 10,
-        units: 'mL',
-        instructions: 'over 20-30 minutes IV'),
+      types: [DrugType.cardiac],
+      name: '0.9% NaCl Bolus',
+      dose: '10 mL/kg',
+      multiplier: 10,
+      units: 'mL',
+      instructions: 'over 20-30 minutes IV',
+      jumpReference:
+          'https://www.resus.org.uk/library/2021-resuscitation-guidelines/newborn-resuscitation-and-support-transition-infants-birth',
+    ),
     // Sedative Drugs
     // Fentayl and Morphine already included under intubation
     DrugMultiplier(
@@ -914,6 +1076,7 @@ class Neomate {
       dose: '100 mcg/kg',
       multiplier: 100,
       units: 'micrograms',
+      jumpReference: 'https://bnfc.nice.org.uk/drugs/pancuronium-bromide',
       instructions: 'by slow IV push',
       notes: 'for longer duration of action',
     ),
@@ -943,7 +1106,7 @@ class Neomate {
             'Concentrations higher than 1.6 mg/ml are not recommended, unless infused centrally (BNFc 2015).',
         minDose: 5,
         maxDose: 20,
-        doseRange: '5-20 microrams/kg/min',
+        doseRange: '5-20 micrograms/kg/min',
         doseMsg: '1-4 mL/h gives 5-20 mcg/kg/min, via central line.',
         dilute: true,
         concentratedDoseRange: '0.1-0.4 mL/h gives 5-20 mcg/kg/min'),
@@ -1078,6 +1241,7 @@ class Neomate {
       multiplier: 20,
       units: 'mg',
       instructions: 'given IV over 20 minutes',
+      jumpReference: 'https://bnfc.nice.org.uk/drugs/phenobarbital',
       qualifier: 'loading dose',
       followOn: DrugMultiplier(
         types: [DrugType.neurology],
@@ -1095,6 +1259,7 @@ class Neomate {
       dose: 'Loading dose 18 mg/kg',
       multiplier: 18,
       units: 'mg',
+      jumpReference: 'https://bnfc.nice.org.uk/drugs/phenytoin',
       instructions: 'given IV over 30 minutes with close ECG monitoring',
     ),
     DrugMultiplier(
@@ -1103,6 +1268,7 @@ class Neomate {
       dose: '300 mcg/kg',
       multiplier: 300,
       units: 'micrograms',
+      jumpReference: 'https://bnfc.nice.org.uk/drugs/midazolam',
       instructions: 'IV over 5 minutes',
       notes: 'further dose after 10 minutes if required',
     ),
@@ -1152,6 +1318,8 @@ class Neomate {
       dose: '0.2 mL/kg',
       multiplier: 0.2,
       units: 'mL',
+      jumpReference:
+          'https://www.resus.org.uk/library/2021-resuscitation-guidelines/newborn-resuscitation-and-support-transition-infants-birth',
       instructions: 'IV stat then flush with 0.9% sodium chloride',
     ),
     DrugMultiplier(
@@ -1161,6 +1329,8 @@ class Neomate {
       qualifier: '1 mmol/kg for emergency resuscitation',
       multiplier: 2,
       units: 'mL',
+      jumpReference:
+          'https://www.resus.org.uk/library/2021-resuscitation-guidelines/newborn-resuscitation-and-support-transition-infants-birth',
       instructions: 'of sodium bicarbonate 4.2% via central line',
       notes:
           'double check concentration, 4.2% and 8.4% forms are easily confused',
@@ -1174,6 +1344,8 @@ class Neomate {
       dose: '10 mL/kg',
       multiplier: 10,
       units: 'mL',
+      jumpReference:
+          'https://www.resus.org.uk/library/2021-resuscitation-guidelines/newborn-resuscitation-and-support-transition-infants-birth',
       instructions: 'IV over 20-30 minutes',
     ),
     DrugMultiplier(
@@ -1184,6 +1356,8 @@ class Neomate {
       name: 'Dextrose 10% bolus',
       dose: '2.5 mL/kg',
       multiplier: 2.5,
+      jumpReference:
+          'https://www.resus.org.uk/library/2021-resuscitation-guidelines/newborn-resuscitation-and-support-transition-infants-birth',
       units: 'mL',
       instructions: 'IV over 20-30 minutes',
     ),
@@ -1203,6 +1377,7 @@ class Neomate {
       dose: '150 mcg/kg',
       multiplier: 150,
       units: 'micrograms',
+      jumpReference: 'https://bnfc.nice.org.uk/drugs/adenosine',
       instructions:
           'IV stat into a large central vein followed immediately by a NaCl 0.9% flush',
       notes: 'escalating doses may be required',
@@ -1264,6 +1439,10 @@ class Neomate {
     return babyWeight * 1000;
   }
 
+  double weightNumKg() {
+    return babyWeight;
+  }
+
   List<Drug> drugList(DrugType myType) {
     // Find all the drugs of a given type
     // Then return a list of new Drugs with the weight bound in
@@ -1275,50 +1454,104 @@ class Neomate {
     return newList;
   }
 
-  static OIResults oiCalculator({
+  static CalcResults mapCalc(
+      {required double rate,
+      required double ti,
+      required double te,
+      required double pip,
+      required double peep}) {
+    List<CalcResultLine> resultLines = [];
+
+    resultLines.add(CalcHeading(result: 'To calculate the respiratory rate'));
+
+    resultLines.add(CalcFormula(
+      top: '$ti (secs Ti) + $te (secs Te)',
+      bottom: '60 (seconds per minute)',
+      result: '= ${rate.toStringAsFixed(0)} breaths per minute',
+    ));
+
+    var map = ((ti * pip) + (te * peep)) / (ti + te);
+
+    resultLines
+        .add(CalcHeading(result: 'To calculate the mean airway pressure'));
+    resultLines.add(CalcFormula(
+      top:
+          '$pip (cmH\u2082O PIP) x $ti (s Ti) + $peep (cmH\u2082O PEEP) x $te (s Te)',
+      bottom: '$ti (s Ti) + $te (s Te)',
+      result: ' = ${map.toStringAsFixed(1)} cmH\u2082O Mean Airway Pressure',
+    ));
+
+    resultLines.add(CalcAdvisory(
+        result:
+            'This calculation is less accurate than measurement with a flow sensor'));
+
+    return CalcResults(
+      heading: 'Ventilation Calculation',
+      resultLines: resultLines,
+    );
+  }
+
+  static CalcResults oiCalculator({
     required double inspiredO2,
     required double map,
     required double paO2,
     required MapUnits mapUnits,
     required PaO2Units paO2Units,
   }) {
-    var mmHgToCmH2O = '';
-    var kPaToMmHg = '';
-    var warning = '';
+    List<CalcResultLine> resultLines = [];
+
+    resultLines.add(CalcCommentary(
+        result:
+            '''The oxygenation index (OI) measures the fraction of inspired oxygen and its usage within the body. A lower OI is better: as oxygenation improves, a baby will be able to achieve a higher PaO\u2082 at a lower FiO\u2082.
+
+					OI > 25: indicates severe respiratory failure
+					OI > 40: consider ECMO'''));
+
+    resultLines.add(CalcHeading(result: 'Calculation'));
 
     if (mapUnits == MapUnits.mmHg) {
       var oldunits = map;
       map = map * 1.36;
-      mmHgToCmH2O =
-          'To convert MAP units: $oldunits mmHg x 1.36 = ${map.toStringAsFixed(1)} cmH\u2082O';
+      resultLines.add(CalcCommentary(result: 'To convert MAP units'));
+      resultLines.add(CalcResult(
+          result:
+              '$oldunits mmHg x 1.36 = ${map.toStringAsFixed(1)} cmH\u2082O'));
     }
 
     if (paO2Units == PaO2Units.kPa) {
       var oldunits = paO2;
       paO2 = paO2 * 7.5;
-      kPaToMmHg =
-          'To convert PaO\u2082 units: $oldunits kPa x 7.5 = ${paO2.toStringAsFixed(1)} mmHg';
+      resultLines.add(CalcCommentary(result: 'To convert PaO\u2082 units'));
+      resultLines.add(CalcResult(
+          result: '$oldunits kPa x 7.5 = ${paO2.toStringAsFixed(1)} mmHg'));
     }
 
+    resultLines.add(CalcCommentary(result: 'To calculate oxygenation index'));
     var result = (map * inspiredO2) / paO2;
-    var formulaTop =
-        '${map.toStringAsFixed(1)} (cmH\u2082O Mean Airway Pressure) x ${inspiredO2.toStringAsFixed(0)} (% FiO\u2082)';
-    var formulaBottom = '${paO2.toStringAsFixed(1)} (mmHg PaO\u2082)';
+    resultLines.add(CalcFormula(
+      top:
+          '${map.toStringAsFixed(1)} (cmH\u2082O Mean Airway Pressure) x ${inspiredO2.toStringAsFixed(0)} (% FiO\u2082)',
+      bottom: '${paO2.toStringAsFixed(1)} (mmHg PaO\u2082)',
+      result:
+          '= ${result.toStringAsFixed(1)} oxygenation index (ratio with no units)',
+    ));
 
-    var resultString = result.toStringAsFixed(1);
+    if (result > 40) {
+      resultLines.add(CalcWarning(
+          result:
+              'OI is above 40 so patient should be discussed urgently with an ECMO centre'));
+    } else if (result > 25) {
+      resultLines.add(CalcWarning(
+          result:
+              'OI is above 25 so patient is in severe respiratory failure'));
+    }
 
-    return OIResults(
-      formulaTop: formulaTop,
-      formulaBottom: formulaBottom,
-      result: result,
-      resultString: resultString,
-      mmHgToCmH2O: mmHgToCmH2O,
-      kPaToMmHg: kPaToMmHg,
-      warning: warning,
-    );
+    return CalcResults(
+        heading: 'Oxygenation Index (OI) Calculation',
+        resultLines: resultLines);
   }
 
-  IVInfusionDetails maintIV(
+  CalcResults dailyFluids(
       {required double dex,
       required double sodium,
       required double potassium,
@@ -1326,77 +1559,111 @@ class Neomate {
     // these are all worked out for 500 mL bag
     // electrolytes are in mmol/kg
 
+    List<CalcResultLine> resultLines = [];
+
     // Daily totals
     var mLperDay = total * babyWeight;
     var mLperHour = (mLperDay / 24).toPrecision(1);
 
-    var stringTotal =
-        '$babyWeight kg x ${total.toStringAsFixed(0)} mL/kg/day = ${mLperDay.toStringAsFixed(1)} mL/day \ndivided by 24 = ${mLperHour.toStringAsFixed(1)} mL/hour infusion rate';
-    stringTotal = stringTotal.replaceAll('.0 ', ' ');
+    resultLines
+        .add(CalcHeading(result: 'Calculations for a $babyWeight kg baby'));
+
+    resultLines.add(CalcResult(
+        result:
+            '$babyWeight kg x ${total.toStringAsFixed(0)} mL/kg/day = ${mLperDay.toStringAsFixed(1)} mL/day'
+                .replaceAll('.0 ', ' ')));
+
+    resultLines.add(CalcResult(
+        result:
+            '${mLperDay.toStringAsFixed(1)} \u00F7 24 = ${mLperHour.toStringAsFixed(1)} mL/hour infusion rate'
+                .replaceAll('.0 ', ' ')));
 
     // Glucose infusion rate
+
+    resultLines.add(CalcHeading(result: 'Glucose infusion rate'));
+
     var girResult = (dex * 1000 * mLperHour) / (babyWeight * 60 * 100);
-    print(girResult);
-    var girTop =
-        '$dex (%) x 1000 (mg/g) x ${mLperHour.toStringAsFixed(1)} (mL/h rate) ';
-    var girBottom = '$babyWeight (kg) x 60 (min/h) x 100 (mL/dL)';
-    var girResultString = '= ${girResult.toStringAsFixed(1)} mg/kg/min';
 
-    girTop = girTop.replaceAll('.0 ', ' ');
+    resultLines.add(CalcFormula(
+      top:
+          '$dex (%) x 1000 (mg/g) x ${mLperHour.toStringAsFixed(1)} (mL/h rate)'
+              .replaceAll('.0 ', ' '),
+      bottom: '$babyWeight (kg) x 60 (min/h) x 100 (mL/dL)',
+      result: '= ${girResult.toStringAsFixed(1)} mg/kg/min',
+    ));
 
-    var dexTop = '';
-    var dexBottom = '500 mL bag';
-    var dexSummary = '';
+    if (dex != 10 && dex != 5) {
+      // Non-standard dextrose
+      resultLines.add(CalcHeading(result: 'To prepare $dex% dextrose'));
+      if (dex < 10 && dex > 5) {
+        var proportionDex = (50 - dex) / (50 - 5);
+        var addFifty = (((1 - proportionDex) * 500) * 10) / 10;
+        addFifty = addFifty.toPrecision(1);
+        var remainingFive = 500 - addFifty;
 
-    // Non-standard dextrose
-    if (dex < 10 && dex > 5) {
-      var proportionDex = (50 - dex) / (50 - 5);
-      var addFifty = (((1 - proportionDex) * 500) * 10) / 10;
-      addFifty = addFifty.toPrecision(1);
-      var remainingFive = 500 - addFifty;
-      dexTop =
-          '(500 - $addFifty = $remainingFive mL x 5%) + ($addFifty mL x 50%)';
-      dexSummary =
-          'Take a 500mL bag of 5% dextrose, remove $addFifty mL then add $addFifty mL of 50% dextrose';
-    }
-    if (dex > 10) {
-      var proportionDex = (50 - dex) / (50 - 10);
-      var addFifty = (((1 - proportionDex) * 500) * 10) / 10;
-      addFifty = addFifty.toPrecision(1);
-      var remainingTen = 500 - addFifty;
-      dexTop =
-          '(500 - $addFifty = $remainingTen mL x 10%) + ($addFifty mL x 50%)';
-      dexSummary =
-          'Take a 500mL bag of 10% dextrose, remove $addFifty mL then add $addFifty mL of 50% dextrose';
+        resultLines.add(CalcFormula(
+          top:
+              '(500 - $addFifty = $remainingFive mL x 5%) + ($addFifty mL x 50%)',
+          bottom: '500 mL bag',
+          result:
+              'Take a 500mL bag of 5% dextrose, remove $addFifty mL then add $addFifty mL of 50% dextrose',
+        ));
+      }
+      if (dex > 10) {
+        var proportionDex = (50 - dex) / (50 - 10);
+        var addFifty = (((1 - proportionDex) * 500) * 10) / 10;
+        addFifty = addFifty.toPrecision(1);
+        var remainingTen = 500 - addFifty;
+
+        resultLines.add(CalcFormula(
+          top:
+              '(500 - $addFifty = $remainingTen mL x 10%) + ($addFifty mL x 50%)',
+          bottom: '500 mL bag',
+          result:
+              'Take a 500mL bag of 10% dextrose, remove $addFifty mL then add $addFifty mL of 50% dextrose',
+        ));
+      }
     }
 
     // Electrolytes
-    var sodiumToAdd = (sodium * babyWeight * 500) / mLperDay;
-    var sodiumString =
-        '= ${sodiumToAdd.toStringAsFixed(2)} mmol sodium added to 500mL bag';
-    var sodiumTop = '$sodium (mmol/kg/day) x $babyWeight (kg) x 500 (mL bag)';
 
-    var potassiumToAdd = (potassium * babyWeight * 500) / mLperDay;
-    var potassiumString =
-        '= ${potassiumToAdd.toStringAsFixed(2)} mmol potassium added to 500mL bag';
-    var potassiumTop =
-        '$potassium (mmol/kg/day) x $babyWeight (kg) x 500 (mL bag)';
+    resultLines.add(CalcHeading(result: 'Electrolytes per 500mL bag'));
 
-    var electrolyteBottom = '${mLperDay.toStringAsFixed(1)} (mL/day)';
+    if (sodium == 0) {
+      resultLines.add(CalcCommentary(result: 'No sodium added'));
+    } else {
+      var sodiumToAdd = (sodium * babyWeight * 500) / mLperDay;
+      resultLines.add(CalcCommentary(result: 'Sodium at $sodium mmol/kg/day'));
+      resultLines.add(CalcFormula(
+        top: '$sodium (mmol/kg/day) x $babyWeight (kg) x 500 (mL bag)',
+        bottom: '${mLperDay.toStringAsFixed(1)} (mL/day)',
+        result:
+            '= ${sodiumToAdd.toStringAsFixed(2)} mmol sodium added to 500mL bag',
+      ));
+    }
 
-    return IVInfusionDetails(
-      total: stringTotal,
-      dexTop: dexTop,
-      dexBottom: dexBottom,
-      dexSummary: dexSummary,
-      girTop: girTop,
-      girBottom: girBottom,
-      girResult: girResultString,
-      sodium: sodiumString,
-      potassium: potassiumString,
-      sodiumTop: sodiumTop,
-      potassiumTop: potassiumTop,
-      electrolyteBottom: electrolyteBottom,
-    );
+    if (potassium == 0) {
+      resultLines.add(CalcCommentary(result: 'No potassium added'));
+    } else {
+      var potassiumToAdd = (potassium * babyWeight * 500) / mLperDay;
+      resultLines
+          .add(CalcCommentary(result: 'Potassium at $potassium mmol/kg/day'));
+      resultLines.add(CalcFormula(
+        top: '$potassium (mmol/kg/day) x $babyWeight (kg) x 500 (mL bag)',
+        bottom: '${mLperDay.toStringAsFixed(1)} (mL/day)',
+        result:
+            '= ${potassiumToAdd.toStringAsFixed(2)} mmol potassium added to 500mL bag',
+      ));
+      if (potassium > 4.5) {
+        resultLines.add(CalcAdvisory(
+            result:
+                'Fluids with potassium concentration greater than 0.2 mmol/kg/hour (>4.8 mmol/kg/day) should be infused via a central line'));
+      }
+    }
+
+    return CalcResults(
+        heading:
+            'Infusion calculation at ${total.toStringAsFixed(0)} mL/kg/day',
+        resultLines: resultLines);
   }
 }
