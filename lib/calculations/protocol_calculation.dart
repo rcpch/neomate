@@ -1,6 +1,31 @@
 // SPDX-FileCopyrightText: 2026 Neomate team and RCPCH
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// Clinical source IDs: none assigned
+// Clinical content IDs: CALC-PROTOCOL-ENGINE
+// Clinical reviewer: none
+// Clinical sign-off: none
+// Review due: none
+// Safety hazards: none assigned
+//
+// ---------------------------------------------------------------------------
+// STATUS: NOT APPROVED FOR CLINICAL USE. No source assigned, no clinical
+// reviewer, no sign-off. See spec/clinical-source-convention.md.
+// ---------------------------------------------------------------------------
+// Module  : Shared engine for weight-based bolus doses, infusion preparations,
+//           and line-length protocols.
+// Purpose : Apply the dose, concentration, route, and vascular-access limits
+//           carried by an approved protocol record before any number is
+//           returned.
+//
+// Reviewer notes:
+//   * This file holds no doses and no protocol values. Every clinical figure
+//     arrives from a protocol record supplied by the caller, so signing this
+//     file off means agreeing the constraint logic, not any drug.
+//   * A protocol whose approved range is malformed is rejected rather than
+//     treated as unconstrained.
+// ---------------------------------------------------------------------------
+
 import 'patient_context.dart';
 
 enum AdministrationRoute {

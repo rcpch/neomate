@@ -6,7 +6,7 @@ Legend: [x] done, [~] in progress, [ ] not started
 - [x] **R2 - Establish current Flutter/Dart build compatibility and remove obsolete project assumptions** - the native shell has no legacy UI, state-management, navigation, HTML-rendering, or networking dependencies; strict analysis and the full test suite pass on Flutter 3.44.
 - [x] **R3 - Inventory inherited calculations, checklists, reference content, sources, and licences** - captured in `spec/legacy-inventory-and-source-review.md`; item-level source approval and rights clearance remain release gates.
 - [~] **R4 - Define approved intended purpose, system boundaries, users, deployment environment, and regulatory classification** - UK-first, free-to-use, likely Class IIa planning assumption is recorded; formal classification and conformity route remain open.
-- [~] **R5 - Extract deterministic calculation domain modules from Flutter UI** - pure policy-driven patient weight and context handling is implemented; remaining calculation families are pending.
+- [~] **R5 - Extract deterministic calculation domain modules from Flutter UI** - patient weight, mean airway pressure, oxygenation index, daily fluid volume, and glucose infusion rate are implemented as pure single-formula modules, each in its own file with a clinical sign-off header so it can be reviewed in isolation; electrolyte, compounding, and line-length families are pending.
 - [ ] **R6 - Build source-derived calculation conformance vectors and independent clinical verification**
 - [ ] **R7 - Replace legacy presentation with accessible, usability-tested Flutter feature modules**
 - [~] **R8 - Establish controlled CI, dependency management, security scanning, and reproducible release builds** - pinned Flutter CI, workflow security scanning, Pub/GitHub Actions Dependabot, lockfile enforcement, tests, and web release build are configured; full platform release provenance remains pending.
@@ -24,7 +24,7 @@ This plan deliberately puts medical-device assurance and market access last. No 
 - [x] **D2 - Inventory all available legacy implementations, sources, defects, and functional scope**
 - [x] **D3 - Remove obsolete unversioned development logs and archive snapshots**
 - [ ] **D4 - Confirm written provenance and redistribution rights for inherited code, content, images, and fonts**
-- [x] **D5 - Create a source and clinical-sign-off comment convention for every clinical code file**
+- [x] **D5 - Create a source and clinical-sign-off comment convention for every clinical code file** - the convention is enforced by `test/architecture/clinical_source_convention_test.dart`, which rejects a missing block, a malformed sign-off, and any file claiming approval without a source, named reviewer, and review-due date.
 
 Completion criteria: every inherited asset and source file has a recorded disposition; no undocumented clinical material is copied into new feature modules.
 
@@ -53,8 +53,8 @@ Decision: inherited HTML is migration-source material only. No HTML renderer or 
 ### Calculation Engine
 
 - [x] **D16 - Extract weight validation and patient-context handling into a pure, unit-explicit domain module**
-- [ ] **D17 - Extract ventilation and oxygenation-index calculations into pure modules with controlled result/error types**
-- [ ] **D18 - Extract daily fluid, GIR, electrolyte, and compounding calculations into pure modules**
+- [x] **D17 - Extract ventilation and oxygenation-index calculations into pure modules with controlled result/error types** - mean airway pressure and oxygenation index are single-formula files returning `CalculationOutcome`; PaO2 now requires an explicit unit, closing the inherited kPa/mmHg defect.
+- [~] **D18 - Extract daily fluid, GIR, electrolyte, and compounding calculations into pure modules** - daily fluid volume and glucose infusion rate are implemented as single-formula files; electrolyte and compounding calculations remain to be specified.
 - [x] **D19 - Define named protocol calculation interfaces for drug bolus, line-length, and infusion preparation functions**
 - [x] **D20 - Enforce protocol range, concentration, route, line, and denominator controls in the calculation engine**
 - [x] **D21 - Exclude the generic infusion calculator from the first clinical release unless a separate safety case approves it** - no generic infusion feature exists in the active native app.
