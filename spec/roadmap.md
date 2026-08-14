@@ -32,7 +32,7 @@ Completion criteria: every inherited asset and source file has a recorded dispos
 
 - [x] **D6 - Remove incompatible legacy Flutter dependencies and restore a clean Flutter 3.44 test build**
 - [x] **D7 - Replace legacy global state, navigation, HTML rendering, and page-transition patterns with current Flutter architecture**
-- [~] **D8 - Enforce a no-network runtime boundary in all application targets** - active Dart dependencies and code contain no networking capability; automated platform-policy enforcement remains pending.
+- [x] **D8 - Enforce a no-network runtime boundary in all application targets** - architecture tests reject networking dependencies, active Dart networking APIs, Android release internet permission, and Apple release network entitlements.
 - [ ] **D9 - Define and test offline startup, restart, and full feature operation on Android, iOS, macOS, Windows, Linux, and web**
 - [ ] **D10 - Define release signing, installation, update, and rollback procedures for every target platform without making clinical operation network-dependent**
 
@@ -42,7 +42,7 @@ Completion criteria: the app has no runtime network dependency, no analytics, no
 
 - [x] **D11 - Create typed source, clinical-sign-off, content, protocol, warning, and review-expiry records**
 - [x] **D12 - Add registry enforcement tests for mandatory provenance, reviewer, review date, expiry date, and applicability fields**
-- [ ] **D13 - Create a deployment-profile model for local-network content without embedding local phone numbers or referral rules in the core product**
+- [x] **D13 - Create a deployment-profile model for local-network content without embedding local phone numbers or referral rules in the core product**
 - [ ] **D14 - Replace opaque HTML with typed, accessible, versioned clinical content rendering**
 - [ ] **D15 - Define a controlled offline content-update format and verification method**
 
