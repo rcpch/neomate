@@ -12,6 +12,8 @@ The repositories reviewed were:
 | `../neomate-2025` | Flutter/Dart | Most developed Flutter successor, with a small inherited unit-test suite. |
 | `.` | Flutter/Dart | Controlled rebuild target, largely a copy of the 2025 clinical logic with new safety/QMS baseline. Root-level legacy development logs and code archive snapshots were deliberately deleted on 14 August 2026 because Git history is the authoritative change record. |
 
+The inherited Dart files are retained under `lib/legacy/` as read-only migration evidence. They are excluded from shipped imports and static analysis. Native replacements must not import them.
+
 ## Product Baseline
 
 Neomate 2 is proposed as an offline-capable clinical calculator and guidance-reference application for appropriately trained neonatal healthcare professionals. It must not diagnose, prescribe, replace clinical judgement, replace local policy, replace independent calculation checks, store an electronic patient record, or process patient data unless separately specified and approved.

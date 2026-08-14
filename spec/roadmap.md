@@ -48,6 +48,8 @@ Completion criteria: the app has no runtime network dependency, no analytics, no
 
 Completion criteria: a feature cannot render a clinical statement or protocol unless its registry record is complete and current.
 
+Decision: inherited HTML is migration-source material only. No HTML renderer or HTML-based clinical content will ship in Neomate 2; rebuild all clinical presentation and logic as native Dart and Flutter components.
+
 ### Calculation Engine
 
 - [ ] **D16 - Extract weight validation and patient-context handling into a pure, unit-explicit domain module**
