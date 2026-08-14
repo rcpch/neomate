@@ -12,7 +12,7 @@ Legend: [x] done, [~] in progress, [ ] not started
 - [ ] **R8 - Establish controlled CI, dependency management, security scanning, and reproducible release builds**
 - [ ] **R9 - Complete clinical safety case, QMS design controls, and release readiness review**
 - [x] **R10 - Decide the growth/clinic feature scope and approved growth-data source** - native growth functionality is out of scope; potential Rust RCPCH Digital Growth Charts FFI integration is deferred to D49.
-- [ ] **R11 - Create the versioned clinical-content and protocol registries with provenance enforcement**
+- [~] **R11 - Create the versioned clinical-content and protocol registries with provenance enforcement** - typed records and registry validation are implemented; approved real content and protocol records remain to be added.
 
 ## Delivery Plan
 
@@ -24,7 +24,7 @@ This plan deliberately puts medical-device assurance and market access last. No 
 - [x] **D2 - Inventory all available legacy implementations, sources, defects, and functional scope**
 - [x] **D3 - Remove obsolete unversioned development logs and archive snapshots**
 - [ ] **D4 - Confirm written provenance and redistribution rights for inherited code, content, images, and fonts**
-- [ ] **D5 - Create a source and clinical-sign-off comment convention for every clinical code file**
+- [x] **D5 - Create a source and clinical-sign-off comment convention for every clinical code file**
 
 Completion criteria: every inherited asset and source file has a recorded disposition; no undocumented clinical material is copied into new feature modules.
 
@@ -40,8 +40,8 @@ Completion criteria: the app has no runtime network dependency, no analytics, no
 
 ### Domain And Content Platform
 
-- [ ] **D11 - Create typed source, clinical-sign-off, content, protocol, warning, and review-expiry records**
-- [ ] **D12 - Add registry enforcement tests for mandatory provenance, reviewer, review date, expiry date, and applicability fields**
+- [x] **D11 - Create typed source, clinical-sign-off, content, protocol, warning, and review-expiry records**
+- [x] **D12 - Add registry enforcement tests for mandatory provenance, reviewer, review date, expiry date, and applicability fields**
 - [ ] **D13 - Create a deployment-profile model for local-network content without embedding local phone numbers or referral rules in the core product**
 - [ ] **D14 - Replace opaque HTML with typed, accessible, versioned clinical content rendering**
 - [ ] **D15 - Define a controlled offline content-update format and verification method**
