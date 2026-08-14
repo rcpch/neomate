@@ -4,6 +4,7 @@ Read this directory before changing clinical behaviour or app architecture.
 
 - [roadmap.md](roadmap.md) - staged rebuild work.
 - [intended-purpose.md](intended-purpose.md) - proposed clinical scope and excluded uses.
+- [legacy-inventory-and-source-review.md](legacy-inventory-and-source-review.md) - cross-codebase feature inventory, defects, source review, and rebuild requirements.
 - [ubiquitous-language.md](ubiquitous-language.md) - canonical domain terminology.
 - [queries.md](queries.md) - decisions requiring human governance input.
 
