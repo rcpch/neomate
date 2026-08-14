@@ -4,7 +4,12 @@
 // Tests for the oxygenation index. The unit-handling tests are the most
 // important ones here: they demonstrate that a kPa measurement and the
 // equivalent mmHg measurement produce the same OI, which is the specific
-// defect identified in the inherited implementation.
+// defect the explicit-unit type is there to prevent.
+//
+// For accuracy: the inherited implementation did convert kPa to mmHg, using a
+// factor of 7.5. Its weakness was that the unit was a separate selection
+// alongside a field validated by digit count, so the two could disagree. Here
+// the value and its unit are a single type that cannot be separated.
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:neomate2/calculations/calculation_outcome.dart';

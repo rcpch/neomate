@@ -26,6 +26,10 @@
 //   * This module therefore refuses to accept a bare number for PaO2: the
 //     caller must state the unit via [PartialPressureUnit], and the
 //     conversion happens here in one reviewable place.
+//   * The inherited implementation did convert kPa to mmHg, using 7.5. Its
+//     weakness was that the unit was chosen separately from a field validated
+//     by digit count, so the two could disagree. Pairing the value with its
+//     unit in one type removes that possibility.
 //   * The inherited implementation validated the PaO2 field by digit count
 //     rather than by unit or magnitude. See
 //     spec/legacy-inventory-and-source-review.md.

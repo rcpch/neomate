@@ -21,7 +21,10 @@ const _registerPath = 'clinical-safety/signoff.md';
 
 /// Directories whose Dart files require clinical sign-off. Kept identical to
 /// the scope used by the source-convention test.
-const _clinicalSourceDirectories = <String>['lib/calculations'];
+const _clinicalSourceDirectories = <String>[
+  'lib/calculations',
+  'lib/clinical_policy'
+];
 
 /// Files that carry no clinical meaning and so need no sign-off. This list is
 /// asserted against the register below, so an exemption cannot be added in

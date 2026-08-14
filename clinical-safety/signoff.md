@@ -28,6 +28,13 @@ A tick here records that the header block has been completed with a named review
 - [ ] `lib/calculations/fluids/electrolyte_requirement.dart` - daily electrolyte requirement in mmol/day from a prescribed mmol/kg/day.
 - [ ] `lib/calculations/fluids/additive_volume.dart` - compounding step: volume of a stock preparation needed to deliver a required amount.
 
+## Clinical Policy Values
+
+These files hold the numeric limits and presentation decisions that the calculation modules are validated against. They are separated from the formulas so that a value can be changed and re-reviewed without touching arithmetic that has already been signed off.
+
+- [ ] `lib/clinical_policy/neonatal_weight_policy.dart` - the permitted weight range, currently 200-6000 g harvested from the inherited implementation and attributed to SRC-006, which is provenance only.
+- [ ] `lib/clinical_policy/display_precision.dart` - decimal places used when displaying fluid volumes and rates, currently 1 d.p. on the grounds that no syringe dispenses more accurately than 0.1 mL.
+
 ## Files Exempt From Clinical Sign-Off
 
 These contain only generic value types or technical infrastructure, with no formula, threshold, dose, or clinical statement. The exemption is asserted in the test named above, so removing or weakening it is a visible change.

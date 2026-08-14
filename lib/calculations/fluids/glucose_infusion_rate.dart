@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Neomate team and RCPCH
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-// Clinical source IDs: none assigned
+// Clinical source IDs: SRC-001
 // Clinical content IDs: CALC-GLUCOSE-INFUSION-RATE
 // Clinical reviewer: none
 // Clinical sign-off: none

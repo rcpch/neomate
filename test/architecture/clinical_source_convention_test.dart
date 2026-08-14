@@ -18,7 +18,10 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Directories whose Dart files are treated as clinical source files.
-const _clinicalSourceDirectories = <String>['lib/calculations'];
+const _clinicalSourceDirectories = <String>[
+  'lib/calculations',
+  'lib/clinical_policy'
+];
 
 /// Files exempt from the convention, each with the reason it qualifies under
 /// the "generic technical infrastructure or non-clinical value types" rule.
