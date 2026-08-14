@@ -3,10 +3,10 @@
 Legend: [x] done, [~] in progress, [ ] not started
 
 - [x] **R1 - Establish clinical safety, QMS, agent, and validation baseline**
-- [~] **R2 - Establish current Flutter/Dart build compatibility and remove obsolete project assumptions** - Dart 3 compatibility constraint is in place; replace all legacy UI, state-management, navigation, and HTML-rendering dependencies with current Flutter practices to regain a compilable test suite.
+- [x] **R2 - Establish current Flutter/Dart build compatibility and remove obsolete project assumptions** - the native shell has no legacy UI, state-management, navigation, HTML-rendering, or networking dependencies; strict analysis and the full test suite pass on Flutter 3.44.
 - [x] **R3 - Inventory inherited calculations, checklists, reference content, sources, and licences** - captured in `spec/legacy-inventory-and-source-review.md`; item-level source approval and rights clearance remain release gates.
 - [~] **R4 - Define approved intended purpose, system boundaries, users, deployment environment, and regulatory classification** - UK-first, free-to-use, likely Class IIa planning assumption is recorded; formal classification and conformity route remain open.
-- [ ] **R5 - Extract deterministic calculation domain modules from Flutter UI**
+- [~] **R5 - Extract deterministic calculation domain modules from Flutter UI** - pure policy-driven patient weight and context handling is implemented; remaining calculation families are pending.
 - [ ] **R6 - Build source-derived calculation conformance vectors and independent clinical verification**
 - [ ] **R7 - Replace legacy presentation with accessible, usability-tested Flutter feature modules**
 - [ ] **R8 - Establish controlled CI, dependency management, security scanning, and reproducible release builds**
@@ -30,9 +30,9 @@ Completion criteria: every inherited asset and source file has a recorded dispos
 
 ### Offline Core
 
-- [ ] **D6 - Remove incompatible legacy Flutter dependencies and restore a clean Flutter 3.44 test build**
-- [ ] **D7 - Replace legacy global state, navigation, HTML rendering, and page-transition patterns with current Flutter architecture**
-- [ ] **D8 - Enforce a no-network runtime boundary in all application targets**
+- [x] **D6 - Remove incompatible legacy Flutter dependencies and restore a clean Flutter 3.44 test build**
+- [x] **D7 - Replace legacy global state, navigation, HTML rendering, and page-transition patterns with current Flutter architecture**
+- [~] **D8 - Enforce a no-network runtime boundary in all application targets** - active Dart dependencies and code contain no networking capability; automated platform-policy enforcement remains pending.
 - [ ] **D9 - Define and test offline startup, restart, and full feature operation on Android, iOS, macOS, Windows, Linux, and web**
 - [ ] **D10 - Define release signing, installation, update, and rollback procedures for every target platform without making clinical operation network-dependent**
 
@@ -52,7 +52,7 @@ Decision: inherited HTML is migration-source material only. No HTML renderer or 
 
 ### Calculation Engine
 
-- [ ] **D16 - Extract weight validation and patient-context handling into a pure, unit-explicit domain module**
+- [x] **D16 - Extract weight validation and patient-context handling into a pure, unit-explicit domain module**
 - [ ] **D17 - Extract ventilation and oxygenation-index calculations into pure modules with controlled result/error types**
 - [ ] **D18 - Extract daily fluid, GIR, electrolyte, and compounding calculations into pure modules**
 - [ ] **D19 - Define named protocol calculation interfaces for drug bolus, line-length, and infusion preparation functions**
