@@ -204,7 +204,7 @@ List<Reference> referenceDb = [
 ];
 
 class NeomateHtml {
-  static var cooling = '''		
+  static var cooling = '''
 	<h1>When to consider treatment with cooling</h1>
 	<p>The following information comes from the UK TOBY Clinician's Handbook found
   <a href="https://www.npeu.ox.ac.uk/downloads/files/tobyregister/Register-Clinicans-Handbook1-v4-07-06-10.pdf">here</a>.</p>

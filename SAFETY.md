@@ -1,0 +1,29 @@
+# Clinical Safety
+
+## Product
+
+Neomate 2 is an offline-capable Flutter clinical calculator and guidance-reference application for appropriately trained neonatal healthcare professionals. The proposed intended purpose is recorded in [spec/intended-purpose.md](spec/intended-purpose.md).
+
+It is not a diagnostic system, prescribing system, electronic patient record, or substitute for clinical judgement, local policy, independent calculation checks, or current authoritative clinical sources.
+
+## Safety Status
+
+**Not approved for clinical deployment or patient-care use.** The repository contains inherited legacy clinical content and calculation logic. It must not be distributed or submitted to an app store until the safety case, hazard controls, clinical-content review, evidence traceability, usability assessment, independent calculation verification, cybersecurity assessment, and release gates are completed and signed off by the responsible governance roles.
+
+## Intended Users And Environment
+
+The proposed intended users are appropriately trained neonatal clinicians in a UK NICU context. The target platforms are Android, iOS, macOS, Windows, Linux, and web. The application must remain usable offline. Platform-specific device controls, update and rollback mechanisms, and data-processing boundaries require verification before any clinical release.
+
+## Safety Ownership
+
+The Neomate team and RCPCH currently own product, clinical safety, clinical content, engineering, quality, security, and release accountability. Named responsible persons and formal approval delegation must be recorded before clinical deployment.
+
+## Safety Artefacts
+
+- [clinical-safety/SAFETY-PLAN.md](clinical-safety/SAFETY-PLAN.md) - lifecycle, responsibilities, and release gates.
+- [clinical-safety/SAFETY-CASE.md](clinical-safety/SAFETY-CASE.md) - safety argument and evidence status.
+- [clinical-safety/HAZARD-LOG.md](clinical-safety/HAZARD-LOG.md) - initial hazards and required controls.
+
+## Change Rule
+
+Any change affecting clinical content, a calculation, validation, units, warning, workflow, source, or deployment context must update the linked safety artefacts in the same pull request. Changes must identify reviewed evidence and require appropriate clinical review.

@@ -1,0 +1,11 @@
+# Hazard Log
+
+Risk ratings and acceptability criteria must be defined by the appointed Clinical Safety Officer. The following initial register identifies known inherited-code hazards and does not constitute a completed risk assessment.
+
+| ID | Hazard | Cause | Clinical consequence | Initial risk | Controls required | Residual risk | Owner | Status | Evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| HZ-001 | Incorrect calculated dose, volume, or infusion preparation | Legacy formula, unit conversion, rounding, or data defect | Overdose, underdose, delay, or incorrect treatment | Unassessed | Independent source traceability, pure calculation modules, source-derived vectors, boundary tests, clinical review, clear units and warnings | Unassessed | Unassigned | Open | `lib/neomate.dart`; `test/clinical_calculation_baseline_test.dart` (legacy regression only, not clinical verification) |
+| HZ-002 | Outdated or incorrect clinical advice | Legacy text or links have not been reviewed | Inappropriate clinical action | Unassessed | Content inventory, source register, clinical-content review, review dates, controlled update process | Unassessed | Unassigned | Open | `lib/neomate.dart`; `lib/neomate_html.dart`; `lib/neomate_checklists.dart` |
+| HZ-003 | Use outside intended neonatal population | Inadequate validation, unclear limits, or user misunderstanding | Incorrect output applied to unsuitable patient | Unassessed | Approved intended purpose, input validation, visible limitations, usability testing | Unassessed | Unassigned | Open | `lib/neomate.dart` |
+| HZ-004 | Use error from ambiguous presentation or units | Legacy UI, small controls, unclear wording, or conversion display | Misread result or incorrect treatment | Unassessed | User-centred design, accessibility review, usability assessment, explicit unit display | Unassessed | Unassigned | Open | `lib/main.dart` |
+| HZ-005 | Uncontrolled distribution of an unapproved build | Legacy store history or informal build sharing | Clinical use of unapproved software | Unassessed | Prominent non-deployment status, controlled signing and release, approved release gate | Unassessed | Unassigned | Open | `README.md`; `SAFETY.md` |

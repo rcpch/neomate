@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: 2026 Neomate team and RCPCH
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+#!/usr/bin/env bash
+set -euo pipefail
+
+dart format --set-exit-if-changed .
+flutter analyze --fatal-infos

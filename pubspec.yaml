@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Neomate team and RCPCH
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 name: neomate2
 description: Neomate App version 2
 
@@ -18,7 +21,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+11
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions

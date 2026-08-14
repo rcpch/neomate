@@ -45,3 +45,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Local agent and retained private-workspace artefacts
+.claude/
+.opencode/
+.playwright-mcp/
+.private/
