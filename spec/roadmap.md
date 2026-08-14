@@ -9,7 +9,7 @@ Legend: [x] done, [~] in progress, [ ] not started
 - [~] **R5 - Extract deterministic calculation domain modules from Flutter UI** - pure policy-driven patient weight and context handling is implemented; remaining calculation families are pending.
 - [ ] **R6 - Build source-derived calculation conformance vectors and independent clinical verification**
 - [ ] **R7 - Replace legacy presentation with accessible, usability-tested Flutter feature modules**
-- [ ] **R8 - Establish controlled CI, dependency management, security scanning, and reproducible release builds**
+- [~] **R8 - Establish controlled CI, dependency management, security scanning, and reproducible release builds** - pinned Flutter CI, workflow security scanning, Pub/GitHub Actions Dependabot, lockfile enforcement, tests, and web release build are configured; full platform release provenance remains pending.
 - [ ] **R9 - Complete clinical safety case, QMS design controls, and release readiness review**
 - [x] **R10 - Decide the growth/clinic feature scope and approved growth-data source** - native growth functionality is out of scope; potential Rust RCPCH Digital Growth Charts FFI integration is deferred to D49.
 - [~] **R11 - Create the versioned clinical-content and protocol registries with provenance enforcement** - typed records and registry validation are implemented; approved real content and protocol records remain to be added.
@@ -89,7 +89,7 @@ Completion criteria: test evidence is linked to source records and hazards; repr
 ### Product Readiness
 
 - [ ] **D37 - Design the accessible Flutter feature modules and migrate approved functionality from the legacy interface**
-- [ ] **D38 - Add controlled build provenance, dependency review, CI, reproducible builds, and release artefact retention**
+- [~] **D38 - Add controlled build provenance, dependency review, CI, reproducible builds, and release artefact retention** - initial pinned CI and dependency automation are complete; signed multi-platform release provenance and artefact retention remain pending.
 - [ ] **D39 - Define support, incident, issue triage, corrective-action, content-update, and product-maintenance workflows**
 - [ ] **D40 - Establish public documentation, source availability, and licence notices appropriate to AGPL-3.0-or-later distribution**
 - [ ] **D41 - Produce a non-clinical beta build for technical and usability evaluation only**
