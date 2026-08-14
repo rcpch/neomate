@@ -18,6 +18,7 @@ A tick here records that the header block has been completed with a named review
 
 ## Calculation Modules
 
+- [ ] `lib/calculations/result_rounding.dart` - rounding and display of calculated numbers, including the refusal to display a non-zero amount that rounds to zero.
 - [ ] `lib/calculations/patient_context.dart` - patient weight validation, and the single gram-to-kilogram conversion every other calculation depends on.
 - [ ] `lib/calculations/protocol_calculation.dart` - the protocol engine: enforcement of dose range, route, vascular access, infusion rate, preparation volume, and concentration bounds.
 - [ ] `lib/calculations/ventilation/mean_airway_pressure.dart` - mean airway pressure from conventional ventilator settings.
