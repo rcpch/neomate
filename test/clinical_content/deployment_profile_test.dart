@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:neomate2/clinical_content/clinical_artifact.dart';
 import 'package:neomate2/clinical_content/clinical_registry.dart';
 import 'package:neomate2/clinical_content/deployment_profile.dart';
+import 'package:neomate2/clinical_content/content_document.dart';
 import 'package:neomate2/clinical_content/provenance.dart';
 
 void main() {
@@ -50,6 +51,7 @@ void main() {
         reviewWindow: reviewWindow,
         signOffs: signOffs,
         summary: 'Synthetic content for tests.',
+        document: const ClinicalContentDocument(blocks: []),
       ),
       ClinicalProtocol(
         id: 'PROTOCOL-001',

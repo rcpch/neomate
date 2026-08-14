@@ -4,6 +4,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:neomate2/clinical_content/clinical_artifact.dart';
 import 'package:neomate2/clinical_content/clinical_registry.dart';
+import 'package:neomate2/clinical_content/content_document.dart';
 import 'package:neomate2/clinical_content/provenance.dart';
 
 void main() {
@@ -51,6 +52,7 @@ void main() {
               ),
             ],
         summary: 'Synthetic test content only.',
+        document: const ClinicalContentDocument(blocks: []),
       );
 
   test('accepts a complete current registry', () {

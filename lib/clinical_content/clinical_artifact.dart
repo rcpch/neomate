@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'provenance.dart';
+import 'content_document.dart';
 
 abstract interface class ClinicalArtifact {
   String get id;
@@ -25,6 +26,7 @@ class ClinicalContent implements ClinicalArtifact {
     required this.reviewWindow,
     required this.signOffs,
     required this.summary,
+    required this.document,
   });
 
   @override
@@ -44,6 +46,7 @@ class ClinicalContent implements ClinicalArtifact {
   @override
   final List<ClinicalSignOff> signOffs;
   final String summary;
+  final ClinicalContentDocument document;
 }
 
 class ClinicalWarning {
