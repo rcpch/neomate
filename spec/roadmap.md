@@ -55,9 +55,9 @@ Decision: inherited HTML is migration-source material only. No HTML renderer or 
 - [x] **D16 - Extract weight validation and patient-context handling into a pure, unit-explicit domain module**
 - [ ] **D17 - Extract ventilation and oxygenation-index calculations into pure modules with controlled result/error types**
 - [ ] **D18 - Extract daily fluid, GIR, electrolyte, and compounding calculations into pure modules**
-- [ ] **D19 - Define named protocol calculation interfaces for drug bolus, line-length, and infusion preparation functions**
-- [ ] **D20 - Enforce protocol range, concentration, route, line, and denominator controls in the calculation engine**
-- [ ] **D21 - Exclude the generic infusion calculator from the first clinical release unless a separate safety case approves it**
+- [x] **D19 - Define named protocol calculation interfaces for drug bolus, line-length, and infusion preparation functions**
+- [x] **D20 - Enforce protocol range, concentration, route, line, and denominator controls in the calculation engine**
+- [x] **D21 - Exclude the generic infusion calculator from the first clinical release unless a separate safety case approves it** - no generic infusion feature exists in the active native app.
 
 Completion criteria: no calculation lives in a widget; all invalid and non-finite inputs return controlled non-results; configured clinical limits are enforced in code.
 
