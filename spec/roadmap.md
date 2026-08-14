@@ -88,7 +88,7 @@ Completion criteria: test evidence is linked to source records and hazards; repr
 
 ### Product Readiness
 
-- [ ] **D37 - Design the accessible Flutter feature modules and migrate approved functionality from the legacy interface**
+- [~] **D37 - Design the accessible Flutter feature modules and migrate approved functionality from the legacy interface** - adaptive native landing workflow and typed content rendering are implemented and visually checked on phone and desktop; approved clinical feature migration remains pending.
 - [~] **D38 - Add controlled build provenance, dependency review, CI, reproducible builds, and release artefact retention** - initial pinned CI and dependency automation are complete; signed multi-platform release provenance and artefact retention remain pending.
 - [ ] **D39 - Define support, incident, issue triage, corrective-action, content-update, and product-maintenance workflows**
 - [ ] **D40 - Establish public documentation, source availability, and licence notices appropriate to AGPL-3.0-or-later distribution**
