@@ -12,10 +12,12 @@
 | Q6 | Initial source families are RCPCH, Resuscitation Council UK, and the Neonatal Society. | Specific authoritative sources and local policies for each item remain open. |
 | Q7 | Replace obsolete dependencies and patterns with current Flutter practices rather than preserving legacy implementation choices. | In progress under R2. |
 
-## Open Questions
+## Further Resolved Decisions
 
-- **Q8**: What regulatory classification, target market, and evidence route apply to the intended product?
-- **Q9**: Who are the named Clinical Safety Officer, clinical content lead, quality lead, and release approvers?
-- **Q10**: What written permissions or ownership transfer cover inherited code, clinical content, images, and font assets?
-- **Q11**: What precise source, edition, review date, and local-policy status govern each clinical content item?
-- **Q12**: What platform-specific update and rollback mechanisms will satisfy the offline deployment model?
+| ID | Decision | Status |
+| --- | --- | --- |
+| Q8 | The intended product is likely Class IIa. The United Kingdom is the initial market; European Union and other markets are deferred. The product is intended to be free to use. | Planning assumption recorded. Formal classification, evidence route, and market-access route remain open. |
+| Q9 | Dr Marcus Baw currently holds the Clinical Safety Officer, clinical content lead, quality lead, and release-approval roles. | Independent review and formal delegation remain required before clinical release. Contributors are listed in `README.md`. |
+| Q10 | RCPCH repository ownership and related email trails are the known current provenance evidence. | Written ownership, licence, and redistribution clearance for inherited material remain open. |
+| Q11 | Each relevant clinical source-code file must link to sources and clinical sign-off in comments. | Registry-level provenance fields and item-level implementation remain open. |
+| Q12 | The application must operate 100% offline with no runtime network dependency. Native growth charts are out of scope. A future Rust RCPCH Digital Growth Charts component may be integrated through Flutter FFI. | Offline platform verification and update/rollback design remain open; FFI integration is deferred. |

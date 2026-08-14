@@ -24,6 +24,17 @@ s/test
 - [spec/](spec/) - durable product, terminology, and roadmap decisions.
 - [agent-instructions.md](agent-instructions.md) - contributor and agent workflow.
 
+## Contributors
+
+The current contributors are listed alphabetically:
+
+- Dr Marcus Baw
+- Michael Barton - RCPCH Lead Developer
+- Dr Katharine Jamieson - Neonatal consultant
+- Dr Chris Kelly - Doctor, Guy's and St Thomas' Hospital
+- Dr Lee Collier - Doctor / Developer
+- Dr Syed Mohinuddin - Neonatal consultant, Children's Hospital of Eastern Ontario (CHEO)
+
 ## Licence
 
 New Neomate 2 code and project artefacts are Copyright (c) 2026 Neomate team and RCPCH, licensed under the [GNU Affero General Public License v3.0 or later](LICENSE). Written documentation produced for this project is CC-BY-SA-4.0.

@@ -10,7 +10,7 @@ The repositories reviewed were:
 | --- | --- | --- |
 | `../neomateapp` | Ionic/Cordova, JavaScript | Original, broadest feature set including growth clinic and legacy telemetry. |
 | `../neomate-2025` | Flutter/Dart | Most developed Flutter successor, with a small inherited unit-test suite. |
-| `.` | Flutter/Dart | Controlled rebuild target, largely a copy of the 2025 clinical logic with new safety/QMS baseline. |
+| `.` | Flutter/Dart | Controlled rebuild target, largely a copy of the 2025 clinical logic with new safety/QMS baseline. Root-level legacy development logs and code archive snapshots were deliberately deleted on 14 August 2026 because Git history is the authoritative change record. |
 
 ## Product Baseline
 
@@ -43,6 +43,7 @@ The proposed platform scope is Android, iOS, macOS, Windows, Linux, and web. Off
 ### Clinical Content
 
 - Every rendered clinical statement, dose, threshold, checklist item, image, and link must have a stable content ID, source ID, source edition/version, source URL, clinical reviewer, review date, expiry/review date, and local-policy status.
+- Each source-code file containing clinical content or calculation logic must link to its sources and clinical sign-off in top-of-file comments. The repository-level content/protocol record remains the authoritative index and must include the corresponding source version and review dates.
 - Content that is not current, has no current source, or is only an inherited implementation must not be included in a clinical build.
 - External links must not be used as the only delivery mechanism for clinical content because the proposed product must work offline.
 
@@ -67,7 +68,7 @@ The proposed platform scope is Android, iOS, macOS, Windows, Linux, and web. Off
 
 ### Growth
 
-- If growth is restored, use an approved RCPCH digital-growth-chart data licence or an approved alternative. Do not copy embedded LMS data from the Ionic app without data provenance and rights review.
+- Growth-chart functionality is out of scope for native Neomate 2 development. A future Rust implementation of RCPCH digital growth charts may be integrated through Flutter FFI after its own data, clinical, security, and interface review. Do not copy embedded LMS data from the Ionic app.
 - Growth functionality must identify sex, measure type, chronological and corrected age rules, gestation, units, dataset version, and applicability limits. It needs conformance vectors from the approved data provider.
 
 ## Algorithm And Guidance Register
@@ -150,8 +151,6 @@ No Flutter widget may own clinical formulae, thresholds, or protocol data. No cl
 
 ## Decisions Required Before Implementation
 
-- Decide whether growth/clinic functionality is in the first clinical release or formally retired.
 - Select a content-management approach that remains offline by default and supports signed/versioned updates.
 - Define deployment-specific content profiles and owners for local network referral processes.
-- Assign named clinical reviewers and source-approval authority for each protocol family.
 - Obtain written rights/provenance for inherited code, clinical content, images, font, and growth data.

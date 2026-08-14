@@ -16,7 +16,7 @@ The proposed intended users are appropriately trained neonatal clinicians in a U
 
 ## Safety Ownership
 
-The Neomate team and RCPCH currently own product, clinical safety, clinical content, engineering, quality, security, and release accountability. Named responsible persons and formal approval delegation must be recorded before clinical deployment.
+Dr Marcus Baw currently holds the product owner, Clinical Safety Officer, clinical content lead, engineering lead, quality lead, security lead, and release-approval roles for the Neomate team and RCPCH. Formal delegation and an independent review arrangement must be recorded before clinical deployment.
 
 ## Safety Artefacts
 

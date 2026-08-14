@@ -12,4 +12,4 @@ Neomate 2 is not intended to diagnose disease, prescribe treatment, replace clin
 
 ## Current Status
 
-This is a proposed intended purpose, not an approved regulatory claim. Regulatory classification, target market, clinical evaluation route, and release labelling require formal assessment before deployment.
+The initial target market is the United Kingdom. The intended product is likely to require classification as a Class IIa medical device, but this is a planning assumption rather than a regulatory determination. The product is intended to be free to use. European Union and other market entry are deferred until after the UK route is established. Regulatory classification, clinical evaluation route, conformity assessment, and release labelling require formal assessment before deployment.
