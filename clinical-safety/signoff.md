@@ -24,6 +24,8 @@ A tick here records that the header block has been completed with a named review
 - [ ] `lib/calculations/ventilation/oxygenation_index.dart` - oxygenation index, including the kPa to mmHg conversion.
 - [ ] `lib/calculations/fluids/daily_fluid_volume.dart` - total daily fluid volume and hourly rate from a prescribed volume per kilogram.
 - [ ] `lib/calculations/fluids/glucose_infusion_rate.dart` - glucose infusion rate in mg/kg/min.
+- [ ] `lib/calculations/fluids/electrolyte_requirement.dart` - daily electrolyte requirement in mmol/day from a prescribed mmol/kg/day.
+- [ ] `lib/calculations/fluids/additive_volume.dart` - compounding step: volume of a stock preparation needed to deliver a required amount.
 
 ## Files Exempt From Clinical Sign-Off
 

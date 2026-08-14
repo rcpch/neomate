@@ -54,7 +54,7 @@ Decision: inherited HTML is migration-source material only. No HTML renderer or 
 
 - [x] **D16 - Extract weight validation and patient-context handling into a pure, unit-explicit domain module**
 - [x] **D17 - Extract ventilation and oxygenation-index calculations into pure modules with controlled result/error types** - mean airway pressure and oxygenation index are single-formula files returning `CalculationOutcome`; PaO2 now requires an explicit unit, closing the inherited kPa/mmHg defect.
-- [~] **D18 - Extract daily fluid, GIR, electrolyte, and compounding calculations into pure modules** - daily fluid volume and glucose infusion rate are implemented as single-formula files; electrolyte and compounding calculations remain to be specified.
+- [x] **D18 - Extract daily fluid, GIR, electrolyte, and compounding calculations into pure modules** - daily fluid volume, glucose infusion rate, electrolyte requirement, and additive volume are single-formula files. Prescription and compounding arithmetic are deliberately separate files, and the compounding step refuses to divide an amount by a concentration expressed in a different unit.
 - [x] **D19 - Define named protocol calculation interfaces for drug bolus, line-length, and infusion preparation functions**
 - [x] **D20 - Enforce protocol range, concentration, route, line, and denominator controls in the calculation engine**
 - [x] **D21 - Exclude the generic infusion calculator from the first clinical release unless a separate safety case approves it** - no generic infusion feature exists in the active native app.
