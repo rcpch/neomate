@@ -4,6 +4,7 @@ Read this directory before changing clinical behaviour or app architecture.
 
 - [roadmap.md](roadmap.md) - canonical staged technical, clinical, and regulatory rebuild plan.
 - [clinical-source-convention.md](clinical-source-convention.md) - mandatory source and clinical-sign-off convention for clinical Dart files.
+- [offline-content-updates.md](offline-content-updates.md) - controlled build-time clinical-content update and rollback policy.
 - [intended-purpose.md](intended-purpose.md) - proposed clinical scope and excluded uses.
 - [legacy-inventory-and-source-review.md](legacy-inventory-and-source-review.md) - cross-codebase feature inventory, defects, source review, and rebuild requirements.
 - [ubiquitous-language.md](ubiquitous-language.md) - canonical domain terminology.

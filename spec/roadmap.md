@@ -44,7 +44,7 @@ Completion criteria: the app has no runtime network dependency, no analytics, no
 - [x] **D12 - Add registry enforcement tests for mandatory provenance, reviewer, review date, expiry date, and applicability fields**
 - [x] **D13 - Create a deployment-profile model for local-network content without embedding local phone numbers or referral rules in the core product**
 - [x] **D14 - Replace opaque HTML with typed, accessible, versioned clinical content rendering**
-- [ ] **D15 - Define a controlled offline content-update format and verification method**
+- [x] **D15 - Define a controlled offline content-update format and verification method** - clinical content is compiled typed Dart data distributed only inside a reviewed, signed application release; runtime content updates are prohibited.
 
 Completion criteria: a feature cannot render a clinical statement or protocol unless its registry record is complete and current.
 
