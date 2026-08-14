@@ -8,6 +8,7 @@ Candidates below were selected for current UK practice, preferring national bodi
 
 - **Proposed** - identified as the likely governing source; URL and edition checked; not yet clinically approved for this use.
 - **Candidate** - plausible governing source, but the specific edition or its applicability to our use has not been confirmed.
+- **Inherited baseline** - carried forward from the shipped Neomate product, which has been in live clinical use internationally. Treated as a reasonably assured starting point rather than as unevidenced, but still requiring verification against a current source before sign-off.
 - **Provenance only** - not an authoritative clinical source. Records where an inherited value came from, so it is never mistaken for evidence.
 
 ## Register
@@ -19,7 +20,9 @@ Candidates below were selected for current UK practice, preferring national bodi
 | SRC-003 | Newborn Resuscitation and Support of Transition of Infants at Birth Guidelines | Resuscitation Council UK | 2025 | Proposed | Newborn resuscitation content. Note: bicarbonate is no longer recommended |
 | SRC-004 | Neonatal infection: antibiotics for prevention and treatment (NG195) | NICE | Updated May 2026 | Proposed | Neonatal infection content |
 | SRC-005 | Therapeutic hypothermia for neonatal encephalopathy - Framework for Practice | BAPM | 2025 update | Proposed | Cooling and HIE content |
-| SRC-006 | Inherited Neomate implementation | Neomate team, repository held by RCPCH | Legacy, undated | Provenance only | Records where a harvested legacy limit came from. Carries no clinical authority |
+| SRC-006 | Inherited Neomate implementation | Neomate team, repository held by RCPCH | Legacy, undated | Inherited baseline | Default values, algorithms, and logic carried forward from the shipped product |
+| SRC-008 | BNF for Children | NICE / BMJ / RPS | Cited by the inherited product as the 2015 edition; current edition not yet checked | Candidate | Drug doses and concentration limits |
+| SRC-009 | Injectable Medicines Guide (Medusa) | SPS / NHS | Cited by the inherited product as 2015; current edition not yet checked | Candidate | Infusion concentration limits and preparation advice |
 | SRC-007 | Neonatal respiratory ECMO service specification | NHS England | Not confirmed | Candidate | Oxygenation index escalation thresholds, if such thresholds are ever presented |
 
 ## Notes On Specific Sources

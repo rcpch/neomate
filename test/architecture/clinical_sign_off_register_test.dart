@@ -23,7 +23,8 @@ const _registerPath = 'clinical-safety/signoff.md';
 /// the scope used by the source-convention test.
 const _clinicalSourceDirectories = <String>[
   'lib/calculations',
-  'lib/clinical_policy'
+  'lib/clinical_policy',
+  'lib/clinical_protocols',
 ];
 
 /// Files that carry no clinical meaning and so need no sign-off. This list is

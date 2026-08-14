@@ -28,6 +28,16 @@ A tick here records that the header block has been completed with a named review
 - [ ] `lib/calculations/fluids/electrolyte_requirement.dart` - daily electrolyte requirement in mmol/day from a prescribed mmol/kg/day.
 - [ ] `lib/calculations/fluids/additive_volume.dart` - compounding step: volume of a stock preparation needed to deliver a required amount.
 
+## Drug Protocols
+
+Carried forward from the shipped Neomate product (SRC-006), which has been in live clinical use internationally, with concentration advice the inherited code attributes to BNFc 2015 (SRC-008) and Medusa 2015 (SRC-009). The reviewer's task is to confirm each figure against the current edition, not to derive it afresh. All are restricted to central or umbilical venous access.
+
+- [ ] `lib/clinical_protocols/infusions/dopamine_infusion.dart` - 5-20 micrograms/kg/min; maximum 1.6 mg/mL.
+- [ ] `lib/clinical_protocols/infusions/dobutamine_infusion.dart` - 2-20 micrograms/kg/min; maximum 10 mg/mL.
+- [ ] `lib/clinical_protocols/infusions/adrenaline_infusion.dart` - 50-500 nanograms/kg/min; maximum 0.24 mg/mL.
+- [ ] `lib/clinical_protocols/infusions/noradrenaline_infusion.dart` - 50-500 nanograms/kg/min; maximum 40 micrograms/mL.
+- [ ] `lib/clinical_protocols/infusions/dinoprostone_infusion.dart` - 1-20 nanograms/kg/min enforced against a 5-10 usual range; maximum 1 microgram/mL. **Carries an unresolved discrepancy between the enforced and displayed dose ranges, for the reviewer to settle.**
+
 ## Clinical Policy Values
 
 These files hold the numeric limits and presentation decisions that the calculation modules are validated against. They are separated from the formulas so that a value can be changed and re-reviewed without touching arithmetic that has already been signed off.
