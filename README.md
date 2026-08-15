@@ -16,6 +16,8 @@ s/lint
 s/test
 ```
 
+The current non-clinical demonstration scope, build commands, and limitations are documented in [spec/internal-alpha.md](spec/internal-alpha.md).
+
 ## Governance
 
 - [SAFETY.md](SAFETY.md) - clinical safety status and entry point.

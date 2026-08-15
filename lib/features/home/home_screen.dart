@@ -3,6 +3,9 @@
 
 import 'package:flutter/material.dart';
 
+import '../calculators/calculators_screen.dart';
+import '../references/references_screen.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -12,6 +15,7 @@ class HomeScreen extends StatelessWidget {
       description:
           'Weight-based calculations and approved protocol preparations',
       icon: Icons.calculate_outlined,
+      available: true,
     ),
     _Destination(
       title: 'Clinical guidance',
@@ -27,6 +31,7 @@ class HomeScreen extends StatelessWidget {
       title: 'References',
       description: 'Sources, review dates, and clinical sign-off records',
       icon: Icons.source_outlined,
+      available: true,
     ),
   ];
 
@@ -78,7 +83,17 @@ class HomeScreen extends StatelessWidget {
                                 SizedBox(
                                   width: width,
                                   child: _DestinationPanel(
-                                      destination: destination),
+                                    key: Key(
+                                      'destination-${destination.title.toLowerCase().replaceAll(' ', '-')}',
+                                    ),
+                                    destination: destination,
+                                    onTap: destination.available
+                                        ? () => _openDestination(
+                                              context,
+                                              destination.title,
+                                            )
+                                        : null,
+                                  ),
                                 ),
                             ],
                           );
@@ -94,6 +109,18 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _openDestination(BuildContext context, String title) {
+    final screen = switch (title) {
+      'Calculators' => const CalculatorsScreen(),
+      'References' => const ReferencesScreen(),
+      _ => null,
+    };
+    if (screen == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => screen),
     );
   }
 }
@@ -179,7 +206,7 @@ class _SafetyNotice extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'This build is not approved for clinical use. Clinical features remain unavailable until independently reviewed.',
+                    'This build is not approved for clinical use. Alpha demonstrations are available for evaluation; reviewed clinical features remain unavailable.',
                     style: TextStyle(color: Color(0xff4f3500)),
                   ),
                 ],
@@ -193,52 +220,62 @@ class _SafetyNotice extends StatelessWidget {
 }
 
 class _DestinationPanel extends StatelessWidget {
-  const _DestinationPanel({required this.destination});
+  const _DestinationPanel({super.key, required this.destination, this.onTap});
 
   final _Destination destination;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Semantics(
       container: true,
-      label: '${destination.title}, unavailable pending clinical review',
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 150),
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: const Color(0xffcbd8d3)),
+      button: destination.available,
+      label: destination.available
+          ? '${destination.title}, internal alpha available'
+          : '${destination.title}, unavailable pending clinical review',
+      child: Material(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: Color(0xffcbd8d3)),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Container(
+            constraints: const BoxConstraints(minHeight: 150),
+            padding: const EdgeInsets.all(18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ExcludeSemantics(
-                  child: Icon(destination.icon,
-                      color: const Color(0xff176c55), size: 28),
+                Row(
+                  children: [
+                    ExcludeSemantics(
+                      child: Icon(destination.icon,
+                          color: const Color(0xff176c55), size: 28),
+                    ),
+                    const Spacer(),
+                    _ReviewStatus(available: destination.available),
+                  ],
                 ),
-                const Spacer(),
-                const _ReviewStatus(),
+                const SizedBox(height: 16),
+                Text(
+                  destination.title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: const Color(0xff153e33),
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  destination.description,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: const Color(0xff50665f),
+                      ),
+                ),
               ],
             ),
-            const SizedBox(height: 16),
-            Text(
-              destination.title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: const Color(0xff153e33),
-                    fontWeight: FontWeight.w700,
-                  ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              destination.description,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: const Color(0xff50665f),
-                  ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -246,20 +283,22 @@ class _DestinationPanel extends StatelessWidget {
 }
 
 class _ReviewStatus extends StatelessWidget {
-  const _ReviewStatus();
+  const _ReviewStatus({required this.available});
+
+  final bool available;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
       decoration: BoxDecoration(
-        color: const Color(0xffedf1ef),
+        color: available ? const Color(0xffe8f3ef) : const Color(0xffedf1ef),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: const Text(
-        'In review',
+      child: Text(
+        available ? 'Alpha demo' : 'In review',
         style: TextStyle(
-          color: Color(0xff50665f),
+          color: available ? const Color(0xff125743) : const Color(0xff50665f),
           fontSize: 12,
           fontWeight: FontWeight.w700,
         ),
@@ -292,9 +331,13 @@ class _OfflineStatus extends StatelessWidget {
 
 class _Destination {
   const _Destination(
-      {required this.title, required this.description, required this.icon});
+      {required this.title,
+      required this.description,
+      required this.icon,
+      this.available = false});
 
   final String title;
   final String description;
   final IconData icon;
+  final bool available;
 }

@@ -42,7 +42,7 @@ Carried forward from the shipped Neomate product (SRC-006), which has been in li
 
 These files hold the numeric limits and presentation decisions that the calculation modules are validated against. They are separated from the formulas so that a value can be changed and re-reviewed without touching arithmetic that has already been signed off.
 
-- [ ] `lib/clinical_policy/neonatal_weight_policy.dart` - the permitted weight range, currently 200-6000 g harvested from the inherited implementation and attributed to SRC-006, which is provenance only.
+- [ ] `lib/clinical_policy/neonatal_weight_policy.dart` - the permitted weight range, currently 200-6000 g harvested from the inherited implementation and attributed to SRC-006 as an inherited baseline.
 - [ ] `lib/clinical_policy/display_precision.dart` - decimal places used when displaying fluid volumes and rates, currently 1 d.p. on the grounds that no syringe dispenses more accurately than 0.1 mL.
 
 ## Files Exempt From Clinical Sign-Off
@@ -55,8 +55,8 @@ These contain only generic value types or technical infrastructure, with no form
 
 The following require sign-off when implemented, and must be added to this register at that time:
 
-- Electrolyte and compounding calculations.
 - Line-length calculations.
+- Remaining drug bolus and infusion protocols.
 - Every clinical content and protocol record admitted to the registry, each of which carries its own source, reviewer, sign-off, and expiry fields.
 
 ## Excluded From Review
