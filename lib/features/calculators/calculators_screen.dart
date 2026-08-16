@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../calculations/patient_context.dart';
 import '../shared/alpha_notice.dart';
+import 'airway_and_lines_screen.dart';
 import 'cardiac_infusions_screen.dart';
 import 'electrolyte_compounding_screen.dart';
 import 'physiology_calculators_screen.dart';
@@ -40,6 +41,21 @@ class CalculatorsScreen extends StatelessWidget {
             'Pure Dart calculation modules presented through Flutter-native controls. Nothing is saved or sent anywhere.',
           ),
           const SizedBox(height: 18),
+          _CalculatorTile(
+            title: 'Airway and umbilical lines',
+            description:
+                'Inherited ETT size/lip-length and UVC/UAC insertion aids with confirmation warnings',
+            icon: Icons.air,
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => AirwayAndLinesScreen(
+                  initialWeightGrams: initialWeightGrams,
+                  initialWeightOrigin: initialWeightOrigin,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
           _CalculatorTile(
             title: 'Physiology and fluids',
             description:

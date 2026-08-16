@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../../calculations/patient_context.dart';
 import '../../clinical_policy/neonatal_weight_policy.dart';
+import '../calculators/airway_and_lines_screen.dart';
 import '../calculators/calculators_screen.dart';
 import '../calculators/cardiac_infusions_screen.dart';
 import '../calculators/electrolyte_compounding_screen.dart';
@@ -77,13 +78,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       _ClinicalCategory(
                         title: 'Intubation and airway',
                         icon: Icons.air,
-                        children: const [
-                          _PendingAction(
+                        available: true,
+                        children: [
+                          _AvailableAction(
+                            key: const Key('task-airway-aids'),
                             title: 'ETT size and lip length',
                             detail:
-                                'Pending current airway source and placement-confirmation controls',
+                                'Inherited selection and initial-position aids with confirmation warning',
+                            onTap: () => _openWithWeight(
+                              validWeight,
+                              (weight, origin) => AirwayAndLinesScreen(
+                                initialWeightGrams: weight,
+                                initialWeightOrigin: origin,
+                              ),
+                            ),
                           ),
-                          _PendingAction(
+                          const _PendingAction(
                             title: 'Premedication boluses',
                             detail: 'Pending BNFC and local formulary review',
                           ),
@@ -92,10 +102,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       _ClinicalCategory(
                         title: 'Central lines',
                         icon: Icons.water_drop_outlined,
-                        children: const [
-                          _PendingAction(
+                        available: true,
+                        children: [
+                          _AvailableAction(
+                            key: const Key('task-central-line-aids'),
                             title: 'UVC and UAC length aids',
-                            detail: 'Pending BAPM 2026 and local policy review',
+                            detail:
+                                'Inherited insertion length and catheter-size aids with tip-confirmation warning',
+                            onTap: () => _openWithWeight(
+                              validWeight,
+                              (weight, origin) => AirwayAndLinesScreen(
+                                initialWeightGrams: weight,
+                                initialWeightOrigin: origin,
+                              ),
+                            ),
                           ),
                         ],
                       ),

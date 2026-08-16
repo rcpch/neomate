@@ -24,6 +24,8 @@ Candidates below were selected for current UK practice, preferring national bodi
 | SRC-008 | BNF for Children | NICE / BMJ / RPS | Cited by the inherited product as the 2015 edition; current edition not yet checked | Candidate | Drug doses and concentration limits |
 | SRC-009 | Injectable Medicines Guide (Medusa) | SPS / NHS | Cited by the inherited product as 2015; current edition not yet checked | Candidate | Infusion concentration limits and preparation advice |
 | SRC-007 | Neonatal respiratory ECMO service specification | NHS England | Not confirmed | Candidate | Oxygenation index escalation thresholds, if such thresholds are ever presented |
+| SRC-010 | Neonatal Airway Safety Standard | BAPM | Published April 2024 | Candidate | Airway safety and placement-confirmation controls; applicability to inherited ETT weight bands remains to be confirmed |
+| SRC-011 | Use of Central Venous Access Devices in Neonates | BAPM | Published July 2026 | Candidate | Umbilical venous access and tip-confirmation controls; applicability to inherited insertion-length formulae remains to be confirmed |
 
 ## Notes On Specific Sources
 

@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:neomate2/app/neomate_app.dart';
+import 'package:neomate2/features/calculators/airway_and_lines_screen.dart';
 import 'package:neomate2/features/home/home_screen.dart';
 
 void main() {
@@ -137,7 +138,8 @@ void main() {
 
     await tester.tap(find.byKey(const Key('destination-calculators')));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Electrolytes and compounding'));
+    await tester.drag(find.byType(ListView), const Offset(0, -350));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Electrolytes and compounding'));
     await tester.pumpAndSettle();
 
@@ -149,6 +151,42 @@ void main() {
     );
     await tester.pump();
     expect(find.textContaining('stock volume is invalid'), findsOneWidget);
+  });
+
+  testWidgets('shows inherited airway and line aids with confirmation warnings',
+      (tester) async {
+    await tester.pumpWidget(const NeomateApp());
+
+    await tester.tap(find.byKey(const Key('destination-calculators')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Airway and umbilical lines'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('ett-size-result')),
+        matching: find.textContaining('3.5-4.0', findRichText: true),
+      ),
+      findsOneWidget,
+    );
+    expect(find.textContaining('Confirm tube size'), findsOneWidget);
+    await tester.drag(find.byType(ListView), const Offset(0, -500));
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('uvc-result')),
+        matching: find.textContaining('10.0', findRichText: true),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('uac-result')),
+        matching: find.textContaining('18.0', findRichText: true),
+      ),
+      findsOneWidget,
+    );
+    expect(find.textContaining('confirm final tip position'), findsOneWidget);
   });
 
   testWidgets('opens source and sign-off status', (tester) async {
@@ -166,8 +204,8 @@ void main() {
       const Offset(0, -900),
     );
     await tester.pumpAndSettle();
-    expect(find.textContaining('0 of 16'), findsOneWidget);
-    expect(find.textContaining('SRC-006'), findsOneWidget);
+    expect(find.textContaining('0 of 20'), findsOneWidget);
+    expect(find.textContaining('SRC-011'), findsOneWidget);
   });
 
   for (final surface in {
@@ -218,4 +256,51 @@ void main() {
       expect(find.text('Mean airway pressure'), findsOneWidget);
     });
   }
+
+  testWidgets('home and airway aids support 200 percent text scaling on phone',
+      (tester) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      const MediaQuery(
+        data: MediaQueryData(textScaler: TextScaler.linear(2)),
+        child: NeomateApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+
+    await tester.pumpWidget(
+      const MediaQuery(
+        data: MediaQueryData(textScaler: TextScaler.linear(2)),
+        child: MaterialApp(home: AirwayAndLinesScreen()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Intubation and airway'), findsOneWidget);
+  });
+
+  testWidgets('airway aids distinguish invalid and unavailable results',
+      (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(home: AirwayAndLinesScreen()),
+    );
+
+    final weightField = find.byKey(const Key('airway-lines-weight-field'));
+    await tester.enterText(weightField, '199');
+    await tester.pump();
+
+    expect(find.text('Weight must be between 200 and 6000 g.'), findsOneWidget);
+    expect(find.byKey(const Key('ett-size-result')), findsNothing);
+
+    await tester.enterText(weightField, '5000');
+    await tester.pump();
+
+    expect(find.text('Weight must be between 200 and 6000 g.'), findsNothing);
+    expect(find.text('No inherited value'), findsOneWidget);
+    expect(find.byKey(const Key('uvc-result')), findsOneWidget);
+  });
 }

@@ -27,6 +27,10 @@ A tick here records that the header block has been completed with a named review
 - [ ] `lib/calculations/fluids/glucose_infusion_rate.dart` - glucose infusion rate in mg/kg/min.
 - [ ] `lib/calculations/fluids/electrolyte_requirement.dart` - daily electrolyte requirement in mmol/day from a prescribed mmol/kg/day.
 - [ ] `lib/calculations/fluids/additive_volume.dart` - compounding step: volume of a stock preparation needed to deliver a required amount.
+- [ ] `lib/calculations/airway/endotracheal_tube_size.dart` - inherited ETT internal-diameter bands by weight.
+- [ ] `lib/calculations/airway/endotracheal_tube_lip_length.dart` - inherited ETT oral lip-length bands. **Carries an unresolved discrepancy below 500 g between the HTML and Dart predecessors.**
+- [ ] `lib/calculations/lines/umbilical_venous_catheter.dart` - inherited UVC insertion-length formula and catheter-size threshold.
+- [ ] `lib/calculations/lines/umbilical_arterial_catheter.dart` - inherited UAC insertion-length formula and catheter-size threshold.
 
 ## Drug Protocols
 
@@ -55,7 +59,6 @@ These contain only generic value types or technical infrastructure, with no form
 
 The following require sign-off when implemented, and must be added to this register at that time:
 
-- Line-length calculations.
 - Remaining drug bolus and infusion protocols.
 - Every clinical content and protocol record admitted to the registry, each of which carries its own source, reviewer, sign-off, and expiry fields.
 

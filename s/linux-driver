@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 Neomate team and RCPCH
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Launch the Linux app with Flutter Driver enabled for local MCP interaction.
+# Never use this entrypoint for a distributable or clinical build.
+
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+if ! command -v flutter >/dev/null 2>&1; then
+  echo "Flutter is required. Install the Flutter SDK and ensure 'flutter' is on PATH." >&2
+  exit 1
+fi
+
+exec flutter run -d linux -t test_driver/driver_main.dart "$@"

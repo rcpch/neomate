@@ -39,6 +39,18 @@ class ReferencesScreen extends StatelessWidget {
       status: 'Candidate - current edition pending',
       use: 'Infusion preparation advice',
     ),
+    (
+      id: 'SRC-010',
+      title: 'BAPM Neonatal Airway Safety Standard',
+      status: 'Candidate - applicability review pending',
+      use: 'Airway safety and placement-confirmation controls',
+    ),
+    (
+      id: 'SRC-011',
+      title: 'BAPM central venous access framework',
+      status: 'Candidate - applicability review pending',
+      use: 'Umbilical venous access and tip-confirmation controls',
+    ),
   ];
 
   @override
@@ -87,7 +99,7 @@ class ReferencesScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Text(
-              'Clinical sign-off: 0 of 16 reviewable files approved. Engineering tests demonstrate implementation behavior only and do not replace independent clinical review.',
+              'Clinical sign-off: 0 of 20 reviewable files approved. Engineering tests demonstrate implementation behavior only and do not replace independent clinical review.',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ),
