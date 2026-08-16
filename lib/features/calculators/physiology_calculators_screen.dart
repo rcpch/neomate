@@ -15,7 +15,14 @@ import '../../clinical_policy/neonatal_weight_policy.dart';
 import '../shared/alpha_notice.dart';
 
 class PhysiologyCalculatorsScreen extends StatefulWidget {
-  const PhysiologyCalculatorsScreen({super.key});
+  const PhysiologyCalculatorsScreen({
+    super.key,
+    this.initialWeightGrams = 3000,
+    this.initialWeightOrigin = WeightOrigin.measured,
+  });
+
+  final double initialWeightGrams;
+  final WeightOrigin initialWeightOrigin;
 
   @override
   State<PhysiologyCalculatorsScreen> createState() =>
@@ -24,7 +31,7 @@ class PhysiologyCalculatorsScreen extends StatefulWidget {
 
 class _PhysiologyCalculatorsScreenState
     extends State<PhysiologyCalculatorsScreen> {
-  final _weight = TextEditingController(text: '3000');
+  late final TextEditingController _weight;
   final _pip = TextEditingController(text: '24');
   final _peep = TextEditingController(text: '6');
   final _ti = TextEditingController(text: '0.4');
@@ -35,6 +42,14 @@ class _PhysiologyCalculatorsScreenState
   final _glucose = TextEditingController(text: '10');
   final _rate = TextEditingController(text: '10');
   PartialPressureUnit _paO2Unit = PartialPressureUnit.kilopascals;
+
+  @override
+  void initState() {
+    super.initState();
+    _weight = TextEditingController(
+      text: widget.initialWeightGrams.toStringAsFixed(0),
+    );
+  }
 
   @override
   void dispose() {
@@ -64,6 +79,10 @@ class _PhysiologyCalculatorsScreenState
         padding: const EdgeInsets.all(20),
         children: [
           const AlphaNotice(compact: true),
+          if (widget.initialWeightOrigin == WeightOrigin.estimated) ...[
+            const SizedBox(height: 10),
+            const _EstimatedWeightNotice(),
+          ],
           const SizedBox(height: 18),
           _Section(
             title: 'Patient',
@@ -256,7 +275,7 @@ class _PhysiologyCalculatorsScreenState
     }
     final patient = PatientContext(
       weight: weightResult.weight,
-      weightOrigin: WeightOrigin.measured,
+      weightOrigin: widget.initialWeightOrigin,
     );
     final mapResult = calculateMeanAirwayPressure(
       peakInspiratoryPressureCmH2O: values[1]!,
@@ -302,6 +321,21 @@ class _PhysiologyCalculatorsScreenState
       dailyFluid: fluidResult.value.totalMillilitresPerDay,
       hourlyFluid: fluidResult.value.millilitresPerHour,
       gir: girResult.value,
+    );
+  }
+}
+
+class _EstimatedWeightNotice extends StatelessWidget {
+  const _EstimatedWeightNotice();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      'Estimated weight: all weight-derived outputs carry additional uncertainty.',
+      style: TextStyle(
+        color: Color(0xff775000),
+        fontWeight: FontWeight.w700,
+      ),
     );
   }
 }

@@ -17,6 +17,7 @@ class NeomateApp extends StatelessWidget {
           seedColor: const Color(0xff176c55),
           brightness: Brightness.light,
         ),
+        fontFamily: 'Lato',
         useMaterial3: true,
       ),
       home: const HomeScreen(),

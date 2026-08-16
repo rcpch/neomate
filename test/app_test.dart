@@ -4,19 +4,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:neomate2/app/neomate_app.dart';
+import 'package:neomate2/features/home/home_screen.dart';
 
 void main() {
   testWidgets('shows the native rebuild status', (tester) async {
     await tester.pumpWidget(const NeomateApp());
 
-    expect(find.text('Neomate'), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Image &&
+            widget.image is AssetImage &&
+            (widget.image as AssetImage).assetName ==
+                'graphics/neomate-logo.gif',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      Theme.of(tester.element(find.byType(HomeScreen)))
+          .textTheme
+          .bodyMedium
+          ?.fontFamily,
+      'Lato',
+    );
     expect(find.text('Native rebuild in progress'), findsOneWidget);
     expect(
-        find.textContaining('not approved for clinical use'), findsOneWidget);
+        find.textContaining('Not approved for clinical use'), findsOneWidget);
+    expect(find.byKey(const Key('home-weight-field')), findsOneWidget);
     expect(find.text('Calculators'), findsOneWidget);
-    expect(find.text('Clinical guidance'), findsOneWidget);
-    expect(find.text('Alpha demo'), findsNWidgets(2));
+    expect(find.text('Clinical tasks'), findsOneWidget);
+    expect(find.text('Cardiac drugs'), findsOneWidget);
+    expect(find.text('Alpha actions available'), findsWidgets);
     expect(find.textContaining('Offline by design'), findsOneWidget);
+  });
+
+  testWidgets('passes the workspace weight into a grouped cardiac workflow',
+      (tester) async {
+    await tester.pumpWidget(const NeomateApp());
+
+    await tester.enterText(find.byKey(const Key('home-weight-field')), '2500');
+    await tester.tap(find.text('Estimated weight'));
+    await tester.pump();
+    final cardiacInfusions = find.byKey(const Key('task-cardiac-infusions'));
+    await tester.drag(find.byType(CustomScrollView), const Offset(0, -450));
+    await tester.pumpAndSettle();
+    await tester.tap(cardiacInfusions);
+    await tester.pumpAndSettle();
+
+    final field = tester.widget<TextField>(
+      find.descendant(
+        of: find.byKey(const Key('infusion-weight-field')),
+        matching: find.byType(TextField),
+      ),
+    );
+    expect(field.controller?.text, '2500');
+    expect(find.text('Cardiac infusions'), findsOneWidget);
+    expect(find.textContaining('Estimated weight:'), findsOneWidget);
   });
 
   testWidgets('opens the native physiology calculator and updates results',
@@ -88,12 +131,30 @@ void main() {
     );
   });
 
+  testWidgets('calculates electrolyte requirement and stock volume',
+      (tester) async {
+    await tester.pumpWidget(const NeomateApp());
+
+    await tester.tap(find.byKey(const Key('destination-calculators')));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Electrolytes and compounding'));
+    await tester.tap(find.text('Electrolytes and compounding'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('9.0 mmol/day'), findsOneWidget);
+    expect(find.textContaining('Draw up 9.0 mL'), findsOneWidget);
+    await tester.enterText(
+      find.byKey(const Key('stock-concentration-field')),
+      '0',
+    );
+    await tester.pump();
+    expect(find.textContaining('stock volume is invalid'), findsOneWidget);
+  });
+
   testWidgets('opens source and sign-off status', (tester) async {
     await tester.pumpWidget(const NeomateApp());
 
     final references = find.byKey(const Key('destination-references'));
-    await tester.drag(find.byType(Scrollable), const Offset(0, -500));
-    await tester.pumpAndSettle();
     await tester.tap(references);
     await tester.pumpAndSettle();
     expect(find.text('Clinical source register'), findsOneWidget);
@@ -121,7 +182,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(tester.takeException(), isNull);
-      expect(find.text('Neomate'), findsOneWidget);
+      expect(find.text('Native rebuild in progress'), findsOneWidget);
       expect(find.text('References'), findsOneWidget);
     });
   }

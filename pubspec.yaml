@@ -76,10 +76,19 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
   fonts:
-      - family: Neomate
-        fonts:
-          - asset: fonts/Neomate.ttf
+    - family: Neomate
+      fonts:
+        - asset: fonts/Neomate.ttf
+    - family: Lato
+      fonts:
+        - asset: fonts/lato-regular.ttf
+        - asset: fonts/lato-italic.ttf
+          style: italic
+        - asset: fonts/lato-bold.ttf
+          weight: 700
+        - asset: fonts/lato-black.ttf
+          weight: 900
 
   assets:
-      - graphics/cfm/
-      - graphics/
+    - graphics/cfm/
+    - graphics/

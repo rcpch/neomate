@@ -6,9 +6,12 @@ The internal alpha is a Flutter-native demonstration for the original Neomate au
 
 ## Demonstrable Scope
 
-- Adaptive Flutter-native home screen for phone and desktop layouts.
+- Adaptive Flutter-native home screen for phone and desktop layouts, using the inherited Neomate logo and Lato type family.
+- Prominent session-only baby-weight context passed into available calculator workflows, with measured/estimated status visible.
+- Familiar clinical accordion categories loosely correlated with the original Neomate task layout while retaining native Flutter controls and accessibility semantics.
+- Familiar bottom navigation for workspace, calculators, checklists, and references; unavailable areas remain visibly gated pending review.
 - Native calculator navigation with no HTML renderer or runtime network dependency.
-- Live weight validation, mean airway pressure, oxygenation index, daily fluid volume, and glucose infusion rate calculations.
+- Live weight validation, mean airway pressure, oxygenation index, daily fluid volume, glucose infusion rate, electrolyte requirement, and additive stock-volume calculations.
 - Five inherited cardiac infusion preparation protocols: dopamine, dobutamine, adrenaline, noradrenaline, and dinoprostone.
 - Enforced inherited dose, concentration, intravenous-route, and central/umbilical-venous-access controls.
 - Native source and review-status presentation.
@@ -50,20 +53,21 @@ iOS and macOS must be built and exercised on macOS with Xcode. Windows must be b
 
 ## Demo Script
 
-1. Open the home screen and point out the offline/no-storage status and persistent development warning.
-2. Open **Calculators**, then **Physiology and fluids**.
-3. Change weight and ventilator values to show live native calculation results.
-4. Enter an invalid weight to demonstrate a controlled refusal rather than a misleading result.
-5. Open **Cardiac infusions** and show a valid dopamine preparation.
-6. Raise the dose or lower the pump rate to demonstrate enforced concentration limits.
-7. Select peripheral access to demonstrate the line-access refusal.
+1. Open the home screen and point out the familiar Neomate branding, weight-first workflow, offline/no-storage status, and persistent development warning.
+2. Change the workspace weight and open **Cardiac drugs** to demonstrate that the session weight is carried into the named infusion workflow.
+3. Raise the dose or lower the pump rate to demonstrate enforced concentration limits, then select peripheral access to demonstrate the line-access refusal.
+4. Open **Intravenous fluids**, then **Electrolytes and compounding**, to show the explicit prescription and stock-preparation steps.
+5. Open **Oxygenation index** and change ventilator values to show live native calculation results.
+6. Enter an invalid weight to demonstrate a controlled refusal rather than a misleading result.
+7. Use the bottom **Calculators** destination to show the complete alpha calculator catalogue.
 8. Open **References** to show inherited/proposed source status and zero clinical sign-offs.
-9. Confirm that guidance and checklists remain unavailable pending review.
+9. Confirm that locked category actions and checklists remain unavailable pending review.
 
 ## Known Limitations
 
 - No clinical calculation or protocol has independent clinical sign-off.
 - The fluid alpha uses a deliberately broad inherited engineering guard of 1-300 mL/kg/day, not a prescribing range. A reviewed local fluid policy is still required.
+- The electrolyte alpha uses a deliberately broad 0.1-100 mmol/kg/day engineering guard, not a prescribing range. Users must enter a prescription already selected from an approved policy and independently verify the stock preparation.
 - Infusion values remain inherited baselines pending verification against current BNFC, Medusa, and the approved local formulary.
 - Dinoprostone retains the inherited discrepancy between its enforced 1-20 nanograms/kg/min range and displayed usual 5-10 nanograms/kg/min range.
 - No treatment interpretation, escalation threshold, compatibility advice, diluent selection, or local policy is presented.

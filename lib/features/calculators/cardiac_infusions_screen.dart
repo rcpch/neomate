@@ -15,19 +15,34 @@ import '../../clinical_protocols/infusions/noradrenaline_infusion.dart';
 import '../shared/alpha_notice.dart';
 
 class CardiacInfusionsScreen extends StatefulWidget {
-  const CardiacInfusionsScreen({super.key});
+  const CardiacInfusionsScreen({
+    super.key,
+    this.initialWeightGrams = 3000,
+    this.initialWeightOrigin = WeightOrigin.measured,
+  });
+
+  final double initialWeightGrams;
+  final WeightOrigin initialWeightOrigin;
 
   @override
   State<CardiacInfusionsScreen> createState() => _CardiacInfusionsScreenState();
 }
 
 class _CardiacInfusionsScreenState extends State<CardiacInfusionsScreen> {
-  final _weight = TextEditingController(text: '3000');
+  late final TextEditingController _weight;
   final _dose = TextEditingController(text: '10');
   final _volume = TextEditingController(text: '50');
   final _rate = TextEditingController(text: '2');
   _Drug _drug = _Drug.dopamine;
   VascularAccess _access = VascularAccess.central;
+
+  @override
+  void initState() {
+    super.initState();
+    _weight = TextEditingController(
+      text: widget.initialWeightGrams.toStringAsFixed(0),
+    );
+  }
 
   @override
   void dispose() {
@@ -47,6 +62,16 @@ class _CardiacInfusionsScreenState extends State<CardiacInfusionsScreen> {
         padding: const EdgeInsets.all(20),
         children: [
           const AlphaNotice(compact: true),
+          if (widget.initialWeightOrigin == WeightOrigin.estimated) ...[
+            const SizedBox(height: 10),
+            const Text(
+              'Estimated weight: all weight-derived outputs carry additional uncertainty.',
+              style: TextStyle(
+                color: Color(0xff775000),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
           const SizedBox(height: 18),
           Text(
             'Named protocol preparation',
@@ -202,7 +227,7 @@ class _CardiacInfusionsScreenState extends State<CardiacInfusionsScreen> {
     final calculated = protocol.calculate(
       patient: PatientContext(
         weight: weightResult.weight,
-        weightOrigin: WeightOrigin.measured,
+        weightOrigin: widget.initialWeightOrigin,
       ),
       route: AdministrationRoute.intravenous,
       access: _access,

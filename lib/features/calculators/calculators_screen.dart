@@ -3,12 +3,21 @@
 
 import 'package:flutter/material.dart';
 
+import '../../calculations/patient_context.dart';
 import '../shared/alpha_notice.dart';
 import 'cardiac_infusions_screen.dart';
+import 'electrolyte_compounding_screen.dart';
 import 'physiology_calculators_screen.dart';
 
 class CalculatorsScreen extends StatelessWidget {
-  const CalculatorsScreen({super.key});
+  const CalculatorsScreen({
+    super.key,
+    this.initialWeightGrams = 3000,
+    this.initialWeightOrigin = WeightOrigin.measured,
+  });
+
+  final double initialWeightGrams;
+  final WeightOrigin initialWeightOrigin;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +47,10 @@ class CalculatorsScreen extends StatelessWidget {
             icon: Icons.monitor_heart_outlined,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => const PhysiologyCalculatorsScreen(),
+                builder: (_) => PhysiologyCalculatorsScreen(
+                  initialWeightGrams: initialWeightGrams,
+                  initialWeightOrigin: initialWeightOrigin,
+                ),
               ),
             ),
           ),
@@ -50,7 +62,25 @@ class CalculatorsScreen extends StatelessWidget {
             icon: Icons.medication_outlined,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => const CardiacInfusionsScreen(),
+                builder: (_) => CardiacInfusionsScreen(
+                  initialWeightGrams: initialWeightGrams,
+                  initialWeightOrigin: initialWeightOrigin,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          _CalculatorTile(
+            title: 'Electrolytes and compounding',
+            description:
+                'Convert a prescribed mmol/kg/day requirement into a daily amount and stock volume',
+            icon: Icons.science_outlined,
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => ElectrolyteCompoundingScreen(
+                  initialWeightGrams: initialWeightGrams,
+                  initialWeightOrigin: initialWeightOrigin,
+                ),
               ),
             ),
           ),

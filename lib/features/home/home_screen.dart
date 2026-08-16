@@ -2,104 +2,254 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import '../../calculations/patient_context.dart';
+import '../../clinical_policy/neonatal_weight_policy.dart';
 import '../calculators/calculators_screen.dart';
+import '../calculators/cardiac_infusions_screen.dart';
+import '../calculators/electrolyte_compounding_screen.dart';
+import '../calculators/physiology_calculators_screen.dart';
 import '../references/references_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  static const _destinations = [
-    _Destination(
-      title: 'Calculators',
-      description:
-          'Weight-based calculations and approved protocol preparations',
-      icon: Icons.calculate_outlined,
-      available: true,
-    ),
-    _Destination(
-      title: 'Clinical guidance',
-      description: 'Versioned neonatal guidance for acute care',
-      icon: Icons.menu_book_outlined,
-    ),
-    _Destination(
-      title: 'Checklists',
-      description: 'Reviewed cognitive aids for neonatal workflows',
-      icon: Icons.checklist_outlined,
-    ),
-    _Destination(
-      title: 'References',
-      description: 'Sources, review dates, and clinical sign-off records',
-      icon: Icons.source_outlined,
-      available: true,
-    ),
-  ];
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final _weight = TextEditingController(text: '3000');
+  bool _estimatedWeight = false;
+
+  @override
+  void dispose() {
+    _weight.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final validWeight = _validatedWeight;
     return Scaffold(
       backgroundColor: const Color(0xfff4f7f5),
       body: CustomScrollView(
         slivers: [
           const _Header(),
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+            padding: const EdgeInsets.fromLTRB(16, 18, 16, 36),
             sliver: SliverToBoxAdapter(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 960),
+                  constraints: const BoxConstraints(maxWidth: 920),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const _SafetyNotice(),
-                      const SizedBox(height: 28),
+                      const SizedBox(height: 18),
+                      _WeightContext(
+                        controller: _weight,
+                        estimated: _estimatedWeight,
+                        valid: validWeight != null,
+                        onChanged: () => setState(() {}),
+                        onEstimatedChanged: (value) {
+                          setState(() => _estimatedWeight = value);
+                        },
+                      ),
+                      const SizedBox(height: 24),
                       Text(
-                        'Clinical workspace',
+                        'Clinical tasks',
                         style:
                             Theme.of(context).textTheme.headlineSmall?.copyWith(
                                   color: const Color(0xff153e33),
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w800,
                                 ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 5),
                       Text(
-                        'Features become available only after their clinical sources, controls, and tests are approved.',
+                        'Familiar Neomate categories, rebuilt as native Flutter workflows. Available items are alpha demonstrations only.',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: const Color(0xff456158),
                             ),
                       ),
-                      const SizedBox(height: 18),
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          final columns = constraints.maxWidth >= 720 ? 2 : 1;
-                          final width = columns == 1
-                              ? constraints.maxWidth
-                              : (constraints.maxWidth - 16) / 2;
-                          return Wrap(
-                            spacing: 16,
-                            runSpacing: 16,
-                            children: [
-                              for (final destination in _destinations)
-                                SizedBox(
-                                  width: width,
-                                  child: _DestinationPanel(
-                                    key: Key(
-                                      'destination-${destination.title.toLowerCase().replaceAll(' ', '-')}',
-                                    ),
-                                    destination: destination,
-                                    onTap: destination.available
-                                        ? () => _openDestination(
-                                              context,
-                                              destination.title,
-                                            )
-                                        : null,
-                                  ),
-                                ),
-                            ],
-                          );
-                        },
+                      const SizedBox(height: 14),
+                      _ClinicalCategory(
+                        title: 'Intubation and airway',
+                        icon: Icons.air,
+                        children: const [
+                          _PendingAction(
+                            title: 'ETT size and lip length',
+                            detail:
+                                'Pending current airway source and placement-confirmation controls',
+                          ),
+                          _PendingAction(
+                            title: 'Premedication boluses',
+                            detail: 'Pending BNFC and local formulary review',
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 28),
+                      _ClinicalCategory(
+                        title: 'Central lines',
+                        icon: Icons.water_drop_outlined,
+                        children: const [
+                          _PendingAction(
+                            title: 'UVC and UAC length aids',
+                            detail: 'Pending BAPM 2026 and local policy review',
+                          ),
+                        ],
+                      ),
+                      _ClinicalCategory(
+                        title: 'Cardiac drugs',
+                        icon: Icons.favorite_outline,
+                        available: true,
+                        initiallyExpanded: true,
+                        children: [
+                          _AvailableAction(
+                            key: const Key('task-cardiac-infusions'),
+                            title: 'Cardiac infusions',
+                            detail:
+                                'Dopamine, dobutamine, adrenaline, noradrenaline, and dinoprostone',
+                            onTap: () => _openWithWeight(
+                              validWeight,
+                              (weight, origin) => CardiacInfusionsScreen(
+                                initialWeightGrams: weight,
+                                initialWeightOrigin: origin,
+                              ),
+                            ),
+                          ),
+                          const _PendingAction(
+                            title: 'Fluid and medicine boluses',
+                            detail: 'Pending source and formulary review',
+                          ),
+                        ],
+                      ),
+                      const _ClinicalCategory(
+                        title: 'Sedative drugs',
+                        icon: Icons.bedtime_outlined,
+                        children: [
+                          _PendingAction(
+                            title: 'Bolus and infusion protocols',
+                            detail: 'Pending BNFC and local formulary review',
+                          ),
+                        ],
+                      ),
+                      const _ClinicalCategory(
+                        title: 'Neurology',
+                        icon: Icons.psychology_outlined,
+                        children: [
+                          _PendingAction(
+                            title: 'Anticonvulsant protocols',
+                            detail: 'Pending BNFC and local formulary review',
+                          ),
+                        ],
+                      ),
+                      const _ClinicalCategory(
+                        title: 'Emergency drugs',
+                        icon: Icons.emergency_outlined,
+                        children: [
+                          _PendingAction(
+                            title: 'Newborn resuscitation medicines',
+                            detail: 'Pending RCUK 2025 and local policy review',
+                          ),
+                        ],
+                      ),
+                      const _ClinicalCategory(
+                        title: 'Cooling criteria',
+                        icon: Icons.ac_unit,
+                        children: [
+                          _PendingAction(
+                            title: 'HIE and therapeutic hypothermia guidance',
+                            detail: 'Pending BAPM 2025 and network review',
+                          ),
+                        ],
+                      ),
+                      const _ClinicalCategory(
+                        title: 'Admission to unit',
+                        icon: Icons.login_outlined,
+                        children: [
+                          _PendingAction(
+                            title: 'Admission checklist and medicines',
+                            detail: 'Pending decomposition and clinical review',
+                          ),
+                        ],
+                      ),
+                      _ClinicalCategory(
+                        title: 'Intravenous fluids',
+                        icon: Icons.local_drink_outlined,
+                        available: true,
+                        children: [
+                          _AvailableAction(
+                            title: 'Daily fluids and glucose infusion rate',
+                            detail:
+                                'Daily/hourly volume and single-infusion GIR',
+                            onTap: () => _openWithWeight(
+                              validWeight,
+                              (weight, origin) => PhysiologyCalculatorsScreen(
+                                initialWeightGrams: weight,
+                                initialWeightOrigin: origin,
+                              ),
+                            ),
+                          ),
+                          _AvailableAction(
+                            key: const Key('task-electrolyte-compounding'),
+                            title: 'Electrolytes and compounding',
+                            detail:
+                                'Prescribed daily requirement and stock volume',
+                            onTap: () => _openWithWeight(
+                              validWeight,
+                              (weight, origin) => ElectrolyteCompoundingScreen(
+                                initialWeightGrams: weight,
+                                initialWeightOrigin: origin,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      _ClinicalCategory(
+                        title: 'Oxygenation index',
+                        icon: Icons.monitor_heart_outlined,
+                        available: true,
+                        children: [
+                          _AvailableAction(
+                            title: 'Ventilation and oxygenation',
+                            detail:
+                                'Mean airway pressure and unit-explicit oxygenation index',
+                            onTap: () => _openWithWeight(
+                              validWeight,
+                              (weight, origin) => PhysiologyCalculatorsScreen(
+                                initialWeightGrams: weight,
+                                initialWeightOrigin: origin,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      _ClinicalCategory(
+                        title: 'Infusion calculators',
+                        icon: Icons.medication_outlined,
+                        available: true,
+                        children: [
+                          _AvailableAction(
+                            title: 'Named cardiac protocols',
+                            detail:
+                                'Only reviewed-by-name protocol structures; no generic calculator',
+                            onTap: () => _openWithWeight(
+                              validWeight,
+                              (weight, origin) => CardiacInfusionsScreen(
+                                initialWeightGrams: weight,
+                                initialWeightOrigin: origin,
+                              ),
+                            ),
+                          ),
+                          const _PendingAction(
+                            title: 'Other named infusions',
+                            detail:
+                                'Sedative, neurological, and emergency tranches pending',
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
                       const _OfflineStatus(),
                     ],
                   ),
@@ -109,18 +259,90 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: 0,
+        onDestinationSelected: (index) {
+          switch (index) {
+            case 1:
+              _openWithWeight(
+                validWeight,
+                (weight, origin) => CalculatorsScreen(
+                  initialWeightGrams: weight,
+                  initialWeightOrigin: origin,
+                ),
+              );
+            case 2:
+              _showPending('Checklists');
+            case 3:
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const ReferencesScreen(),
+                ),
+              );
+          }
+        },
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
+            label: 'Workspace',
+          ),
+          NavigationDestination(
+            key: Key('destination-calculators'),
+            icon: Icon(Icons.calculate_outlined),
+            label: 'Calculators',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.checklist_outlined),
+            label: 'Checklists',
+          ),
+          NavigationDestination(
+            key: Key('destination-references'),
+            icon: Icon(Icons.source_outlined),
+            label: 'References',
+          ),
+        ],
+      ),
     );
   }
 
-  void _openDestination(BuildContext context, String title) {
-    final screen = switch (title) {
-      'Calculators' => const CalculatorsScreen(),
-      'References' => const ReferencesScreen(),
-      _ => null,
-    };
-    if (screen == null) return;
+  double? get _validatedWeight {
+    final grams = double.tryParse(_weight.text);
+    if (grams == null) return null;
+    final result = PatientWeight.validate(
+      grams: grams,
+      policy: neonatalWeightPolicy,
+    );
+    return result is ValidWeight ? result.weight.grams : null;
+  }
+
+  void _openWithWeight(
+    double? weight,
+    Widget Function(double weightGrams, WeightOrigin origin) builder,
+  ) {
+    if (weight == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Enter a weight between 200 and 6000 g first.'),
+        ),
+      );
+      return;
+    }
     Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => screen),
+      MaterialPageRoute<void>(
+        builder: (_) => builder(
+          weight,
+          _estimatedWeight ? WeightOrigin.estimated : WeightOrigin.measured,
+        ),
+      ),
+    );
+  }
+
+  void _showPending(String feature) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$feature remain unavailable pending clinical review.'),
+      ),
     );
   }
 }
@@ -132,38 +354,222 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverAppBar(
       pinned: true,
-      expandedHeight: 168,
-      backgroundColor: const Color(0xff125743),
+      expandedHeight: 150,
+      backgroundColor: const Color(0xff202322),
       foregroundColor: Colors.white,
       flexibleSpace: FlexibleSpaceBar(
         expandedTitleScale: 1,
-        titlePadding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
+        titlePadding: const EdgeInsets.fromLTRB(16, 0, 16, 15),
         title: Semantics(
           header: true,
-          child: const Text(
-            'Neomate',
-            style: TextStyle(
-                color: Colors.white, fontSize: 28, fontWeight: FontWeight.w800),
+          image: true,
+          label: 'Neomate',
+          child: ExcludeSemantics(
+            child: Image.asset(
+              'graphics/neomate-logo.gif',
+              width: 205,
+              height: 34,
+              fit: BoxFit.contain,
+              alignment: Alignment.centerLeft,
+            ),
           ),
         ),
         background: const DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xff0e4738), Color(0xff1f765d)],
+              colors: [Color(0xff181b1a), Color(0xff176c55)],
               begin: Alignment.bottomLeft,
               end: Alignment.topRight,
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20, 64, 20, 20),
+            padding: EdgeInsets.fromLTRB(16, 54, 16, 20),
             child: Align(
               alignment: Alignment.topLeft,
               child: Text(
                 'Offline neonatal calculations and guidance',
-                style: TextStyle(color: Color(0xffd7ede5), fontSize: 16),
+                style: TextStyle(color: Color(0xffd7ede5), fontSize: 15),
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _WeightContext extends StatelessWidget {
+  const _WeightContext({
+    required this.controller,
+    required this.estimated,
+    required this.valid,
+    required this.onChanged,
+    required this.onEstimatedChanged,
+  });
+
+  final TextEditingController controller;
+  final bool estimated;
+  final bool valid;
+  final VoidCallback onChanged;
+  final ValueChanged<bool> onEstimatedChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(
+          color: valid ? const Color(0xff3d9275) : const Color(0xffbd4c36),
+          width: 1.5,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x12000000),
+            blurRadius: 10,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final compact = constraints.maxWidth < 560;
+          final input = TextField(
+            key: const Key('home-weight-field'),
+            controller: controller,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+            ],
+            decoration: InputDecoration(
+              labelText: 'Baby weight',
+              suffixText: 'grams',
+              helperText: valid ? 'Used for this session only' : '200-6000 g',
+              border: const OutlineInputBorder(),
+              errorText: valid ? null : 'Enter a valid neonatal weight',
+              prefixIcon: const Icon(Icons.monitor_weight_outlined),
+            ),
+            onChanged: (_) => onChanged(),
+          );
+          final estimate = Material(
+            color: Colors.transparent,
+            child: SwitchListTile.adaptive(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Estimated weight'),
+              subtitle: const Text('Mark derived results as estimated'),
+              value: estimated,
+              onChanged: onEstimatedChanged,
+            ),
+          );
+          if (compact) {
+            return Column(children: [input, estimate]);
+          }
+          return Row(
+            children: [
+              Expanded(flex: 3, child: input),
+              const SizedBox(width: 18),
+              Expanded(flex: 2, child: estimate),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _ClinicalCategory extends StatelessWidget {
+  const _ClinicalCategory({
+    required this.title,
+    required this.icon,
+    required this.children,
+    this.available = false,
+    this.initiallyExpanded = false,
+  });
+
+  final String title;
+  final IconData icon;
+  final List<Widget> children;
+  final bool available;
+  final bool initiallyExpanded;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      clipBehavior: Clip.antiAlias,
+      child: ExpansionTile(
+        initiallyExpanded: initiallyExpanded,
+        leading: Icon(icon, color: Colors.white),
+        collapsedIconColor: Colors.white,
+        iconColor: Colors.white,
+        collapsedBackgroundColor: const Color(0xff176c55),
+        backgroundColor: const Color(0xfff8fbfa),
+        textColor: const Color(0xff153e33),
+        collapsedTextColor: Colors.white,
+        shape: const Border(),
+        collapsedShape: const Border(),
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.w700),
+        ),
+        subtitle: available
+            ? const Text(
+                'Alpha actions available',
+                style: TextStyle(color: Color(0xffd7ede5)),
+              )
+            : null,
+        childrenPadding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+        children: children,
+      ),
+    );
+  }
+}
+
+class _AvailableAction extends StatelessWidget {
+  const _AvailableAction({
+    super.key,
+    required this.title,
+    required this.detail,
+    required this.onTap,
+  });
+
+  final String title;
+  final String detail;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+      leading: const Icon(Icons.play_circle_outline, color: Color(0xff176c55)),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
+      subtitle: Text(detail),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: onTap,
+    );
+  }
+}
+
+class _PendingAction extends StatelessWidget {
+  const _PendingAction({required this.title, required this.detail});
+
+  final String title;
+  final String detail;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+      leading: const Icon(Icons.lock_clock_outlined, color: Color(0xff6d7d77)),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
+      subtitle: Text(detail),
+      trailing: const Text(
+        'In review',
+        style: TextStyle(
+          color: Color(0xff596963),
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );
@@ -179,7 +585,7 @@ class _SafetyNotice extends StatelessWidget {
       container: true,
       label: 'Development safety notice',
       child: Container(
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           color: const Color(0xfffff0c7),
           border: Border.all(color: const Color(0xffd79818), width: 1.5),
@@ -189,8 +595,10 @@ class _SafetyNotice extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ExcludeSemantics(
-              child: Icon(Icons.health_and_safety_outlined,
-                  color: Color(0xff775000)),
+              child: Icon(
+                Icons.health_and_safety_outlined,
+                color: Color(0xff775000),
+              ),
             ),
             SizedBox(width: 12),
             Expanded(
@@ -204,103 +612,15 @@ class _SafetyNotice extends StatelessWidget {
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  SizedBox(height: 3),
                   Text(
-                    'This build is not approved for clinical use. Alpha demonstrations are available for evaluation; reviewed clinical features remain unavailable.',
+                    'Not approved for clinical use. Available calculations are internal alpha demonstrations only.',
                     style: TextStyle(color: Color(0xff4f3500)),
                   ),
                 ],
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _DestinationPanel extends StatelessWidget {
-  const _DestinationPanel({super.key, required this.destination, this.onTap});
-
-  final _Destination destination;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      container: true,
-      button: destination.available,
-      label: destination.available
-          ? '${destination.title}, internal alpha available'
-          : '${destination.title}, unavailable pending clinical review',
-      child: Material(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(color: Color(0xffcbd8d3)),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: Container(
-            constraints: const BoxConstraints(minHeight: 150),
-            padding: const EdgeInsets.all(18),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    ExcludeSemantics(
-                      child: Icon(destination.icon,
-                          color: const Color(0xff176c55), size: 28),
-                    ),
-                    const Spacer(),
-                    _ReviewStatus(available: destination.available),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  destination.title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: const Color(0xff153e33),
-                        fontWeight: FontWeight.w700,
-                      ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  destination.description,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: const Color(0xff50665f),
-                      ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ReviewStatus extends StatelessWidget {
-  const _ReviewStatus({required this.available});
-
-  final bool available;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-      decoration: BoxDecoration(
-        color: available ? const Color(0xffe8f3ef) : const Color(0xffedf1ef),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        available ? 'Alpha demo' : 'In review',
-        style: TextStyle(
-          color: available ? const Color(0xff125743) : const Color(0xff50665f),
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
         ),
       ),
     );
@@ -315,29 +635,19 @@ class _OfflineStatus extends StatelessWidget {
     return const Row(
       children: [
         ExcludeSemantics(
-            child: Icon(Icons.offline_bolt_outlined, color: Color(0xff176c55))),
+          child: Icon(Icons.offline_bolt_outlined, color: Color(0xff176c55)),
+        ),
         SizedBox(width: 10),
         Expanded(
           child: Text(
             'Offline by design · no analytics · no patient data storage',
             style: TextStyle(
-                color: Color(0xff34554b), fontWeight: FontWeight.w600),
+              color: Color(0xff34554b),
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ],
     );
   }
-}
-
-class _Destination {
-  const _Destination(
-      {required this.title,
-      required this.description,
-      required this.icon,
-      this.available = false});
-
-  final String title;
-  final String description;
-  final IconData icon;
-  final bool available;
 }

@@ -99,6 +99,14 @@ The proposed platform scope is Android, iOS, macOS, Windows, Linux, and web. Off
 - BAPM therapeutic-hypothermia guidance has a 2025 update and is subject to renewal in 2026, so HIE content needs a formally managed review date.
 - BAPM published a central-venous-access framework in July 2026, requiring re-review of inherited UVC/UAC material.
 
+## Inherited Brand Assets
+
+| Asset | Legacy path | Rebuild path | Status |
+| --- | --- | --- | --- |
+| Neomate wordmark and baby symbol | `../neomateapp/www/images/headertitle8-neomate.gif` | `graphics/neomate-logo.gif` | Inherited brand asset used in the internal alpha. Ownership and redistribution clearance remain part of D4. |
+| Lato Regular, Italic, Bold, and Black | `../neomateapp/www/css/lato-*.ttf` | `fonts/lato-*.ttf` | Lato is published under the SIL Open Font License, but the inherited repository does not include its font licence text. Retained for internal alpha continuity; add authoritative licence evidence and notices before distribution. |
+| Neomate icon font | Already inherited as `fonts/Neomate.ttf` | `fonts/Neomate.ttf` | Custom icon font with no licence metadata embedded. Not used for general text; ownership and redistribution clearance remain part of D4. |
+
 ## Known Defects And Risks
 
 These findings are observations of inherited code, not clinical determinations. They are linked to `clinical-safety/HAZARD-LOG.md` during remediation.
