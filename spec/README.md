@@ -10,5 +10,6 @@ Read this directory before changing clinical behaviour or app architecture.
 - [legacy-inventory-and-source-review.md](legacy-inventory-and-source-review.md) - cross-codebase feature inventory, defects, source review, and rebuild requirements.
 - [ubiquitous-language.md](ubiquitous-language.md) - canonical domain terminology.
 - [queries.md](queries.md) - decisions requiring human governance input.
+- [clinical-review-questions.md](clinical-review-questions.md) - prioritised questions for neonatal clinical reviewers, with an answer template and links to unresolved implementation decisions.
 
 Legacy code is evidence of prior behaviour, not an approved specification or clinical source.

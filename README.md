@@ -24,6 +24,7 @@ The current non-clinical demonstration scope, build commands, and limitations ar
 - [clinical-safety/](clinical-safety/) - safety plan, safety case, and hazard log.
 - [qms/](qms/) - software-development and release controls.
 - [spec/](spec/) - durable product, terminology, and roadmap decisions.
+- [Clinical review questions](spec/clinical-review-questions.md) - prioritised decisions for neonatal clinical reviewers.
 - [agent-instructions.md](agent-instructions.md) - contributor and agent workflow.
 
 ## Contributors
@@ -34,7 +35,7 @@ The current contributors are listed alphabetically:
 - Michael Barton - RCPCH Lead Developer
 - Dr Katharine Jamieson - Neonatal consultant
 - Dr Chris Kelly - Doctor, Guy's and St Thomas' Hospital
-- Dr Lee Collier - Doctor / Developer
+- Dr Lee Collier, STORKS Charity, Blizard Institute Queen Mary University of London
 - Dr Syed Mohinuddin - Neonatal consultant, Children's Hospital of Eastern Ontario (CHEO)
 
 ## Licence
