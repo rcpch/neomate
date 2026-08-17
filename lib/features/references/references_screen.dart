@@ -99,7 +99,7 @@ class ReferencesScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Text(
-              'Clinical sign-off: 0 of 22 reviewable files approved. Engineering tests demonstrate implementation behavior only and do not replace independent clinical review.',
+              'Clinical sign-off: 0 of 24 reviewable files approved. Engineering tests demonstrate implementation behavior only and do not replace independent clinical review.',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ),

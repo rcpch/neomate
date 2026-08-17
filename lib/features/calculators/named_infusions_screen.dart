@@ -8,10 +8,12 @@ import '../../calculations/patient_context.dart';
 import '../../calculations/protocol_calculation.dart';
 import '../../clinical_policy/neonatal_weight_policy.dart';
 import '../../clinical_protocols/infusions/adrenaline_infusion.dart';
+import '../../clinical_protocols/infusions/clonazepam_infusion.dart';
 import '../../clinical_protocols/infusions/dinoprostone_infusion.dart';
 import '../../clinical_protocols/infusions/dobutamine_infusion.dart';
 import '../../clinical_protocols/infusions/dopamine_infusion.dart';
 import '../../clinical_protocols/infusions/morphine_infusion.dart';
+import '../../clinical_protocols/infusions/midazolam_infusion.dart';
 import '../../clinical_protocols/infusions/noradrenaline_infusion.dart';
 import '../../clinical_protocols/infusions/vecuronium_infusion.dart';
 import '../shared/alpha_notice.dart';
@@ -341,6 +343,27 @@ enum NamedInfusion {
     minimumDose: 50,
     maximumDose: 200,
     maximumConcentration: '2 mg/mL',
+  ),
+  clonazepam(
+    label: 'Clonazepam',
+    doseSuffix: 'micrograms/kg/hour',
+    startingDose: 10,
+    defaultRate: 1,
+    minimumDose: 10,
+    maximumDose: 40,
+    maximumConcentration: '12 micrograms/mL',
+    rangeNote: 'Inherited default exceeds this ceiling at common weights.',
+  ),
+  midazolam(
+    label: 'Midazolam',
+    doseSuffix: 'micrograms/kg/hour',
+    startingDose: 30,
+    defaultRate: 0.1,
+    minimumDose: 30,
+    maximumDose: 300,
+    maximumConcentration: '1 mg/mL',
+    rangeNote:
+        'Displayed predecessor ranges conflict: 10-60, 30-60, and 30-300.',
   );
 
   const NamedInfusion({
@@ -400,6 +423,16 @@ enum NamedInfusion {
             rateMillilitresPerHour: rate,
           ),
         NamedInfusion.vecuronium => vecuroniumInfusion(
+            dosePerKilogramPerHour: dose,
+            preparationVolumeMillilitres: volume,
+            rateMillilitresPerHour: rate,
+          ),
+        NamedInfusion.clonazepam => clonazepamInfusion(
+            dosePerKilogramPerHour: dose,
+            preparationVolumeMillilitres: volume,
+            rateMillilitresPerHour: rate,
+          ),
+        NamedInfusion.midazolam => midazolamInfusion(
             dosePerKilogramPerHour: dose,
             preparationVolumeMillilitres: volume,
             rateMillilitresPerHour: rate,

@@ -165,13 +165,24 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      const _ClinicalCategory(
+                      _ClinicalCategory(
                         title: 'Neurology',
                         icon: Icons.psychology_outlined,
+                        available: true,
                         children: [
-                          _PendingAction(
-                            title: 'Anticonvulsant protocols',
-                            detail: 'Pending BNFC and local formulary review',
+                          _AvailableAction(
+                            key: const Key('task-neurological-infusions'),
+                            title: 'Clonazepam and midazolam infusions',
+                            detail:
+                                'Inherited protocols with unresolved range discrepancies',
+                            onTap: () => _openWithWeight(
+                              validWeight,
+                              (weight, origin) => NamedInfusionsScreen(
+                                initialWeightGrams: weight,
+                                initialWeightOrigin: origin,
+                                initialInfusion: NamedInfusion.clonazepam,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -274,9 +285,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           _AvailableAction(
-                            title: 'Other named infusions',
+                            title: 'Sedation and neurological infusions',
                             detail:
-                                'Morphine and vecuronium; neurological tranches pending',
+                                'Morphine, vecuronium, clonazepam, and midazolam',
                             onTap: () => _openWithWeight(
                               validWeight,
                               (weight, origin) => NamedInfusionsScreen(

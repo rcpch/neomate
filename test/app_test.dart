@@ -152,6 +152,30 @@ void main() {
         findsOneWidget);
   });
 
+  testWidgets('surfaces the inherited clonazepam concentration conflict',
+      (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: NamedInfusionsScreen(
+          initialInfusion: NamedInfusion.clonazepam,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('Inherited range: 10-40'), findsOneWidget);
+    expect(
+      find.textContaining('Inherited default exceeds this ceiling'),
+      findsOneWidget,
+    );
+    await tester.drag(find.byType(ListView), const Offset(0, -500));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('exceeds the inherited maximum concentration'),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('calculates electrolyte requirement and stock volume',
       (tester) async {
     await tester.pumpWidget(const NeomateApp());
@@ -224,7 +248,7 @@ void main() {
       const Offset(0, -900),
     );
     await tester.pumpAndSettle();
-    expect(find.textContaining('0 of 22'), findsOneWidget);
+    expect(find.textContaining('0 of 24'), findsOneWidget);
     expect(find.textContaining('SRC-011'), findsOneWidget);
   });
 
