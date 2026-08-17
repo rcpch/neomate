@@ -8,8 +8,8 @@ import '../../calculations/patient_context.dart';
 import '../../clinical_policy/neonatal_weight_policy.dart';
 import '../calculators/airway_and_lines_screen.dart';
 import '../calculators/calculators_screen.dart';
-import '../calculators/cardiac_infusions_screen.dart';
 import '../calculators/electrolyte_compounding_screen.dart';
+import '../calculators/named_infusions_screen.dart';
 import '../calculators/physiology_calculators_screen.dart';
 import '../references/references_screen.dart';
 
@@ -132,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 'Dopamine, dobutamine, adrenaline, noradrenaline, and dinoprostone',
                             onTap: () => _openWithWeight(
                               validWeight,
-                              (weight, origin) => CardiacInfusionsScreen(
+                              (weight, origin) => NamedInfusionsScreen(
                                 initialWeightGrams: weight,
                                 initialWeightOrigin: origin,
                               ),
@@ -144,13 +144,24 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      const _ClinicalCategory(
-                        title: 'Sedative drugs',
+                      _ClinicalCategory(
+                        title: 'Sedation and paralysis',
                         icon: Icons.bedtime_outlined,
+                        available: true,
                         children: [
-                          _PendingAction(
-                            title: 'Bolus and infusion protocols',
-                            detail: 'Pending BNFC and local formulary review',
+                          _AvailableAction(
+                            key: const Key('task-sedation-infusions'),
+                            title: 'Morphine and vecuronium infusions',
+                            detail:
+                                'Inherited protocols with explicit paralysis warning',
+                            onTap: () => _openWithWeight(
+                              validWeight,
+                              (weight, origin) => NamedInfusionsScreen(
+                                initialWeightGrams: weight,
+                                initialWeightOrigin: origin,
+                                initialInfusion: NamedInfusion.morphine,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -256,16 +267,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                 'Only reviewed-by-name protocol structures; no generic calculator',
                             onTap: () => _openWithWeight(
                               validWeight,
-                              (weight, origin) => CardiacInfusionsScreen(
+                              (weight, origin) => NamedInfusionsScreen(
                                 initialWeightGrams: weight,
                                 initialWeightOrigin: origin,
                               ),
                             ),
                           ),
-                          const _PendingAction(
+                          _AvailableAction(
                             title: 'Other named infusions',
                             detail:
-                                'Sedative, neurological, and emergency tranches pending',
+                                'Morphine and vecuronium; neurological tranches pending',
+                            onTap: () => _openWithWeight(
+                              validWeight,
+                              (weight, origin) => NamedInfusionsScreen(
+                                initialWeightGrams: weight,
+                                initialWeightOrigin: origin,
+                                initialInfusion: NamedInfusion.morphine,
+                              ),
+                            ),
                           ),
                         ],
                       ),

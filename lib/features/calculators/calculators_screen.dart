@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import '../../calculations/patient_context.dart';
 import '../shared/alpha_notice.dart';
 import 'airway_and_lines_screen.dart';
-import 'cardiac_infusions_screen.dart';
 import 'electrolyte_compounding_screen.dart';
+import 'named_infusions_screen.dart';
 import 'physiology_calculators_screen.dart';
 
 class CalculatorsScreen extends StatelessWidget {
@@ -72,13 +72,13 @@ class CalculatorsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           _CalculatorTile(
-            title: 'Cardiac infusions',
+            title: 'Named infusions',
             description:
-                'Five named inherited infusion protocols with dose, concentration, route, and line controls',
+                'Seven inherited cardiac, sedation, and paralysis protocols with hard controls',
             icon: Icons.medication_outlined,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => CardiacInfusionsScreen(
+                builder: (_) => NamedInfusionsScreen(
                   initialWeightGrams: initialWeightGrams,
                   initialWeightOrigin: initialWeightOrigin,
                 ),

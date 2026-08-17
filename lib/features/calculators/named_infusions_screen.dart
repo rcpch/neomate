@@ -11,29 +11,33 @@ import '../../clinical_protocols/infusions/adrenaline_infusion.dart';
 import '../../clinical_protocols/infusions/dinoprostone_infusion.dart';
 import '../../clinical_protocols/infusions/dobutamine_infusion.dart';
 import '../../clinical_protocols/infusions/dopamine_infusion.dart';
+import '../../clinical_protocols/infusions/morphine_infusion.dart';
 import '../../clinical_protocols/infusions/noradrenaline_infusion.dart';
+import '../../clinical_protocols/infusions/vecuronium_infusion.dart';
 import '../shared/alpha_notice.dart';
 
-class CardiacInfusionsScreen extends StatefulWidget {
-  const CardiacInfusionsScreen({
+class NamedInfusionsScreen extends StatefulWidget {
+  const NamedInfusionsScreen({
     super.key,
     this.initialWeightGrams = 3000,
     this.initialWeightOrigin = WeightOrigin.measured,
+    this.initialInfusion = NamedInfusion.dopamine,
   });
 
   final double initialWeightGrams;
   final WeightOrigin initialWeightOrigin;
+  final NamedInfusion initialInfusion;
 
   @override
-  State<CardiacInfusionsScreen> createState() => _CardiacInfusionsScreenState();
+  State<NamedInfusionsScreen> createState() => _NamedInfusionsScreenState();
 }
 
-class _CardiacInfusionsScreenState extends State<CardiacInfusionsScreen> {
+class _NamedInfusionsScreenState extends State<NamedInfusionsScreen> {
   late final TextEditingController _weight;
-  final _dose = TextEditingController(text: '10');
+  late final TextEditingController _dose;
   final _volume = TextEditingController(text: '50');
-  final _rate = TextEditingController(text: '2');
-  _Drug _drug = _Drug.dopamine;
+  late final TextEditingController _rate;
+  late NamedInfusion _drug;
   VascularAccess _access = VascularAccess.central;
 
   @override
@@ -42,6 +46,9 @@ class _CardiacInfusionsScreenState extends State<CardiacInfusionsScreen> {
     _weight = TextEditingController(
       text: widget.initialWeightGrams.toStringAsFixed(0),
     );
+    _drug = widget.initialInfusion;
+    _dose = TextEditingController(text: _drug.startingDose.toString());
+    _rate = TextEditingController(text: _drug.defaultRate.toString());
   }
 
   @override
@@ -57,7 +64,7 @@ class _CardiacInfusionsScreenState extends State<CardiacInfusionsScreen> {
   Widget build(BuildContext context) {
     final result = _calculate();
     return Scaffold(
-      appBar: AppBar(title: const Text('Cardiac infusions')),
+      appBar: AppBar(title: const Text('Named infusions')),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
@@ -85,7 +92,7 @@ class _CardiacInfusionsScreenState extends State<CardiacInfusionsScreen> {
             'Inherited values are shown for author review. Current BNFC and local formulary verification remains outstanding.',
           ),
           const SizedBox(height: 18),
-          DropdownButtonFormField<_Drug>(
+          DropdownButtonFormField<NamedInfusion>(
             key: const Key('drug-selector'),
             initialValue: _drug,
             decoration: const InputDecoration(
@@ -93,7 +100,7 @@ class _CardiacInfusionsScreenState extends State<CardiacInfusionsScreen> {
               border: OutlineInputBorder(),
             ),
             items: [
-              for (final drug in _Drug.values)
+              for (final drug in NamedInfusion.values)
                 DropdownMenuItem(value: drug, child: Text(drug.label)),
             ],
             onChanged: (drug) {
@@ -187,6 +194,10 @@ class _CardiacInfusionsScreenState extends State<CardiacInfusionsScreen> {
           ),
           const SizedBox(height: 20),
           _RangePanel(drug: _drug),
+          if (_drug == NamedInfusion.vecuronium) ...[
+            const SizedBox(height: 12),
+            const _ParalysisWarning(),
+          ],
           const SizedBox(height: 16),
           if (result.error != null)
             _InfusionError(message: result.error!)
@@ -266,7 +277,7 @@ class _CardiacInfusionsScreenState extends State<CardiacInfusionsScreen> {
       };
 }
 
-enum _Drug {
+enum NamedInfusion {
   dopamine(
     label: 'Dopamine',
     doseSuffix: 'micrograms/kg/min',
@@ -311,9 +322,28 @@ enum _Drug {
     minimumDose: 1,
     maximumDose: 20,
     maximumConcentration: '1 microgram/mL',
+  ),
+  morphine(
+    label: 'Morphine',
+    doseSuffix: 'micrograms/kg/hour',
+    startingDose: 5,
+    defaultRate: 0.1,
+    minimumDose: 5,
+    maximumDose: 60,
+    maximumConcentration: '30 mg/mL (unverified inherited field)',
+    rangeNote: 'Displayed usual range 5-20; narrative mentioned up to 40.',
+  ),
+  vecuronium(
+    label: 'Vecuronium',
+    doseSuffix: 'micrograms/kg/hour',
+    startingDose: 100,
+    defaultRate: 1,
+    minimumDose: 50,
+    maximumDose: 200,
+    maximumConcentration: '2 mg/mL',
   );
 
-  const _Drug({
+  const NamedInfusion({
     required this.label,
     required this.doseSuffix,
     required this.startingDose,
@@ -321,6 +351,7 @@ enum _Drug {
     required this.minimumDose,
     required this.maximumDose,
     required this.maximumConcentration,
+    this.rangeNote,
   });
 
   final String label;
@@ -330,6 +361,7 @@ enum _Drug {
   final double minimumDose;
   final double maximumDose;
   final String maximumConcentration;
+  final String? rangeNote;
 
   WeightBasedInfusionProtocol protocol({
     required double dose,
@@ -337,28 +369,38 @@ enum _Drug {
     required double rate,
   }) =>
       switch (this) {
-        _Drug.dopamine => dopamineInfusion(
+        NamedInfusion.dopamine => dopamineInfusion(
             dosePerKilogramPerMinute: dose,
             preparationVolumeMillilitres: volume,
             rateMillilitresPerHour: rate,
           ),
-        _Drug.dobutamine => dobutamineInfusion(
+        NamedInfusion.dobutamine => dobutamineInfusion(
             dosePerKilogramPerMinute: dose,
             preparationVolumeMillilitres: volume,
             rateMillilitresPerHour: rate,
           ),
-        _Drug.adrenaline => adrenalineInfusion(
+        NamedInfusion.adrenaline => adrenalineInfusion(
             dosePerKilogramPerMinute: dose,
             preparationVolumeMillilitres: volume,
             rateMillilitresPerHour: rate,
           ),
-        _Drug.noradrenaline => noradrenalineInfusion(
+        NamedInfusion.noradrenaline => noradrenalineInfusion(
             dosePerKilogramPerMinute: dose,
             preparationVolumeMillilitres: volume,
             rateMillilitresPerHour: rate,
           ),
-        _Drug.dinoprostone => dinoprostoneInfusion(
+        NamedInfusion.dinoprostone => dinoprostoneInfusion(
             dosePerKilogramPerMinute: dose,
+            preparationVolumeMillilitres: volume,
+            rateMillilitresPerHour: rate,
+          ),
+        NamedInfusion.morphine => morphineInfusion(
+            dosePerKilogramPerHour: dose,
+            preparationVolumeMillilitres: volume,
+            rateMillilitresPerHour: rate,
+          ),
+        NamedInfusion.vecuronium => vecuroniumInfusion(
+            dosePerKilogramPerHour: dose,
             preparationVolumeMillilitres: volume,
             rateMillilitresPerHour: rate,
           ),
@@ -382,7 +424,7 @@ class _InfusionResult {
 class _RangePanel extends StatelessWidget {
   const _RangePanel({required this.drug});
 
-  final _Drug drug;
+  final NamedInfusion drug;
 
   @override
   Widget build(BuildContext context) {
@@ -392,9 +434,52 @@ class _RangePanel extends StatelessWidget {
         color: const Color(0xfff1f5f3),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Text(
-        'Inherited range: ${drug.minimumDose.toStringAsFixed(drug.minimumDose % 1 == 0 ? 0 : 1)}-${drug.maximumDose.toStringAsFixed(drug.maximumDose % 1 == 0 ? 0 : 1)} ${drug.doseSuffix}  •  Maximum concentration: ${drug.maximumConcentration}',
+      child: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text:
+                  'Inherited range: ${drug.minimumDose.toStringAsFixed(drug.minimumDose % 1 == 0 ? 0 : 1)}-${drug.maximumDose.toStringAsFixed(drug.maximumDose % 1 == 0 ? 0 : 1)} ${drug.doseSuffix}  •  Maximum concentration: ${drug.maximumConcentration}',
+            ),
+            if (drug.rangeNote case final note?) TextSpan(text: '\n$note'),
+          ],
+        ),
         style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
+    );
+  }
+}
+
+class _ParalysisWarning extends StatelessWidget {
+  const _ParalysisWarning();
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: 'Critical safety warning',
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: const Color(0xffffe7e1),
+          border: Border.all(color: const Color(0xffbd4c36), width: 1.5),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: const Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(Icons.warning_amber_rounded, color: Color(0xff8c2d1d)),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'Vecuronium causes paralysis. It does not provide analgesia or sedation. Confirm adequate analgesia and sedation using approved local policy.',
+                style: TextStyle(
+                  color: Color(0xff702719),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

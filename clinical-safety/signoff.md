@@ -41,6 +41,8 @@ Carried forward from the shipped Neomate product (SRC-006), which has been in li
 - [ ] `lib/clinical_protocols/infusions/adrenaline_infusion.dart` - 50-500 nanograms/kg/min; maximum 0.24 mg/mL.
 - [ ] `lib/clinical_protocols/infusions/noradrenaline_infusion.dart` - 50-500 nanograms/kg/min; maximum 40 micrograms/mL.
 - [ ] `lib/clinical_protocols/infusions/dinoprostone_infusion.dart` - 1-20 nanograms/kg/min enforced against a 5-10 usual range; maximum 1 microgram/mL. **Carries an unresolved discrepancy between the enforced and displayed dose ranges, for the reviewer to settle.**
+- [ ] `lib/clinical_protocols/infusions/morphine_infusion.dart` - 5-60 micrograms/kg/hour enforced against a 5-20 displayed range and narrative ceiling of 40; inherited numeric minimum of zero is deliberately refused, and the concentration field is equivalent to 30 mg/mL. **Carries unresolved dose-range and concentration-limit discrepancies.**
+- [ ] `lib/clinical_protocols/infusions/vecuronium_infusion.dart` - 50-200 micrograms/kg/hour; human-readable 2 mg/mL ceiling enforced. **Carries an unresolved disagreement between inherited numeric and human-readable concentration fields.**
 
 ## Clinical Policy Values
 

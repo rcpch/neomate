@@ -6,7 +6,7 @@ Legend: [x] done, [~] in progress, [ ] not started
 - [x] **R2 - Establish current Flutter/Dart build compatibility and remove obsolete project assumptions** - the native shell has no legacy UI, state-management, navigation, HTML-rendering, or networking dependencies; strict analysis and the full test suite pass on Flutter 3.44.
 - [x] **R3 - Inventory inherited calculations, checklists, reference content, sources, and licences** - captured in `spec/legacy-inventory-and-source-review.md`; item-level source approval and rights clearance remain release gates.
 - [~] **R4 - Define approved intended purpose, system boundaries, users, deployment environment, and regulatory classification** - UK-first, free-to-use, likely Class IIa planning assumption is recorded; formal classification and conformity route remain open.
-- [~] **R5 - Extract deterministic calculation domain modules from Flutter UI** - patient weight, airway, umbilical line-length, mean airway pressure, oxygenation index, daily fluid volume, glucose infusion rate, electrolyte requirement, and compounding are implemented as pure single-purpose modules with clinical sign-off headers; drug-bolus and remaining named-infusion families are pending.
+- [~] **R5 - Extract deterministic calculation domain modules from Flutter UI** - patient weight, airway, umbilical line-length, mean airway pressure, oxygenation index, daily fluid volume, glucose infusion rate, electrolyte requirement, compounding, and seven named infusions are implemented as pure single-purpose modules with clinical sign-off headers; drug-bolus and remaining neurological infusion families are pending.
 - [ ] **R6 - Build source-derived calculation conformance vectors and independent clinical verification**
 - [ ] **R7 - Replace legacy presentation with accessible, usability-tested Flutter feature modules**
 - [~] **R8 - Establish controlled CI, dependency management, security scanning, and reproducible release builds** - pinned Flutter CI, workflow security scanning, Pub/GitHub Actions Dependabot, lockfile enforcement, tests, and web release build are configured; full platform release provenance remains pending.
@@ -67,7 +67,7 @@ Completion criteria: no calculation lives in a widget; all invalid and non-finit
 - [ ] **D23 - Review and specify HIE/cooling content against BAPM 2025 and the selected network policy**
 - [ ] **D24 - Review and specify extreme-preterm content against BAPM 2026**
 - [ ] **D25 - Review and specify neonatal-infection content against NICE NG195, updated May 2026**
-- [~] **D26 - Review each medicine and infusion protocol against BNFC and the approved local neonatal formulary** - five inherited cardiac infusion protocols are implemented as isolated reviewable files with enforced bounds; verification against current BNFC/local formulary and all remaining medicines are pending.
+- [~] **D26 - Review each medicine and infusion protocol against BNFC and the approved local neonatal formulary** - five inherited cardiac and two sedation/paralysis infusion protocols are implemented as isolated reviewable files with enforced bounds; discrepancies are explicit, while verification against current BNFC/local formulary and remaining medicines are pending.
 - [~] **D27 - Review central-line and airway content against current BAPM guidance and local policy** - inherited ETT size/lip-length and UVC/UAC aids are isolated, boundary-tested, and presented with placement-confirmation warnings; current BAPM applicability, local policy, and independent sign-off remain pending.
 - [ ] **D28 - Obtain approved local neonatal fluid/pharmacy protocol and specify the fluid calculator from it**
 - [ ] **D29 - Split all legacy checklists into independently sourced clinical-content records**
@@ -88,11 +88,11 @@ Completion criteria: test evidence is linked to source records and hazards; repr
 
 ### Product Readiness
 
-- [~] **D37 - Design the accessible Flutter feature modules and migrate approved functionality from the legacy interface** - the adaptive native alpha now uses a weight-first workspace, familiar clinical accordion categories, bottom navigation, physiology/fluid calculations, electrolyte compounding, five cardiac infusions, and typed content rendering; approved clinical feature migration remains pending.
+- [~] **D37 - Design the accessible Flutter feature modules and migrate approved functionality from the legacy interface** - the adaptive native alpha now uses a weight-first workspace, familiar clinical accordion categories, bottom navigation, physiology/fluid calculations, electrolyte compounding, seven named infusions, and typed content rendering; approved clinical feature migration remains pending.
 - [~] **D38 - Add controlled build provenance, dependency review, CI, reproducible builds, and release artefact retention** - initial pinned CI and dependency automation are complete; signed multi-platform release provenance and artefact retention remain pending.
 - [ ] **D39 - Define support, incident, issue triage, corrective-action, content-update, and product-maintenance workflows**
 - [ ] **D40 - Establish public documentation, source availability, and licence notices appropriate to AGPL-3.0-or-later distribution**
-- [~] **D41 - Produce a non-clinical beta build for technical and usability evaluation only** - an internal alpha now exposes selected native calculations, five inherited cardiac infusion protocols, and source status on Android, Linux, and web; broader feature migration, Apple/Windows build evidence, and a controlled beta package remain pending.
+- [~] **D41 - Produce a non-clinical beta build for technical and usability evaluation only** - an internal alpha now exposes selected native calculations, seven inherited named infusion protocols, and source status on Android, Linux, and web; broader feature migration, Apple/Windows build evidence, and a controlled beta package remain pending.
 
 Completion criteria: the product is technically mature, fully offline, reproducibly built, and has a controlled evidence trail ready to enter formal medical-device assurance.
 

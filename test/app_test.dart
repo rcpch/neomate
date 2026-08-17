@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:neomate2/app/neomate_app.dart';
 import 'package:neomate2/features/calculators/airway_and_lines_screen.dart';
+import 'package:neomate2/features/calculators/named_infusions_screen.dart';
 import 'package:neomate2/features/home/home_screen.dart';
 
 void main() {
@@ -59,7 +60,7 @@ void main() {
       ),
     );
     expect(field.controller?.text, '2500');
-    expect(find.text('Cardiac infusions'), findsOneWidget);
+    expect(find.text('Named infusions'), findsOneWidget);
     expect(find.textContaining('Estimated weight:'), findsOneWidget);
   });
 
@@ -119,8 +120,8 @@ void main() {
     await tester.ensureVisible(calculators);
     await tester.tap(calculators);
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Cardiac infusions'));
-    await tester.tap(find.text('Cardiac infusions'));
+    await tester.ensureVisible(find.text('Named infusions'));
+    await tester.tap(find.text('Named infusions'));
     await tester.pumpAndSettle();
 
     expect(find.text('45000.0 micrograms in syringe'), findsOneWidget);
@@ -130,6 +131,25 @@ void main() {
       find.textContaining('exceeds the inherited maximum concentration'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('labels paralysis separately from sedation', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: NamedInfusionsScreen(
+          initialInfusion: NamedInfusion.vecuronium,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Named infusions'), findsOneWidget);
+    expect(
+      find.textContaining('Vecuronium causes paralysis'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('does not provide analgesia or sedation'),
+        findsOneWidget);
   });
 
   testWidgets('calculates electrolyte requirement and stock volume',
@@ -204,7 +224,7 @@ void main() {
       const Offset(0, -900),
     );
     await tester.pumpAndSettle();
-    expect(find.textContaining('0 of 20'), findsOneWidget);
+    expect(find.textContaining('0 of 22'), findsOneWidget);
     expect(find.textContaining('SRC-011'), findsOneWidget);
   });
 
@@ -281,6 +301,21 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.text('Intubation and airway'), findsOneWidget);
+
+    await tester.pumpWidget(
+      const MediaQuery(
+        data: MediaQueryData(textScaler: TextScaler.linear(2)),
+        child: MaterialApp(
+          home: NamedInfusionsScreen(
+            initialInfusion: NamedInfusion.vecuronium,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Named infusions'), findsOneWidget);
   });
 
   testWidgets('airway aids distinguish invalid and unavailable results',
