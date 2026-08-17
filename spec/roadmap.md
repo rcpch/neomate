@@ -56,10 +56,10 @@ Decision: inherited HTML is migration-source material only. No HTML renderer or 
 - [x] **D17 - Extract ventilation and oxygenation-index calculations into pure modules with controlled result/error types** - mean airway pressure and oxygenation index are single-formula files returning `CalculationOutcome`; PaO2 now requires an explicit unit, closing the inherited kPa/mmHg defect.
 - [x] **D18 - Extract daily fluid, GIR, electrolyte, and compounding calculations into pure modules** - daily fluid volume, glucose infusion rate, electrolyte requirement, and additive volume are single-formula files. Prescription and compounding arithmetic are deliberately separate files, and the compounding step refuses to divide an amount by a concentration expressed in a different unit.
 - [x] **D19 - Define named protocol calculation interfaces for drug bolus, line-length, and infusion preparation functions**
-- [x] **D20 - Enforce protocol range, concentration, route, line, and denominator controls in the calculation engine**
+- [x] **D20 - Represent protocol range, concentration, route, line, and denominator controls in the calculation engine** - positive finite inputs and valid denominators remain required; configured clinical constraints are non-blocking advisories in internal development builds under the CSO-directed review posture.
 - [x] **D21 - Exclude the generic infusion calculator from the first clinical release unless a separate safety case approves it** - no generic infusion feature exists in the active native app.
 
-Completion criteria: no calculation lives in a widget; all invalid and non-finite inputs return controlled non-results; configured clinical limits are enforced in code.
+Completion criteria: no calculation lives in a widget; all invalid and non-finite inputs return controlled non-results; configured clinical limits are represented and surfaced for review.
 
 ### Clinical Content Review
 
@@ -67,7 +67,7 @@ Completion criteria: no calculation lives in a widget; all invalid and non-finit
 - [ ] **D23 - Review and specify HIE/cooling content against BAPM 2025 and the selected network policy**
 - [ ] **D24 - Review and specify extreme-preterm content against BAPM 2026**
 - [ ] **D25 - Review and specify neonatal-infection content against NICE NG195, updated May 2026**
-- [~] **D26 - Review each medicine and infusion protocol against BNFC and the approved local neonatal formulary** - all nine inherited named infusion protocols are implemented as isolated reviewable files with enforced bounds; discrepancies are explicit, while verification against current BNFC/local formulary and drug boluses are pending.
+- [~] **D26 - Review each medicine and infusion protocol against BNFC and the approved local neonatal formulary** - all nine inherited named infusion protocols are implemented as isolated reviewable files with non-blocking constraint advisories; discrepancies are explicit, while verification against current BNFC/local formulary and drug boluses are pending.
 - [~] **D27 - Review central-line and airway content against current BAPM guidance and local policy** - inherited ETT size/lip-length and UVC/UAC aids are isolated, boundary-tested, and presented with placement-confirmation warnings; current BAPM applicability, local policy, and independent sign-off remain pending.
 - [ ] **D28 - Obtain approved local neonatal fluid/pharmacy protocol and specify the fluid calculator from it**
 - [ ] **D29 - Split all legacy checklists into independently sourced clinical-content records**

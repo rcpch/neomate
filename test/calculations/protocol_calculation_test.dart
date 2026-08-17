@@ -27,7 +27,7 @@ void main() {
       approvedAccess: {VascularAccess.peripheral, VascularAccess.central},
     );
 
-    test('calculates a dose inside all approved constraints', () {
+    test('calculates a dose inside all configured constraints', () {
       final result = protocol.calculate(
         patient: patient,
         route: AdministrationRoute.intravenous,
@@ -36,25 +36,32 @@ void main() {
 
       expect(result.value.amount, 4);
       expect(result.value.unit, DoseUnit.milligrams);
+      expect(result.advisories, isEmpty);
     });
 
-    test('rejects unapproved route and access', () {
+    test('calculates with route and access advisories', () {
       final wrongRoute = protocol.calculate(
         patient: patient,
         route: AdministrationRoute.enteral,
         access: VascularAccess.peripheral,
-      ) as ProtocolCalculationFailure<WeightBasedDose>;
+      ) as ProtocolCalculationSuccess<WeightBasedDose>;
       final wrongAccess = protocol.calculate(
         patient: patient,
         route: AdministrationRoute.intravenous,
         access: VascularAccess.intraosseous,
-      ) as ProtocolCalculationFailure<WeightBasedDose>;
+      ) as ProtocolCalculationSuccess<WeightBasedDose>;
 
-      expect(wrongRoute.issue, ProtocolCalculationIssue.routeNotApproved);
-      expect(wrongAccess.issue, ProtocolCalculationIssue.accessNotApproved);
+      expect(
+        wrongRoute.advisories,
+        contains(ProtocolCalculationAdvisory.routeOutsideConfiguredUse),
+      );
+      expect(
+        wrongAccess.advisories,
+        contains(ProtocolCalculationAdvisory.accessOutsideConfiguredUse),
+      );
     });
 
-    test('rejects configured dose outside approved range', () {
+    test('calculates with advisories outside the configured dose range', () {
       const low = WeightBasedDoseProtocol(
         protocolId: 'PROTOCOL-SYNTHETIC-LOW',
         dosePerKilogram: 0.9,
@@ -77,19 +84,38 @@ void main() {
           patient: patient,
           route: AdministrationRoute.intravenous,
           access: VascularAccess.peripheral,
-        ) as ProtocolCalculationFailure<WeightBasedDose>)
-            .issue,
-        ProtocolCalculationIssue.doseBelowApprovedRange,
+        ) as ProtocolCalculationSuccess<WeightBasedDose>)
+            .advisories,
+        contains(ProtocolCalculationAdvisory.doseBelowConfiguredRange),
       );
       expect(
         (high.calculate(
           patient: patient,
           route: AdministrationRoute.intravenous,
           access: VascularAccess.peripheral,
-        ) as ProtocolCalculationFailure<WeightBasedDose>)
-            .issue,
-        ProtocolCalculationIssue.doseAboveApprovedRange,
+        ) as ProtocolCalculationSuccess<WeightBasedDose>)
+            .advisories,
+        contains(ProtocolCalculationAdvisory.doseAboveConfiguredRange),
       );
+    });
+
+    test('rejects a non-positive dose as invalid input', () {
+      const invalid = WeightBasedDoseProtocol(
+        protocolId: 'PROTOCOL-SYNTHETIC-ZERO',
+        dosePerKilogram: 0,
+        unit: DoseUnit.milligrams,
+        approvedDosePerKilogram: ApprovedRange(minimum: 1, maximum: 3),
+        approvedRoutes: {AdministrationRoute.intravenous},
+        approvedAccess: {VascularAccess.peripheral},
+      );
+
+      final result = invalid.calculate(
+        patient: patient,
+        route: AdministrationRoute.intravenous,
+        access: VascularAccess.peripheral,
+      ) as ProtocolCalculationFailure<WeightBasedDose>;
+
+      expect(result.issue, ProtocolCalculationIssue.invalidDose);
     });
   });
 
@@ -107,7 +133,8 @@ void main() {
       approvedAccess: {VascularAccess.central},
     );
 
-    test('calculates amount and concentration inside approved constraints', () {
+    test('calculates amount and concentration inside configured constraints',
+        () {
       final result = protocol.calculate(
         patient: patient,
         route: AdministrationRoute.intravenous,
@@ -117,6 +144,7 @@ void main() {
       expect(result.value.concentrationPerMillilitre, 4);
       expect(result.value.amountInSyringe, 200);
       expect(result.value.amountUnit, DoseUnit.micrograms);
+      expect(result.advisories, isEmpty);
     });
 
     test('normalises minute and day time bases to an hourly rate', () {
@@ -210,7 +238,8 @@ void main() {
       );
     });
 
-    test('rejects concentration outside approved bounds', () {
+    test('calculates with advisories outside configured concentration bounds',
+        () {
       const tooDilute = WeightBasedInfusionProtocol(
         protocolId: 'PROTOCOL-SYNTHETIC-DILUTE',
         dosePerKilogram: 1,
@@ -243,18 +272,22 @@ void main() {
           patient: patient,
           route: AdministrationRoute.intravenous,
           access: VascularAccess.central,
-        ) as ProtocolCalculationFailure<InfusionPreparation>)
-            .issue,
-        ProtocolCalculationIssue.concentrationBelowApprovedRange,
+        ) as ProtocolCalculationSuccess<InfusionPreparation>)
+            .advisories,
+        contains(
+          ProtocolCalculationAdvisory.concentrationBelowConfiguredRange,
+        ),
       );
       expect(
         (tooConcentrated.calculate(
           patient: patient,
           route: AdministrationRoute.intravenous,
           access: VascularAccess.central,
-        ) as ProtocolCalculationFailure<InfusionPreparation>)
-            .issue,
-        ProtocolCalculationIssue.concentrationAboveApprovedRange,
+        ) as ProtocolCalculationSuccess<InfusionPreparation>)
+            .advisories,
+        contains(
+          ProtocolCalculationAdvisory.concentrationAboveConfiguredRange,
+        ),
       );
     });
   });

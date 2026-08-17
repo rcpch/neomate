@@ -19,8 +19,7 @@
 //   * This module converts a prescription into a daily amount. It does NOT
 //     decide how much of any electrolyte a baby needs. That depends on day of
 //     life, gestation, renal function, serum levels, and local policy, and is
-//     supplied by the caller from a reviewed content record together with the
-//     range that record permits.
+//     supplied by the caller from a reviewed content record.
 //   * The electrolyte is named only so the result can be labelled and so a
 //     prescription for one electrolyte cannot be silently applied to another.
 //     No electrolyte-specific behaviour or default exists in this file.
@@ -32,7 +31,6 @@
 
 import '../calculation_outcome.dart';
 import '../patient_context.dart';
-import '../protocol_calculation.dart' show ApprovedRange;
 
 /// The electrolytes this module can label a requirement with.
 ///
@@ -58,21 +56,13 @@ class ElectrolyteRequirement {
 ///   result.
 /// * [prescribedMillimolesPerKilogramPerDay] - taken from the applicable
 ///   reviewed policy.
-/// * [approvedMillimolesPerKilogramPerDay] - the range that policy permits. A
-///   prescription outside it is refused rather than calculated.
 CalculationOutcome<ElectrolyteRequirement> calculateElectrolyteRequirement({
   required PatientContext patient,
   required Electrolyte electrolyte,
   required double prescribedMillimolesPerKilogramPerDay,
-  required ApprovedRange approvedMillimolesPerKilogramPerDay,
 }) {
   if (!prescribedMillimolesPerKilogramPerDay.isFinite) {
     return const CalculationRejected(CalculationIssue.notFinite);
-  }
-
-  // A malformed or unbounded policy record is not permission to calculate.
-  if (!approvedMillimolesPerKilogramPerDay.isValid) {
-    return const CalculationRejected(CalculationIssue.inconsistentInputs);
   }
 
   // Zero is rejected rather than returned as "no electrolyte required": a
@@ -80,11 +70,6 @@ CalculationOutcome<ElectrolyteRequirement> calculateElectrolyteRequirement({
   // negatives are meaningless.
   if (prescribedMillimolesPerKilogramPerDay <= 0) {
     return const CalculationRejected(CalculationIssue.nonPositiveInput);
-  }
-
-  if (!approvedMillimolesPerKilogramPerDay
-      .contains(prescribedMillimolesPerKilogramPerDay)) {
-    return const CalculationRejected(CalculationIssue.inputOutOfRange);
   }
 
   final millimolesPerDay =

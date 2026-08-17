@@ -27,10 +27,10 @@
 //   * The inherited source notes that higher concentrations may be used if the
 //     patient is fluid restricted. That exception is deliberately NOT encoded
 //     here. Encoding it would require its own review and a way for the user to
-//     record why the limit was exceeded; until then the safer behaviour is to
-//     refuse and let the prescriber work outside the app.
-//   * Administration is via a central line, so peripheral access is not
-//     approved in this record.
+//     record why the limit was exceeded. The configured limit remains visible
+//     as a non-blocking advisory for review.
+//   * Administration via a central line is the configured use. Other access
+//     selections remain calculable with an advisory for review.
 // ---------------------------------------------------------------------------
 
 import '../../calculations/protocol_calculation.dart';

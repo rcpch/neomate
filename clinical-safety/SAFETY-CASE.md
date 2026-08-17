@@ -8,6 +8,8 @@ Neomate 2 may only be deployed for its approved intended purpose when its residu
 
 The claim is not established. This repository is an inherited codebase with unverified clinical content and legacy calculation logic. No clinical deployment is permitted.
 
+Implemented workflows remain exercisable in internal development builds to support clinical review. This development-review posture does not contribute evidence of clinical approval and must not be carried into a distributable release without an explicit Clinical Safety Officer decision recorded against the final release controls.
+
 ## Required Evidence
 
 | Argument element | Required evidence | Current status |

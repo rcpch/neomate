@@ -69,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        'Select a clinical task. Items marked in review remain unavailable pending independent clinical review.',
+                        'Select a clinical task. Items without an active workflow are marked as not implemented.',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: const Color(0xff456158),
                             ),
@@ -93,9 +93,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                          const _PendingAction(
+                          const _NotImplementedAction(
                             title: 'Premedication boluses',
-                            detail: 'Pending BNFC and local formulary review',
+                            detail:
+                                'Not implemented: active bolus protocols and review UI',
                           ),
                         ],
                       ),
@@ -138,10 +139,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                          const _PendingAction(
+                          const _NotImplementedAction(
                             title: 'Reviewed fluid and medicine boluses',
                             detail:
-                                'Obsolete resuscitation doses retired; remaining items pending source review',
+                                'Not implemented: active bolus protocols and review UI',
                           ),
                         ],
                       ),
@@ -154,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             key: const Key('task-sedation-infusions'),
                             title: 'Morphine and vecuronium infusions',
                             detail:
-                                'Dose-controlled protocols with explicit paralysis warning',
+                                'Dose-configured protocols with explicit paralysis warning',
                             onTap: () => _openWithWeight(
                               validWeight,
                               (weight, origin) => NamedInfusionsScreen(
@@ -175,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             key: const Key('task-neurological-infusions'),
                             title: 'Clonazepam and midazolam infusions',
                             detail:
-                                'Dose-controlled protocols with unresolved range discrepancies',
+                                'Dose-configured protocols with unresolved range discrepancies',
                             onTap: () => _openWithWeight(
                               validWeight,
                               (weight, origin) => NamedInfusionsScreen(
@@ -191,10 +192,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: 'Emergency drugs',
                         icon: Icons.emergency_outlined,
                         children: [
-                          _PendingAction(
+                          _NotImplementedAction(
                             title: 'Newborn resuscitation medicines',
                             detail:
-                                'Obsolete bicarbonate and empirical D10 retired; replacement content pending review',
+                                'Not implemented: active emergency medicine protocols',
                           ),
                         ],
                       ),
@@ -202,9 +203,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: 'Cooling criteria',
                         icon: Icons.ac_unit,
                         children: [
-                          _PendingAction(
+                          _NotImplementedAction(
                             title: 'HIE and therapeutic hypothermia guidance',
-                            detail: 'Pending BAPM 2025 and network review',
+                            detail:
+                                'Not implemented: guidance review interface',
                           ),
                         ],
                       ),
@@ -212,9 +214,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: 'Admission to unit',
                         icon: Icons.login_outlined,
                         children: [
-                          _PendingAction(
+                          _NotImplementedAction(
                             title: 'Admission checklist and medicines',
-                            detail: 'Pending decomposition and clinical review',
+                            detail: 'Not implemented: admission workflow',
                           ),
                         ],
                       ),
@@ -324,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             case 2:
-              _showPending('Checklists');
+              _showNotImplemented('Checklists');
             case 3:
               Navigator.of(context).push(
                 MaterialPageRoute<void>(
@@ -390,10 +392,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showPending(String feature) {
+  void _showNotImplemented(String feature) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('$feature remain unavailable pending clinical review.'),
+        content: Text('$feature are not implemented yet.'),
       ),
     );
   }
@@ -603,8 +605,8 @@ class _AvailableAction extends StatelessWidget {
   }
 }
 
-class _PendingAction extends StatelessWidget {
-  const _PendingAction({required this.title, required this.detail});
+class _NotImplementedAction extends StatelessWidget {
+  const _NotImplementedAction({required this.title, required this.detail});
 
   final String title;
   final String detail;
@@ -613,17 +615,10 @@ class _PendingAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-      leading: const Icon(Icons.lock_clock_outlined, color: Color(0xff6d7d77)),
+      leading:
+          const Icon(Icons.construction_outlined, color: Color(0xff6d7d77)),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
       subtitle: Text(detail),
-      trailing: const Text(
-        'In review',
-        style: TextStyle(
-          color: Color(0xff596963),
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
     );
   }
 }

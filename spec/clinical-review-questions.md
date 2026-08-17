@@ -80,7 +80,7 @@ For every retained infusion, please confirm the indication, minimum and maximum 
 | ID | Question | Current inherited position |
 | --- | --- | --- |
 | CRQ-50 | What local neonatal fluid/pharmacy policy should govern daily fluid, GIR, electrolyte, and stock-volume workflows? | Arithmetic is active as an unapproved demonstration; clinical prescribing ranges are not. |
-| CRQ-51 | Are the engineering guards `1-300 mL/kg/day` and `0.1-100 mmol/kg/day` acceptable typo barriers, or should different non-prescribing bounds be used? | These guards are deliberately broad and are not treatment recommendations. |
+| CRQ-51 | Should fluid and electrolyte review workflows show non-blocking reference ranges or typo advisories, and what values should they use? | Internal review builds currently calculate every positive finite entry without a clinical range gate. |
 | CRQ-52 | For which glucose concentrations, routes, and populations is the GIR formula applicable, and what warnings or interpretation should be shown? | Current alpha calculates a number without a treatment target. |
 | CRQ-53 | Which stock preparations, concentration units, maximum additive concentrations, central-line restrictions, and compatibility warnings may be represented? | Current compounding arithmetic deliberately omits local stock defaults and compatibility advice. |
 | CRQ-54 | Confirm the mean-airway-pressure formula, plausible input bounds, and whether the warning about flow-sensor measurement is sufficient. | Formula is isolated but has no approved neonatal source. |
@@ -94,7 +94,7 @@ For every retained infusion, please confirm the indication, minimum and maximum 
 | CRQ-60 | Which guidance/checklist family should be reviewed first: newborn resuscitation, HIE/cooling, extreme preterm birth, neonatal infection, respiratory deterioration, NEC, or transport/referral? | No checklist is active until independently sourced and reviewed. |
 | CRQ-61 | Which checklist statements are universal, and which require a deployment-specific network profile? | Local phone numbers, referral pathways, and treatment rules must not leak into the core product. |
 | CRQ-62 | Which inherited images or diagrams remain clinically useful, and who can confirm their current clinical accuracy and applicability? | Redistribution rights are resolved, but legacy CFM/extreme-preterm assets are not clinically approved for reuse. |
-| CRQ-63 | Are the internal-alpha warnings, estimated-weight warning, placement-confirmation warnings, paralysis warning, and controlled-refusal messages clinically clear and appropriately prominent? | Warning wording and hierarchy are use-error controls. |
+| CRQ-63 | Are the clinical-status warning, estimated-weight warning, placement-confirmation warnings, paralysis warning, and non-blocking protocol advisories clinically clear and appropriately prominent? | Warning wording and hierarchy are use-error controls. |
 | CRQ-64 | Which high-risk tasks should representative clinicians perform in usability testing, and what errors or delays constitute unacceptable performance? | Usability evidence must target realistic safety-critical workflows. |
 | CRQ-65 | What information must be visible beside every result: source/version, review status, formula, units, applicability, warning, independent-check requirement, or local-policy name? | The interface must balance traceability with rapid clinical scanning. |
 

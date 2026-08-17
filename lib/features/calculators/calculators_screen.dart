@@ -74,7 +74,7 @@ class CalculatorsScreen extends StatelessWidget {
           _CalculatorTile(
             title: 'Named infusions',
             description:
-                'Nine cardiac, sedation, paralysis, and neurological protocols with dose and concentration controls',
+                'Nine cardiac, sedation, paralysis, and neurological protocols with configured review ranges',
             icon: Icons.medication_outlined,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(

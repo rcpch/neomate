@@ -24,13 +24,12 @@
 //     whereas dopamine and dobutamine are in micrograms/kg/minute. A
 //     thousand-fold error here is the specific hazard, which is why the dose
 //     unit is part of the protocol record rather than a display string.
-//   * Concentration limit converted for the engine, which checks per
-//     millilitre:
+//   * Concentration limit converted for the engine, which compares per
+//     millilitre and reports an advisory:
 //         12 mg / 50 mL = 0.24 mg/mL = 240 000 nanograms/mL
-//   * The inherited advice is administration via a central line, so peripheral
-//     access is not approved in this record. Note that this is the infusion
-//     protocol; bolus adrenaline in resuscitation is a separate record with
-//     different routes and is not covered here.
+//   * Central-line administration is the configured use. Other access remains
+//     calculable with an advisory. This is the infusion protocol; bolus
+//     adrenaline in resuscitation is a separate record with different routes.
 // ---------------------------------------------------------------------------
 
 import '../../calculations/protocol_calculation.dart';

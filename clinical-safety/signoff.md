@@ -20,7 +20,7 @@ A tick here records that the header block has been completed with a named review
 
 - [ ] `lib/calculations/result_rounding.dart` - rounding and display of calculated numbers, including the refusal to display a non-zero amount that rounds to zero.
 - [ ] `lib/calculations/patient_context.dart` - patient weight validation, and the single gram-to-kilogram conversion every other calculation depends on.
-- [ ] `lib/calculations/protocol_calculation.dart` - the protocol engine: enforcement of dose range, route, vascular access, infusion rate, preparation volume, and concentration bounds.
+- [ ] `lib/calculations/protocol_calculation.dart` - the protocol engine: finite positive inputs, valid infusion denominators, and non-blocking dose, concentration, route, and vascular-access review advisories.
 - [ ] `lib/calculations/ventilation/mean_airway_pressure.dart` - mean airway pressure from conventional ventilator settings.
 - [ ] `lib/calculations/ventilation/oxygenation_index.dart` - oxygenation index, including the kPa to mmHg conversion.
 - [ ] `lib/calculations/fluids/daily_fluid_volume.dart` - total daily fluid volume and hourly rate from a prescribed volume per kilogram.
@@ -40,8 +40,8 @@ Carried forward from the shipped Neomate product (SRC-006), which has been in li
 - [ ] `lib/clinical_protocols/infusions/dobutamine_infusion.dart` - 2-20 micrograms/kg/min; maximum 10 mg/mL.
 - [ ] `lib/clinical_protocols/infusions/adrenaline_infusion.dart` - 50-500 nanograms/kg/min; maximum 0.24 mg/mL.
 - [ ] `lib/clinical_protocols/infusions/noradrenaline_infusion.dart` - 50-500 nanograms/kg/min; maximum 40 micrograms/mL.
-- [ ] `lib/clinical_protocols/infusions/dinoprostone_infusion.dart` - 1-20 nanograms/kg/min enforced against a 5-10 usual range; maximum 1 microgram/mL. **Carries an unresolved discrepancy between the enforced and displayed dose ranges, for the reviewer to settle.**
-- [ ] `lib/clinical_protocols/infusions/morphine_infusion.dart` - 5-60 micrograms/kg/hour enforced against a 5-20 displayed range and narrative ceiling of 40; inherited numeric minimum of zero is deliberately refused, and the concentration field is equivalent to 30 mg/mL. **Carries unresolved dose-range and concentration-limit discrepancies.**
+- [ ] `lib/clinical_protocols/infusions/dinoprostone_infusion.dart` - configured 1-20 nanograms/kg/min against a 5-10 usual range; maximum 1 microgram/mL. **Carries an unresolved discrepancy between the configured and displayed dose ranges, for the reviewer to settle.**
+- [ ] `lib/clinical_protocols/infusions/morphine_infusion.dart` - configured 5-60 micrograms/kg/hour against a 5-20 displayed range and narrative ceiling of 40; zero remains invalid, and the concentration field is equivalent to 30 mg/mL. **Carries unresolved dose-range and concentration-limit discrepancies.**
 - [ ] `lib/clinical_protocols/infusions/vecuronium_infusion.dart` - 50-200 micrograms/kg/hour; human-readable 2 mg/mL ceiling enforced. **Carries an unresolved disagreement between inherited numeric and human-readable concentration fields.**
 - [ ] `lib/clinical_protocols/infusions/clonazepam_infusion.dart` - 10-40 micrograms/kg/hour; maximum 12 micrograms/mL. **The inherited default preparation exceeds its own ceiling at common neonatal weights, and the Ionic display was commented out.**
 - [ ] `lib/clinical_protocols/infusions/midazolam_infusion.dart` - 30-300 micrograms/kg/hour; maximum 1 mg/mL. **Carries unresolved 10-60, 30-60, and 30-300 dose-range discrepancies.**

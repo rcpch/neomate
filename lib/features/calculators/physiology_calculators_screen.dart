@@ -8,7 +8,6 @@ import '../../calculations/calculation_outcome.dart';
 import '../../calculations/fluids/daily_fluid_volume.dart';
 import '../../calculations/fluids/glucose_infusion_rate.dart';
 import '../../calculations/patient_context.dart';
-import '../../calculations/protocol_calculation.dart';
 import '../../calculations/ventilation/mean_airway_pressure.dart';
 import '../../calculations/ventilation/oxygenation_index.dart';
 import '../../clinical_policy/neonatal_weight_policy.dart';
@@ -300,9 +299,6 @@ class _PhysiologyCalculatorsScreenState
     final fluidResult = calculateDailyFluidVolume(
       patient: patient,
       prescribedMillilitresPerKilogramPerDay: values[7]!,
-      // Deliberately broad inherited-alpha guard, not a prescribing range.
-      approvedMillilitresPerKilogramPerDay:
-          const ApprovedRange(minimum: 1, maximum: 300),
     );
     if (fluidResult is! CalculationValue<DailyFluidVolume>) {
       return const _Results(error: 'Daily fluid entry is not valid.');

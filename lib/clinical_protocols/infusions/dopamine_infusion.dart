@@ -25,15 +25,14 @@
 //     figures against the current BNFc rather than to derive them afresh.
 //   * The inherited limit is expressed as a maximum amount in a 50 mL syringe
 //     (80 mg per 50 mL). It is converted here to a concentration per
-//     millilitre, which is what the calculation engine checks, so the limit
-//     holds regardless of the syringe size chosen:
+//     millilitre, which is what the calculation engine compares, so the same
+//     advisory threshold applies regardless of the syringe size chosen:
 //         80 mg / 50 mL = 1.6 mg/mL = 1600 micrograms/mL
-//   * Route and access are restricted to reflect the inherited advice that
-//     these doses are given centrally. Peripheral administration is not
-//     approved here; extravasation of a vasopressor causes tissue injury.
-//   * The dose is supplied by the caller. The approved range is fixed in this
-//     file and cannot be overridden, so a caller can choose a dose but cannot
-//     choose the limits it is checked against.
+//   * Central administration is the configured use. Peripheral administration
+//     remains calculable with an advisory; extravasation of a vasopressor is a
+//     review consideration.
+//   * The dose is supplied by the caller. The configured range is fixed in this
+//     file and reported as a non-blocking advisory.
 // ---------------------------------------------------------------------------
 
 import '../../calculations/protocol_calculation.dart';

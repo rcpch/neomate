@@ -198,9 +198,6 @@ class _ElectrolyteCompoundingScreenState
       patient: patient,
       electrolyte: _electrolyte,
       prescribedMillimolesPerKilogramPerDay: prescribed!,
-      // Broad alpha input guard only, not a prescribing range.
-      approvedMillimolesPerKilogramPerDay:
-          const ApprovedRange(minimum: 0.1, maximum: 100),
     );
     if (requirement is! CalculationValue<ElectrolyteRequirement>) {
       return const _CompoundingResult(

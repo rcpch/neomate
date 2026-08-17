@@ -19,6 +19,7 @@ Neomate 2 is a Flutter rebuild of a legacy neonatal reference and calculation ap
 - Do not introduce patient data, clinical credentials, or production endpoints into the repository.
 - Do not alter clinical behaviour without updating the safety artefacts and traceability record in the same change.
 - Keep implementation history in engineering documentation, not user-facing copy. Clinical UI must describe current capability, evidence, review, and approval status without referring to a rewrite, rebuild, migration, legacy version, prototype, alpha, or demonstration.
+- Keep every implemented workflow exercisable in internal development builds regardless of clinical review or sign-off status. Configured clinical constraints may produce visible review advisories but must not suppress otherwise valid calculations unless the Clinical Safety Officer explicitly changes this posture.
 
 ## Workflow
 

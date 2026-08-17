@@ -40,17 +40,19 @@ void main() {
     expect(midazolamApprovedConcentration.maximum, 1000);
   });
 
-  test('clonazepam refuses the contradictory inherited default preparation',
-      () {
+  test('clonazepam calculates the contradictory default with an advisory', () {
     // 10 mcg/kg/hour x 3 kg / 1 mL/hour = 30 mcg/mL, above the
     // inherited human-readable ceiling of 12 mcg/mL.
     final result = run(clonazepamInfusion(dosePerKilogramPerHour: 10))
-        as ProtocolCalculationFailure<InfusionPreparation>;
+        as ProtocolCalculationSuccess<InfusionPreparation>;
 
     expect(
-      result.issue,
-      ProtocolCalculationIssue.concentrationAboveApprovedRange,
+      result.advisories,
+      contains(
+        ProtocolCalculationAdvisory.concentrationAboveConfiguredRange,
+      ),
     );
+    expect(result.value.amountInSyringe, 1500);
   });
 
   test('clonazepam accepts a preparation within the concentration ceiling', () {
@@ -65,28 +67,33 @@ void main() {
     expect(result.value.amountInSyringe, 500);
   });
 
-  test('midazolam enforces numeric bounds and the 1 mg/mL ceiling', () {
+  test('midazolam reports numeric bounds and the 1 mg/mL ceiling', () {
     final accepted = run(midazolamInfusion(dosePerKilogramPerHour: 30))
         as ProtocolCalculationSuccess<InfusionPreparation>;
     expect(accepted.value.concentrationPerMillilitre, 900);
 
     final aboveDose = run(midazolamInfusion(dosePerKilogramPerHour: 301))
-        as ProtocolCalculationFailure<InfusionPreparation>;
-    expect(aboveDose.issue, ProtocolCalculationIssue.doseAboveApprovedRange);
+        as ProtocolCalculationSuccess<InfusionPreparation>;
+    expect(
+      aboveDose.advisories,
+      contains(ProtocolCalculationAdvisory.doseAboveConfiguredRange),
+    );
 
     final aboveConcentration = run(
       midazolamInfusion(
         dosePerKilogramPerHour: 30,
         rateMillilitresPerHour: 0.05,
       ),
-    ) as ProtocolCalculationFailure<InfusionPreparation>;
+    ) as ProtocolCalculationSuccess<InfusionPreparation>;
     expect(
-      aboveConcentration.issue,
-      ProtocolCalculationIssue.concentrationAboveApprovedRange,
+      aboveConcentration.advisories,
+      contains(
+        ProtocolCalculationAdvisory.concentrationAboveConfiguredRange,
+      ),
     );
   });
 
-  test('both protocols conservatively refuse peripheral access', () {
+  test('both protocols report peripheral access without blocking', () {
     for (final protocol in [
       clonazepamInfusion(
         dosePerKilogramPerHour: 10,
@@ -95,8 +102,11 @@ void main() {
       midazolamInfusion(dosePerKilogramPerHour: 30),
     ]) {
       final result = run(protocol, access: VascularAccess.peripheral)
-          as ProtocolCalculationFailure<InfusionPreparation>;
-      expect(result.issue, ProtocolCalculationIssue.accessNotApproved);
+          as ProtocolCalculationSuccess<InfusionPreparation>;
+      expect(
+        result.advisories,
+        contains(ProtocolCalculationAdvisory.accessOutsideConfiguredUse),
+      );
     }
   });
 }

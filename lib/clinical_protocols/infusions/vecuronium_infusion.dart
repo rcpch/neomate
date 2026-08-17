@@ -23,14 +23,14 @@
 //   * DISCREPANCY CARRIED FORWARD. Numeric fields represented 4-200 mg in a
 //     50 mL syringe (80 micrograms/mL to 4 mg/mL), while their accompanying
 //     text said not below 40 micrograms/mL and ideally not above 2 mg/mL. The
-//     stricter human-readable 2 mg/mL ceiling is enforced here. No minimum
-//     concentration is enforced pending clinical resolution.
+//     stricter human-readable 2 mg/mL ceiling is recorded as a review advisory.
+//     No minimum concentration is recorded pending clinical resolution.
 //   * The original Ionic product showed a fixed preparation of 5 mg per
 //     kilogram in 50 mL at 1 mL/hour to deliver 100 micrograms/kg/hour.
 //   * Vecuronium causes paralysis and provides neither analgesia nor sedation.
 //     The UI must state this explicitly wherever this protocol is exposed.
-//   * This unreviewed alpha conservatively permits only central or umbilical
-//     venous access until route and access policy is independently confirmed.
+//   * Central and umbilical venous access are recorded as the configured use;
+//     other selections remain calculable with an advisory for review.
 // ---------------------------------------------------------------------------
 
 import '../../calculations/protocol_calculation.dart';

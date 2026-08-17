@@ -113,7 +113,7 @@ void main() {
     expect(find.text('Weight must be between 200 and 6000 g.'), findsOneWidget);
   });
 
-  testWidgets('enforces infusion concentration and access controls',
+  testWidgets('shows infusion constraint advisories without blocking results',
       (tester) async {
     await tester.pumpWidget(const NeomateApp());
 
@@ -128,6 +128,9 @@ void main() {
     expect(find.text('45000.0 micrograms in syringe'), findsOneWidget);
     await tester.enterText(find.byKey(const Key('dose-field')), '20');
     await tester.pump();
+    expect(find.text('90000.0 micrograms in syringe'), findsOneWidget);
+    await tester.drag(find.byType(ListView), const Offset(0, -350));
+    await tester.pumpAndSettle();
     expect(
       find.textContaining('exceeds the configured maximum concentration'),
       findsOneWidget,
@@ -170,6 +173,7 @@ void main() {
     );
     await tester.drag(find.byType(ListView), const Offset(0, -500));
     await tester.pumpAndSettle();
+    expect(find.text('1500.0 micrograms in syringe'), findsOneWidget);
     expect(
       find.textContaining('exceeds the configured maximum concentration'),
       findsOneWidget,

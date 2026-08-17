@@ -10,7 +10,7 @@
 // clinical review, when the figures are checked against the current BNFc.
 //
 // Each protocol is also exercised through the calculation engine to confirm
-// the bounds are actually enforced rather than merely recorded.
+// configured bounds are reported as non-blocking review advisories.
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:neomate2/calculations/patient_context.dart';
@@ -78,16 +78,18 @@ void main() {
   });
 
   group('dopamine infusion', () {
-    test('prepares an infusion at a dose inside the approved range', () {
+    test('prepares an infusion and reports concentration advisory', () {
       // 10 mcg/kg/min x 3 kg = 30 mcg/min = 1800 mcg/hour.
       // At 1 mL/hour that is 1800 mcg/mL, which is above the 1600 mcg/mL
-      // limit, so the inherited preparation must be refused at this dose.
+      // limit, so the preparation carries an advisory at this dose.
       final result = run(dopamineInfusion(dosePerKilogramPerMinute: 10))
-          as ProtocolCalculationFailure<InfusionPreparation>;
+          as ProtocolCalculationSuccess<InfusionPreparation>;
 
       expect(
-        result.issue,
-        ProtocolCalculationIssue.concentrationAboveApprovedRange,
+        result.advisories,
+        contains(
+          ProtocolCalculationAdvisory.concentrationAboveConfiguredRange,
+        ),
       );
     });
 
@@ -105,36 +107,46 @@ void main() {
       expect(result.value.amountUnit, DoseUnit.micrograms);
     });
 
-    test('refuses a dose below and above the approved range', () {
+    test('reports a dose below and above the configured range', () {
       final tooLow = run(dopamineInfusion(dosePerKilogramPerMinute: 4))
-          as ProtocolCalculationFailure<InfusionPreparation>;
+          as ProtocolCalculationSuccess<InfusionPreparation>;
       final tooHigh = run(dopamineInfusion(dosePerKilogramPerMinute: 25))
-          as ProtocolCalculationFailure<InfusionPreparation>;
+          as ProtocolCalculationSuccess<InfusionPreparation>;
 
-      expect(tooLow.issue, ProtocolCalculationIssue.doseBelowApprovedRange);
-      expect(tooHigh.issue, ProtocolCalculationIssue.doseAboveApprovedRange);
+      expect(
+        tooLow.advisories,
+        contains(ProtocolCalculationAdvisory.doseBelowConfiguredRange),
+      );
+      expect(
+        tooHigh.advisories,
+        contains(ProtocolCalculationAdvisory.doseAboveConfiguredRange),
+      );
     });
 
-    test('refuses peripheral access for a vasopressor', () {
-      // Extravasation of a vasopressor causes tissue injury, so peripheral
-      // access is not approved for the inherited central-line preparations.
+    test('reports peripheral access for review without blocking', () {
       final result = dopamineInfusion(dosePerKilogramPerMinute: 10).calculate(
         patient: patient,
         route: AdministrationRoute.intravenous,
         access: VascularAccess.peripheral,
-      ) as ProtocolCalculationFailure<InfusionPreparation>;
+      ) as ProtocolCalculationSuccess<InfusionPreparation>;
 
-      expect(result.issue, ProtocolCalculationIssue.accessNotApproved);
+      expect(
+        result.advisories,
+        contains(ProtocolCalculationAdvisory.accessOutsideConfiguredUse),
+      );
     });
 
-    test('refuses a non-intravenous route', () {
+    test('reports a non-intravenous route without blocking', () {
       final result = dopamineInfusion(dosePerKilogramPerMinute: 10).calculate(
         patient: patient,
         route: AdministrationRoute.enteral,
         access: VascularAccess.central,
-      ) as ProtocolCalculationFailure<InfusionPreparation>;
+      ) as ProtocolCalculationSuccess<InfusionPreparation>;
 
-      expect(result.issue, ProtocolCalculationIssue.routeNotApproved);
+      expect(
+        result.advisories,
+        contains(ProtocolCalculationAdvisory.routeOutsideConfiguredUse),
+      );
     });
   });
 
@@ -149,11 +161,14 @@ void main() {
       expect(result.value.amountUnit, DoseUnit.nanograms);
     });
 
-    test('refuses a dose outside the approved range', () {
+    test('reports a dose outside the configured range', () {
       final tooHigh = run(adrenalineInfusion(dosePerKilogramPerMinute: 600))
-          as ProtocolCalculationFailure<InfusionPreparation>;
+          as ProtocolCalculationSuccess<InfusionPreparation>;
 
-      expect(tooHigh.issue, ProtocolCalculationIssue.doseAboveApprovedRange);
+      expect(
+        tooHigh.advisories,
+        contains(ProtocolCalculationAdvisory.doseAboveConfiguredRange),
+      );
     });
   });
 
@@ -225,7 +240,7 @@ void main() {
       });
     });
 
-    test('enforces its own dose ceiling', () {
+    test('reports its own configured dose ceiling', () {
       final aboveCeiling = <String, WeightBasedInfusionProtocol>{
         'dopamine': dopamineInfusion(dosePerKilogramPerMinute: 21),
         'dobutamine': dobutamineInfusion(dosePerKilogramPerMinute: 21),
@@ -236,16 +251,16 @@ void main() {
 
       aboveCeiling.forEach((name, protocol) {
         final result =
-            run(protocol) as ProtocolCalculationFailure<InfusionPreparation>;
+            run(protocol) as ProtocolCalculationSuccess<InfusionPreparation>;
         expect(
-          result.issue,
-          ProtocolCalculationIssue.doseAboveApprovedRange,
-          reason: '$name should refuse a dose above its approved ceiling',
+          result.advisories,
+          contains(ProtocolCalculationAdvisory.doseAboveConfiguredRange),
+          reason: '$name should report a dose above its configured ceiling',
         );
       });
     });
 
-    test('is restricted to central or umbilical venous access', () {
+    test('reports access outside central or umbilical venous use', () {
       final protocols = <String, WeightBasedInfusionProtocol>{
         'dopamine': dopamineInfusion(dosePerKilogramPerMinute: 10),
         'dobutamine': dobutamineInfusion(dosePerKilogramPerMinute: 10),
@@ -264,11 +279,11 @@ void main() {
             patient: patient,
             route: AdministrationRoute.intravenous,
             access: access,
-          ) as ProtocolCalculationFailure<InfusionPreparation>;
+          ) as ProtocolCalculationSuccess<InfusionPreparation>;
           expect(
-            result.issue,
-            ProtocolCalculationIssue.accessNotApproved,
-            reason: '$name should refuse $access',
+            result.advisories,
+            contains(ProtocolCalculationAdvisory.accessOutsideConfiguredUse),
+            reason: '$name should report $access',
           );
         }
       });

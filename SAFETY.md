@@ -18,6 +18,10 @@ The proposed intended users are appropriately trained neonatal clinicians in a U
 
 Dr Marcus Baw currently holds the product owner, Clinical Safety Officer, clinical content lead, engineering lead, quality lead, security lead, and release-approval roles for the Neomate team and RCPCH. Formal delegation and an independent review arrangement must be recorded before clinical deployment.
 
+## Development Review Posture
+
+At the direction of the Clinical Safety Officer, locally run development builds expose every implemented workflow without requiring prior clinical sign-off or a current review decision. Configured protocol dose, concentration, route, and access constraints are displayed as non-blocking review advisories so that reviewers can exercise and assess the calculations. This posture applies only to source-run development builds available to the internal development team; clinical release and distribution gates remain unchanged.
+
 ## Safety Artefacts
 
 - [clinical-safety/SAFETY-PLAN.md](clinical-safety/SAFETY-PLAN.md) - lifecycle, responsibilities, and release gates.

@@ -14,16 +14,15 @@
 // ---------------------------------------------------------------------------
 // Protocol    : Dinoprostone (prostaglandin E2) continuous intravenous
 //               infusion, to maintain ductal patency.
-// Dose range  : 1 to 20 nanograms/kg/minute enforced; 5 to 10
+// Dose range  : 1 to 20 nanograms/kg/minute configured; 5 to 10
 //               nanograms/kg/minute described as the usual range.
 // Limit       : Dilute to 1 microgram/mL.
 //
 // Reviewer notes:
 //   * DISCREPANCY CARRIED FORWARD, FOR THE REVIEWER TO SETTLE. The inherited
-//     product enforces 1-20 nanograms/kg/minute but displays a usual range of
-//     5-10. The wider enforced bounds are used here, because narrowing them
-//     would block a dose the shipped product currently permits. A reviewer
-//     should decide whether the enforced range, the displayed range, or both
+//     product enforced 1-20 nanograms/kg/minute but displayed a usual range of
+//     5-10. The wider configured bounds are recorded here. A reviewer should
+//     decide whether the configured range, the displayed range, or both
 //     are correct.
 //   * The inherited concentration limit is 0.05 mg per 50 mL syringe, which is
 //     the 1 microgram/mL dilution BNFc recommends:
@@ -41,14 +40,14 @@ import '../../calculations/protocol_calculation.dart';
 /// Identifier used in the protocol registry and in test evidence.
 const String dinoprostoneInfusionProtocolId = 'PROTOCOL-DINOPROSTONE-INFUSION';
 
-/// Approved dose range in nanograms/kg/minute, as enforced by the inherited
-/// product.
+/// Configured dose range in nanograms/kg/minute from the inherited product.
+/// Values outside it remain calculable with a review advisory.
 const ApprovedRange dinoprostoneApprovedDose =
     ApprovedRange(minimum: 1, maximum: 20);
 
 /// The usual dose range described by the inherited product, in
-/// nanograms/kg/minute. Not enforced; recorded so the discrepancy above stays
-/// visible rather than being lost.
+/// nanograms/kg/minute. Recorded so the discrepancy above stays visible rather
+/// than being lost.
 const ApprovedRange dinoprostoneUsualDose =
     ApprovedRange(minimum: 5, maximum: 10);
 

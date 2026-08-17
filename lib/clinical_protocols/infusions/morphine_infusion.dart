@@ -13,7 +13,7 @@
 // reviewer, no sign-off. See spec/clinical-source-convention.md.
 // ---------------------------------------------------------------------------
 // Protocol    : Morphine continuous intravenous infusion.
-// Enforced    : 5 to 60 micrograms/kg/hour.
+// Configured  : 5 to 60 micrograms/kg/hour, shown as a review advisory.
 // Stated range: 5 to 20 micrograms/kg/hour; the inherited narrative says that
 //               up to 40 micrograms/kg/hour may occasionally be used.
 // Limit       : 30 mg/mL, converted from the inherited numeric field of
@@ -27,15 +27,15 @@
 //   * DISCREPANCY CARRIED FORWARD. The numeric fields permitted 0-60
 //     micrograms/kg/hour, the displayed range was 5-20, and narrative text
 //     mentioned occasional doses up to 40. The displayed minimum of 5 is
-//     enforced here so zero cannot produce an apparent preparation. The upper
-//     ranges still require clinical review.
+//     recorded as review metadata; zero remains invalid because it cannot
+//     produce a useful preparation. The upper ranges require clinical review.
 //   * The concentration field is unusually permissive and its warning merely
 //     said "Higher than recommended concentration". It is retained as
 //     migration evidence, not endorsed as a suitable preparation limit.
 //   * The original Ionic product instead showed a fixed preparation of 1 mg
 //     per kilogram in 50 mL at 1 mL/hour to deliver 20 micrograms/kg/hour.
-//   * This unreviewed alpha conservatively permits only central or umbilical
-//     venous access until route and access policy is independently confirmed.
+//   * Central and umbilical venous access are recorded as the configured use;
+//     other selections remain calculable with an advisory for review.
 // ---------------------------------------------------------------------------
 
 import '../../calculations/protocol_calculation.dart';

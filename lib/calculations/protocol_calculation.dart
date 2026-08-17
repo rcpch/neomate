@@ -14,16 +14,16 @@
 // ---------------------------------------------------------------------------
 // Module  : Shared engine for weight-based bolus doses, infusion preparations,
 //           and line-length protocols.
-// Purpose : Apply the dose, concentration, route, and vascular-access limits
-//           carried by an approved protocol record before any number is
-//           returned.
+// Purpose : Calculate protocol outputs and report configured dose,
+//           concentration, route, and vascular-access constraints as
+//           non-blocking advisories for clinical review.
 //
 // Reviewer notes:
 //   * This file holds no doses and no protocol values. Every clinical figure
 //     arrives from a protocol record supplied by the caller, so signing this
 //     file off means agreeing the constraint logic, not any drug.
-//   * A protocol whose approved range is malformed is rejected rather than
-//     treated as unconstrained.
+//   * Configured ranges and access constraints are review metadata. They do not
+//     suppress a finite calculation in the internal development build.
 // ---------------------------------------------------------------------------
 
 import 'patient_context.dart';
@@ -57,15 +57,19 @@ enum DoseTimeBasis { minute, hour, day }
 
 enum ProtocolCalculationIssue {
   notFinite,
-  doseBelowApprovedRange,
-  doseAboveApprovedRange,
-  concentrationBelowApprovedRange,
-  concentrationAboveApprovedRange,
-  routeNotApproved,
-  accessNotApproved,
-  invalidApprovedRange,
+  invalidDose,
   invalidRate,
   invalidPreparationVolume,
+}
+
+enum ProtocolCalculationAdvisory {
+  doseBelowConfiguredRange,
+  doseAboveConfiguredRange,
+  concentrationBelowConfiguredRange,
+  concentrationAboveConfiguredRange,
+  routeOutsideConfiguredUse,
+  accessOutsideConfiguredUse,
+  invalidConfiguredRange,
 }
 
 sealed class ProtocolCalculationResult<T> {
@@ -73,9 +77,13 @@ sealed class ProtocolCalculationResult<T> {
 }
 
 class ProtocolCalculationSuccess<T> extends ProtocolCalculationResult<T> {
-  const ProtocolCalculationSuccess(this.value);
+  const ProtocolCalculationSuccess(
+    this.value, {
+    this.advisories = const <ProtocolCalculationAdvisory>[],
+  });
 
   final T value;
+  final List<ProtocolCalculationAdvisory> advisories;
 }
 
 class ProtocolCalculationFailure<T> extends ProtocolCalculationResult<T> {
@@ -145,7 +153,11 @@ class WeightBasedDoseProtocol implements WeightBasedProtocol<WeightBasedDose> {
     required AdministrationRoute route,
     required VascularAccess access,
   }) {
-    final commonFailure = _validateCommon(
+    final inputFailure = _validateDose(dosePerKilogram);
+    if (inputFailure != null) {
+      return ProtocolCalculationFailure(inputFailure);
+    }
+    final advisories = _configuredAdvisories(
       dosePerKilogram: dosePerKilogram,
       approvedDosePerKilogram: approvedDosePerKilogram,
       route: route,
@@ -153,17 +165,15 @@ class WeightBasedDoseProtocol implements WeightBasedProtocol<WeightBasedDose> {
       access: access,
       approvedAccess: approvedAccess,
     );
-    if (commonFailure != null) {
-      return ProtocolCalculationFailure(commonFailure);
-    }
-
     final amount = dosePerKilogram * patient.weight.kilograms;
     if (!amount.isFinite) {
       return const ProtocolCalculationFailure(
           ProtocolCalculationIssue.notFinite);
     }
     return ProtocolCalculationSuccess(
-        WeightBasedDose(amount: amount, unit: unit));
+      WeightBasedDose(amount: amount, unit: unit),
+      advisories: advisories,
+    );
   }
 }
 
@@ -216,16 +226,9 @@ class WeightBasedInfusionProtocol
     required AdministrationRoute route,
     required VascularAccess access,
   }) {
-    final commonFailure = _validateCommon(
-      dosePerKilogram: dosePerKilogram,
-      approvedDosePerKilogram: approvedDosePerKilogram,
-      route: route,
-      approvedRoutes: approvedRoutes,
-      access: access,
-      approvedAccess: approvedAccess,
-    );
-    if (commonFailure != null) {
-      return ProtocolCalculationFailure(commonFailure);
+    final inputFailure = _validateDose(dosePerKilogram);
+    if (inputFailure != null) {
+      return ProtocolCalculationFailure(inputFailure);
     }
     if (!rateMillilitresPerHour.isFinite || rateMillilitresPerHour <= 0) {
       return const ProtocolCalculationFailure(
@@ -237,12 +240,6 @@ class WeightBasedInfusionProtocol
         ProtocolCalculationIssue.invalidPreparationVolume,
       );
     }
-    if (!approvedConcentrationPerMillilitre.isValid) {
-      return const ProtocolCalculationFailure(
-        ProtocolCalculationIssue.invalidApprovedRange,
-      );
-    }
-
     final hourlyDosePerKilogram = switch (timeBasis) {
       DoseTimeBasis.minute => dosePerKilogram * 60,
       DoseTimeBasis.hour => dosePerKilogram,
@@ -258,17 +255,29 @@ class WeightBasedInfusionProtocol
       return const ProtocolCalculationFailure(
           ProtocolCalculationIssue.notFinite);
     }
-    if (concentrationPerMillilitre <
-        approvedConcentrationPerMillilitre.minimum) {
-      return const ProtocolCalculationFailure(
-        ProtocolCalculationIssue.concentrationBelowApprovedRange,
-      );
-    }
-    if (concentrationPerMillilitre >
-        approvedConcentrationPerMillilitre.maximum) {
-      return const ProtocolCalculationFailure(
-        ProtocolCalculationIssue.concentrationAboveApprovedRange,
-      );
+    final advisories = _configuredAdvisories(
+      dosePerKilogram: dosePerKilogram,
+      approvedDosePerKilogram: approvedDosePerKilogram,
+      route: route,
+      approvedRoutes: approvedRoutes,
+      access: access,
+      approvedAccess: approvedAccess,
+    );
+    if (!approvedConcentrationPerMillilitre.isValid) {
+      advisories.add(ProtocolCalculationAdvisory.invalidConfiguredRange);
+    } else {
+      if (concentrationPerMillilitre <
+          approvedConcentrationPerMillilitre.minimum) {
+        advisories.add(
+          ProtocolCalculationAdvisory.concentrationBelowConfiguredRange,
+        );
+      }
+      if (concentrationPerMillilitre >
+          approvedConcentrationPerMillilitre.maximum) {
+        advisories.add(
+          ProtocolCalculationAdvisory.concentrationAboveConfiguredRange,
+        );
+      }
     }
 
     return ProtocolCalculationSuccess(
@@ -279,11 +288,18 @@ class WeightBasedInfusionProtocol
         rateMillilitresPerHour: rateMillilitresPerHour,
         concentrationPerMillilitre: concentrationPerMillilitre,
       ),
+      advisories: advisories,
     );
   }
 }
 
-ProtocolCalculationIssue? _validateCommon({
+ProtocolCalculationIssue? _validateDose(double dosePerKilogram) {
+  if (!dosePerKilogram.isFinite) return ProtocolCalculationIssue.notFinite;
+  if (dosePerKilogram <= 0) return ProtocolCalculationIssue.invalidDose;
+  return null;
+}
+
+List<ProtocolCalculationAdvisory> _configuredAdvisories({
   required double dosePerKilogram,
   required ApprovedRange approvedDosePerKilogram,
   required AdministrationRoute route,
@@ -291,23 +307,22 @@ ProtocolCalculationIssue? _validateCommon({
   required VascularAccess access,
   required Set<VascularAccess> approvedAccess,
 }) {
+  final advisories = <ProtocolCalculationAdvisory>[];
   if (!approvedDosePerKilogram.isValid) {
-    return ProtocolCalculationIssue.invalidApprovedRange;
-  }
-  if (!dosePerKilogram.isFinite) {
-    return ProtocolCalculationIssue.notFinite;
-  }
-  if (dosePerKilogram < approvedDosePerKilogram.minimum) {
-    return ProtocolCalculationIssue.doseBelowApprovedRange;
-  }
-  if (dosePerKilogram > approvedDosePerKilogram.maximum) {
-    return ProtocolCalculationIssue.doseAboveApprovedRange;
+    advisories.add(ProtocolCalculationAdvisory.invalidConfiguredRange);
+  } else {
+    if (dosePerKilogram < approvedDosePerKilogram.minimum) {
+      advisories.add(ProtocolCalculationAdvisory.doseBelowConfiguredRange);
+    }
+    if (dosePerKilogram > approvedDosePerKilogram.maximum) {
+      advisories.add(ProtocolCalculationAdvisory.doseAboveConfiguredRange);
+    }
   }
   if (!approvedRoutes.contains(route)) {
-    return ProtocolCalculationIssue.routeNotApproved;
+    advisories.add(ProtocolCalculationAdvisory.routeOutsideConfiguredUse);
   }
   if (!approvedAccess.contains(access)) {
-    return ProtocolCalculationIssue.accessNotApproved;
+    advisories.add(ProtocolCalculationAdvisory.accessOutsideConfiguredUse);
   }
-  return null;
+  return advisories;
 }

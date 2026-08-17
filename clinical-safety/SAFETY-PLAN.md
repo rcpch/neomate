@@ -21,6 +21,7 @@ This plan defines the minimum clinical-safety controls for the Neomate 2 rebuild
 - Keep calculation functions deterministic and separate from Flutter UI and I/O.
 - Verify calculations independently with source-derived vectors and boundary cases. Legacy behaviour is not sufficient evidence.
 - Review all clinical-content and safety-relevant code changes by the Clinical Safety Officer or delegated clinical content lead.
+- Keep implemented workflows exercisable in internal development builds for clinical review. Review status and configured protocol constraints may inform visible advisories but must not suppress a finite calculation in this review environment.
 - Before clinical release, establish and record independent clinical and quality review arrangements to avoid sole-review of safety-critical work.
 - Review security, privacy, device, offline, and update behaviour before deployment.
 - Verify offline behaviour and every claimed target platform independently before including it in a clinical release.

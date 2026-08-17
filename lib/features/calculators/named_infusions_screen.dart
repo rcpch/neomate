@@ -203,8 +203,13 @@ class _NamedInfusionsScreenState extends State<NamedInfusionsScreen> {
           const SizedBox(height: 16),
           if (result.error != null)
             _InfusionError(message: result.error!)
-          else
+          else ...[
             _PreparationPanel(result: result),
+            if (result.advisories.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              _AdvisoryPanel(advisories: result.advisories),
+            ],
+          ],
           const SizedBox(height: 18),
           const Text(
             'The amount displayed is the total medicine to add to the selected syringe volume. Independently verify all calculations and compatibility.',
@@ -246,11 +251,15 @@ class _NamedInfusionsScreenState extends State<NamedInfusionsScreen> {
       access: _access,
     );
     return switch (calculated) {
-      ProtocolCalculationSuccess<InfusionPreparation>(:final value) =>
+      ProtocolCalculationSuccess<InfusionPreparation>(
+        :final value,
+        :final advisories,
+      ) =>
         _InfusionResult(
           amount: value.amountInSyringe,
           concentration: value.concentrationPerMillilitre,
           unit: value.amountUnit,
+          advisories: advisories,
         ),
       ProtocolCalculationFailure<InfusionPreparation>(:final issue) =>
         _InfusionResult(error: _messageFor(issue)),
@@ -258,23 +267,11 @@ class _NamedInfusionsScreenState extends State<NamedInfusionsScreen> {
   }
 
   String _messageFor(ProtocolCalculationIssue issue) => switch (issue) {
-        ProtocolCalculationIssue.doseBelowApprovedRange =>
-          'Dose is below the configured protocol range.',
-        ProtocolCalculationIssue.doseAboveApprovedRange =>
-          'Dose is above the configured protocol range.',
-        ProtocolCalculationIssue.concentrationBelowApprovedRange =>
-          'Preparation is below the configured concentration range.',
-        ProtocolCalculationIssue.concentrationAboveApprovedRange =>
-          'Preparation exceeds the configured maximum concentration. Increase the pump rate or review the prescribed dose.',
-        ProtocolCalculationIssue.accessNotApproved =>
-          'This preparation requires central or umbilical venous access.',
-        ProtocolCalculationIssue.routeNotApproved =>
-          'Only the intravenous route is supported.',
+        ProtocolCalculationIssue.invalidDose => 'Dose must be above zero.',
         ProtocolCalculationIssue.invalidRate => 'Pump rate must be above zero.',
         ProtocolCalculationIssue.invalidPreparationVolume =>
           'Syringe volume must be above zero.',
-        ProtocolCalculationIssue.notFinite ||
-        ProtocolCalculationIssue.invalidApprovedRange =>
+        ProtocolCalculationIssue.notFinite =>
           'The preparation could not be calculated.',
       };
 }
@@ -446,12 +443,63 @@ class _InfusionResult {
     this.amount,
     this.concentration,
     this.unit,
+    this.advisories = const <ProtocolCalculationAdvisory>[],
   });
 
   final String? error;
   final double? amount;
   final double? concentration;
   final DoseUnit? unit;
+  final List<ProtocolCalculationAdvisory> advisories;
+}
+
+class _AdvisoryPanel extends StatelessWidget {
+  const _AdvisoryPanel({required this.advisories});
+
+  final List<ProtocolCalculationAdvisory> advisories;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('infusion-advisories'),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xfffff0c7),
+        border: Border.all(color: const Color(0xffd79818)),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Review advisories',
+            style: TextStyle(fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 6),
+          for (final advisory in advisories)
+            Text('• ${_messageForAdvisory(advisory)}'),
+        ],
+      ),
+    );
+  }
+
+  static String _messageForAdvisory(ProtocolCalculationAdvisory advisory) =>
+      switch (advisory) {
+        ProtocolCalculationAdvisory.doseBelowConfiguredRange =>
+          'Dose is below the configured protocol range.',
+        ProtocolCalculationAdvisory.doseAboveConfiguredRange =>
+          'Dose is above the configured protocol range.',
+        ProtocolCalculationAdvisory.concentrationBelowConfiguredRange =>
+          'Preparation is below the configured concentration range.',
+        ProtocolCalculationAdvisory.concentrationAboveConfiguredRange =>
+          'Preparation exceeds the configured maximum concentration.',
+        ProtocolCalculationAdvisory.routeOutsideConfiguredUse =>
+          'Route is outside the configured protocol use.',
+        ProtocolCalculationAdvisory.accessOutsideConfiguredUse =>
+          'Vascular access is outside the configured protocol use.',
+        ProtocolCalculationAdvisory.invalidConfiguredRange =>
+          'A configured review range is invalid.',
+      };
 }
 
 class _RangePanel extends StatelessWidget {

@@ -24,8 +24,8 @@
 //   * The preceding Ionic product contained a clonazepam preparation but had
 //     its direct display code commented out. Confirm whether this protocol was
 //     intentionally retired before any clinical use.
-//   * This unreviewed alpha conservatively permits only central or umbilical
-//     venous access until route and access policy is independently confirmed.
+//   * Central and umbilical venous access are recorded as the configured use;
+//     other selections remain calculable with an advisory for review.
 // ---------------------------------------------------------------------------
 
 import '../../calculations/protocol_calculation.dart';

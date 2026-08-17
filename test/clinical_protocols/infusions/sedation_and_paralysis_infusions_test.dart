@@ -48,14 +48,17 @@ void main() {
     expect(result.value.amountUnit, DoseUnit.micrograms);
   });
 
-  test('enforces the inherited morphine dose ceiling', () {
+  test('rejects zero and reports the configured morphine dose ceiling', () {
     final zero = run(morphineInfusion(dosePerKilogramPerHour: 0))
         as ProtocolCalculationFailure<InfusionPreparation>;
     final result = run(morphineInfusion(dosePerKilogramPerHour: 61))
-        as ProtocolCalculationFailure<InfusionPreparation>;
+        as ProtocolCalculationSuccess<InfusionPreparation>;
 
-    expect(zero.issue, ProtocolCalculationIssue.doseBelowApprovedRange);
-    expect(result.issue, ProtocolCalculationIssue.doseAboveApprovedRange);
+    expect(zero.issue, ProtocolCalculationIssue.invalidDose);
+    expect(
+      result.advisories,
+      contains(ProtocolCalculationAdvisory.doseAboveConfiguredRange),
+    );
   });
 
   test('uses the stricter stated vecuronium concentration ceiling', () {
@@ -67,26 +70,31 @@ void main() {
         as ProtocolCalculationSuccess<InfusionPreparation>;
     expect(accepted.value.concentrationPerMillilitre, 300);
 
-    final refused = run(
+    final outsideRange = run(
       vecuroniumInfusion(
         dosePerKilogramPerHour: 200,
         rateMillilitresPerHour: 0.1,
       ),
-    ) as ProtocolCalculationFailure<InfusionPreparation>;
+    ) as ProtocolCalculationSuccess<InfusionPreparation>;
     expect(
-      refused.issue,
-      ProtocolCalculationIssue.concentrationAboveApprovedRange,
+      outsideRange.advisories,
+      contains(
+        ProtocolCalculationAdvisory.concentrationAboveConfiguredRange,
+      ),
     );
   });
 
-  test('conservatively refuses peripheral access for both protocols', () {
+  test('reports peripheral access for both protocols without blocking', () {
     for (final protocol in [
       morphineInfusion(dosePerKilogramPerHour: 5),
       vecuroniumInfusion(dosePerKilogramPerHour: 100),
     ]) {
       final result = run(protocol, access: VascularAccess.peripheral)
-          as ProtocolCalculationFailure<InfusionPreparation>;
-      expect(result.issue, ProtocolCalculationIssue.accessNotApproved);
+          as ProtocolCalculationSuccess<InfusionPreparation>;
+      expect(
+        result.advisories,
+        contains(ProtocolCalculationAdvisory.accessOutsideConfiguredUse),
+      );
     }
   });
 }

@@ -13,7 +13,7 @@
 // reviewer, no sign-off. See spec/clinical-source-convention.md.
 // ---------------------------------------------------------------------------
 // Protocol   : Midazolam continuous intravenous infusion.
-// Enforced   : 30 to 300 micrograms/kg/hour.
+// Configured : 30 to 300 micrograms/kg/hour, shown as a review advisory.
 // Limit      : 1 mg/mL.
 //
 // Reviewer notes:
@@ -24,10 +24,10 @@
 //   * DISCREPANCY CARRIED FORWARD. The Ionic UI and numeric fields stated
 //     30-300 micrograms/kg/hour, its database narrative stated 10-60, and the
 //     Dart successor displayed 30-60 while retaining numeric bounds of 30-300.
-//     The shared 30-300 numeric bounds are enforced here; all ranges require
+//     The shared 30-300 numeric bounds are recorded here; all ranges require
 //     independent clinical resolution.
-//   * This unreviewed alpha conservatively permits only central or umbilical
-//     venous access until route and access policy is independently confirmed.
+//   * Central and umbilical venous access are recorded as the configured use;
+//     other selections remain calculable with an advisory for review.
 // ---------------------------------------------------------------------------
 
 import '../../calculations/protocol_calculation.dart';

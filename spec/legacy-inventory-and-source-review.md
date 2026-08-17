@@ -28,7 +28,7 @@ The proposed platform scope is Android, iOS, macOS, Windows, Linux, and web. Off
 | Intubation ETT size and lip-length aid | Yes | Yes | Retain as an aid, requiring a placement-confirmation warning and source review. |
 | Drug bolus doses | Yes | Yes | Review every medicine against current BNFC and local formulary before inclusion. |
 | UVC/UAC formulae and infusion guidance | Yes | Yes | Review against current BAPM central-venous-access guidance and local policy. |
-| Preconfigured vasoactive, sedative, neurological and emergency infusions | Yes | Yes | Rebuild only as named, source-traceable protocols with enforced range controls. |
+| Preconfigured vasoactive, sedative, neurological and emergency infusions | Yes | Yes | Represent as named, source-traceable protocols. Internal review builds show configured ranges as non-blocking advisories; release-time controls require a CSO decision. |
 | Daily fluid, glucose, electrolyte and compounding calculator | Yes | Yes | Retain as a separate calculation family after a clinical specification and source-derived vectors. |
 | Ventilator cycle/MAP aid | Yes | Yes | Retain if clinically approved; fix inaccurate presentation and add domain validation. |
 | Oxygenation index | Yes | Yes | Retain only with approved source, unit-aware validation, and referral workflow. |
@@ -156,7 +156,7 @@ No Flutter widget may own clinical formulae, thresholds, or protocol data. No cl
 - A protocol registry test must reject any protocol lacking source, version, review date, expiry/review date, reviewer, and applicable population.
 - A content registry test must reject any clinical content lacking the equivalent provenance fields.
 - Each approved calculation requires literature or policy vectors, exact boundary tests, invalid/non-finite input tests, unit-conversion tests, and a review reference.
-- Every protocol must test its enforced minimum/maximum dose, concentration, and line/route constraints.
+- Every protocol must test its recorded minimum/maximum dose, concentration, and line/route constraints and their review advisories.
 - Widget tests must cover input validation, warning visibility, result provenance, no-result state, navigation, and accessibility semantics.
 - Supported-device smoke tests must run for every released target platform. Web must be tested offline with approved clinical content already available.
 

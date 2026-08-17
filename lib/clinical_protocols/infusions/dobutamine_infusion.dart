@@ -24,8 +24,8 @@
 //     50 mL), converted here to a concentration per millilitre so it holds
 //     whatever syringe size is used:
 //         500 mg / 50 mL = 10 mg/mL = 10 000 micrograms/mL
-//   * The inherited guidance describes administration via a central line.
-//     Peripheral access is therefore not approved in this record.
+//   * Central-line administration is the configured use. Other access remains
+//     calculable with an advisory for review.
 // ---------------------------------------------------------------------------
 
 import '../../calculations/protocol_calculation.dart';
