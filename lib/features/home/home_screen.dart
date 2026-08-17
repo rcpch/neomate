@@ -139,8 +139,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           const _PendingAction(
-                            title: 'Fluid and medicine boluses',
-                            detail: 'Pending source and formulary review',
+                            title: 'Reviewed fluid and medicine boluses',
+                            detail:
+                                'Obsolete resuscitation doses retired; remaining items pending source review',
                           ),
                         ],
                       ),
@@ -192,7 +193,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           _PendingAction(
                             title: 'Newborn resuscitation medicines',
-                            detail: 'Pending RCUK 2025 and local policy review',
+                            detail:
+                                'Obsolete bicarbonate and empirical D10 retired; replacement content pending review',
                           ),
                         ],
                       ),

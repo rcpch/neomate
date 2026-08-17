@@ -7,6 +7,7 @@ import 'package:neomate2/app/neomate_app.dart';
 import 'package:neomate2/features/calculators/airway_and_lines_screen.dart';
 import 'package:neomate2/features/calculators/named_infusions_screen.dart';
 import 'package:neomate2/features/home/home_screen.dart';
+import 'package:neomate2/features/references/clinical_change_log_screen.dart';
 
 void main() {
   testWidgets('shows the native rebuild status', (tester) async {
@@ -240,15 +241,25 @@ void main() {
     await tester.tap(references);
     await tester.pumpAndSettle();
     expect(find.text('Clinical source register'), findsOneWidget);
-    await tester.drag(
-      find.byWidgetPredicate(
-        (widget) =>
-            widget is Scrollable && widget.axisDirection == AxisDirection.down,
-      ),
-      const Offset(0, -900),
+    await tester.tap(find.byKey(const Key('clinical-change-log-button')));
+    await tester.pumpAndSettle();
+    expect(find.text('Retired clinical algorithms'), findsOneWidget);
+    expect(
+      find.text('Sodium bicarbonate during newborn resuscitation'),
+      findsOneWidget,
+    );
+    expect(
+        find.textContaining('RCUK 2025 no longer recommends'), findsOneWidget);
+    expect(find.textContaining('https://www.resus.org.uk/'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('clinical-signoff-summary')),
+      500,
+      scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    expect(find.textContaining('0 of 24'), findsOneWidget);
+    expect(find.textContaining('0 of 25'), findsOneWidget);
     expect(find.textContaining('SRC-011'), findsOneWidget);
   });
 
@@ -340,6 +351,17 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.text('Named infusions'), findsOneWidget);
+
+    await tester.pumpWidget(
+      const MediaQuery(
+        data: MediaQueryData(textScaler: TextScaler.linear(2)),
+        child: MaterialApp(home: ClinicalChangeLogScreen()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('Clinical change log'), findsOneWidget);
   });
 
   testWidgets('airway aids distinguish invalid and unavailable results',

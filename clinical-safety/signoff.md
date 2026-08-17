@@ -52,6 +52,7 @@ These files hold the numeric limits and presentation decisions that the calculat
 
 - [ ] `lib/clinical_policy/neonatal_weight_policy.dart` - the permitted weight range, currently 200-6000 g harvested from the inherited implementation and attributed to SRC-006 as an inherited baseline.
 - [ ] `lib/clinical_policy/display_precision.dart` - decimal places used when displaying fluid volumes and rates, currently 1 d.p. on the grounds that no syringe dispenses more accurately than 0.1 mL.
+- [ ] `lib/clinical_policy/retired_bolus_policy.dart` - retirement of inherited resuscitation bicarbonate and empirical 2.5 mL/kg D10 outputs against RCUK 2025, with supporting neonatal evidence.
 
 ## Files Exempt From Clinical Sign-Off
 

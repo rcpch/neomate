@@ -10,6 +10,7 @@ Candidates below were selected for current UK practice, preferring national bodi
 - **Candidate** - plausible governing source, but the specific edition or its applicability to our use has not been confirmed.
 - **Inherited baseline** - carried forward from the shipped Neomate product, which has been in live clinical use internationally. Treated as a reasonably assured starting point rather than as unevidenced, but still requiring verification against a current source before sign-off.
 - **Provenance only** - not an authoritative clinical source. Records where an inherited value came from, so it is never mistaken for evidence.
+- **Supporting evidence** - peer-reviewed literature used to explain a safety decision alongside the governing UK authority; not sufficient for clinical approval by itself.
 
 ## Register
 
@@ -26,6 +27,7 @@ Candidates below were selected for current UK practice, preferring national bodi
 | SRC-007 | Neonatal respiratory ECMO service specification | NHS England | Not confirmed | Candidate | Oxygenation index escalation thresholds, if such thresholds are ever presented |
 | SRC-010 | Neonatal Airway Safety Standard | BAPM | Published April 2024 | Candidate | Airway safety and placement-confirmation controls; applicability to inherited ETT weight bands remains to be confirmed |
 | SRC-011 | Use of Central Venous Access Devices in Neonates | BAPM | Published July 2026 | Candidate | Umbilical venous access and tip-confirmation controls; applicability to inherited insertion-length formulae remains to be confirmed |
+| SRC-012 | The practices of intravenous sodium bicarbonate therapy in neonatal intensive care units: a multi-country survey | Al-Shehri et al., Medicine | 2023; DOI 10.1097/MD.0000000000034337; [full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC10662854/) | Supporting evidence | Potential neonatal harms and mechanism supporting retirement of routine resuscitation bicarbonate alongside SRC-003 |
 
 ## Notes On Specific Sources
 
@@ -34,5 +36,7 @@ Candidates below were selected for current UK practice, preferring national bodi
 **SRC-002** gives starting and maintenance ranges in mmol/kg/day and mL/kg/day. These are the numbers the reviewed policy records should carry. NG154 covers parenteral nutrition specifically, so its ranges may not be the right bounds for all fluid prescribing; a reviewer must confirm the scope.
 
 **SRC-006** is deliberately not an authoritative source. Values harvested from the inherited implementation, such as the 200-6000 g weight range, are attributed to it so that the absence of clinical evidence behind them stays visible until a reviewer either confirms the value against a real source or replaces it.
+
+**SRC-003** explicitly removes sodium bicarbonate from newborn resuscitation and changes glucose treatment to 200 mg/kg (2 mL/kg D10) only when blood glucose is low. The inherited bicarbonate outputs and empirical 2.5 mL/kg D10 bolus are therefore retired rather than migrated. SRC-012 supports the bicarbonate rationale by describing increased carbon dioxide generation, worsening intracellular acidosis when ventilation is inadequate, cerebral blood-flow fluctuation, and intracranial haemorrhage as potential neonatal harms.
 
 **Mean airway pressure and oxygenation index** have no single UK guideline defining them; they are standard physiological definitions. The inherited implementation used the algebraically identical MAP form `((Ti x PIP) + (Te x PEEP)) / (Ti + Te)` and converted PaO2 from kPa using a factor of 7.5. A reviewer should confirm an acceptable citation, such as a current neonatal ventilation reference text, and confirm the conversion factor to use.

@@ -17,6 +17,7 @@ The internal alpha is a Flutter-native demonstration for the original Neomate au
 - Explicit separation of sedation from neuromuscular paralysis, including a prominent warning that vecuronium provides neither analgesia nor sedation.
 - Enforced inherited dose, concentration, intravenous-route, and central/umbilical-venous-access controls.
 - Native source and review-status presentation.
+- In-app clinical change log for retired inherited algorithms, including copyable links to governing and supporting evidence.
 - Controlled invalid-input and no-result states.
 - Persistent internal-alpha warnings stating that outputs are not approved for patient care.
 - No analytics, telemetry, network requests, or patient-data persistence.
@@ -73,8 +74,9 @@ iOS and macOS must be built and exercised on macOS with Xcode. Windows must be b
 8. Open **Oxygenation index** and change ventilator values to show live native calculation results.
 9. Enter an invalid weight to demonstrate a controlled refusal rather than a misleading result.
 10. Use the bottom **Calculators** destination to show the complete alpha calculator catalogue.
-11. Open **References** to show inherited/proposed source status and zero clinical sign-offs.
-12. Confirm that locked category actions and checklists remain unavailable pending review.
+11. Open **References**, then **Clinical change log**, to show why resuscitation bicarbonate and empirical 2.5 mL/kg D10 were retired, with copyable evidence links.
+12. Return to **References** to show inherited/proposed source status and zero clinical sign-offs.
+13. Confirm that locked category actions and checklists remain unavailable pending review.
 
 ## Known Limitations
 
@@ -87,6 +89,8 @@ iOS and macOS must be built and exercised on macOS with Xcode. Windows must be b
 - Vecuronium retains conflicting concentration fields; the stricter human-readable 2 mg/mL ceiling is enforced. Its protocol remains unreviewed, and paralysis must never be mistaken for analgesia or sedation.
 - Clonazepam retains a default preparation that exceeds its own stated 12 micrograms/mL ceiling at common neonatal weights. The alpha refuses that output, and clinical review must determine whether the protocol should be retired.
 - Midazolam retains conflicting inherited dose ranges of 10-60, 30-60, and 30-300 micrograms/kg/hour. The shared numeric 30-300 bounds are enforced pending clinical resolution.
+- Inherited sodium bicarbonate resuscitation outputs are retired because RCUK 2025 no longer recommends bicarbonate in resuscitation. This does not prohibit separately reviewed post-resuscitation use under local policy.
+- The inherited empirical 2.5 mL/kg D10 resuscitation bolus is retired; RCUK 2025 requires glucose measurement where possible and specifies 2 mL/kg D10 only when blood glucose is low. No replacement calculator is active.
 - The ETT lip-length aid retains the HTML predecessor's "below 5.5 cm" output below 500 g; the Dart predecessor instead returned 5.5 cm throughout the sub-700 g band. This discrepancy requires clinical resolution.
 - ETT and umbilical-line outputs are initial aids only. They do not confirm final position and remain pending current BAPM/local-policy review.
 - No treatment interpretation, escalation threshold, compatibility advice, diluent selection, or local policy is presented.

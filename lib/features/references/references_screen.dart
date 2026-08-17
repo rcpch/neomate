@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 
 import '../shared/alpha_notice.dart';
+import 'clinical_change_log_screen.dart';
 
 class ReferencesScreen extends StatelessWidget {
   const ReferencesScreen({super.key});
@@ -20,6 +21,12 @@ class ReferencesScreen extends StatelessWidget {
       title: 'NICE NG154 neonatal parenteral nutrition',
       status: 'Proposed',
       use: 'Fluid and electrolyte calculation context',
+    ),
+    (
+      id: 'SRC-003',
+      title: 'RCUK Newborn Resuscitation Guidelines',
+      status: 'Proposed - 2025 edition checked',
+      use: 'Retirement of obsolete bicarbonate and empirical glucose boluses',
     ),
     (
       id: 'SRC-006',
@@ -51,6 +58,12 @@ class ReferencesScreen extends StatelessWidget {
       status: 'Candidate - applicability review pending',
       use: 'Umbilical venous access and tip-confirmation controls',
     ),
+    (
+      id: 'SRC-012',
+      title: 'Neonatal intravenous sodium bicarbonate practice review',
+      status: 'Supporting evidence - peer reviewed',
+      use: 'Mechanistic rationale and documented potential harms',
+    ),
   ];
 
   @override
@@ -73,6 +86,17 @@ class ReferencesScreen extends StatelessWidget {
           const Text(
             'Sources listed here are proposed or inherited. None constitutes clinical approval for this alpha.',
           ),
+          const SizedBox(height: 14),
+          OutlinedButton.icon(
+            key: const Key('clinical-change-log-button'),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const ClinicalChangeLogScreen(),
+              ),
+            ),
+            icon: const Icon(Icons.history_outlined),
+            label: const Text('View clinical change log'),
+          ),
           const SizedBox(height: 18),
           for (final source in _sources)
             Card(
@@ -93,13 +117,14 @@ class ReferencesScreen extends StatelessWidget {
             ),
           const SizedBox(height: 18),
           Container(
+            key: const Key('clinical-signoff-summary'),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: const Color(0xfff1f5f3),
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Text(
-              'Clinical sign-off: 0 of 24 reviewable files approved. Engineering tests demonstrate implementation behavior only and do not replace independent clinical review.',
+              'Clinical sign-off: 0 of 25 reviewable files approved. Engineering tests demonstrate implementation behavior only and do not replace independent clinical review.',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ),
