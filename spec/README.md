@@ -11,5 +11,6 @@ Read this directory before changing clinical behaviour or app architecture.
 - [ubiquitous-language.md](ubiquitous-language.md) - canonical domain terminology.
 - [queries.md](queries.md) - decisions requiring human governance input.
 - [clinical-review-questions.md](clinical-review-questions.md) - prioritised questions for neonatal clinical reviewers, with an answer template and links to unresolved implementation decisions.
+- [publication-readiness.md](publication-readiness.md) - separates public source-repository prerequisites from clinical release gates.
 
 Legacy code is evidence of prior behaviour, not an approved specification or clinical source.

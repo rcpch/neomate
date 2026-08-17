@@ -40,6 +40,6 @@ The current contributors are listed alphabetically:
 
 ## Licence
 
-New Neomate 2 code and project artefacts are Copyright (c) 2026 Neomate team and RCPCH, licensed under the [GNU Affero General Public License v3.0 or later](LICENSE). Written documentation produced for this project is CC-BY-SA-4.0.
+New Neomate 2 code and project artefacts are Copyright (c) 2026 Neomate team and RCPCH, licensed under the [GNU Affero General Public License v3.0 or later](LICENSE). Written documentation produced for this project is CC-BY-SA-4.0. Rights in inherited Neomate-owned material have been transferred to RCPCH for continued maintenance and redistribution.
 
-Inherited code, clinical content, images, fonts, and third-party references retain their existing rights and must be inventoried and cleared before distribution. Distribution remains prohibited pending that provenance review and clinical governance approval.
+Third-party material retains its existing rights and licence requirements. Publication of the source code does not constitute clinical approval; distribution or deployment for clinical use remains prohibited until the documented clinical-governance, safety, quality, and regulatory gates are met.

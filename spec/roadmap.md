@@ -4,7 +4,7 @@ Legend: [x] done, [~] in progress, [ ] not started
 
 - [x] **R1 - Establish clinical safety, QMS, agent, and validation baseline**
 - [x] **R2 - Establish current Flutter/Dart build compatibility and remove obsolete project assumptions** - the native shell has no legacy UI, state-management, navigation, HTML-rendering, or networking dependencies; strict analysis and the full test suite pass on Flutter 3.44.
-- [x] **R3 - Inventory inherited calculations, checklists, reference content, sources, and licences** - captured in `spec/legacy-inventory-and-source-review.md`; item-level source approval and rights clearance remain release gates.
+- [x] **R3 - Inventory inherited calculations, checklists, reference content, sources, and licences** - captured in `spec/legacy-inventory-and-source-review.md`; inherited Neomate-owned rights are resolved, while item-level clinical-source approval remains a clinical release gate.
 - [~] **R4 - Define approved intended purpose, system boundaries, users, deployment environment, and regulatory classification** - UK-first, free-to-use, likely Class IIa planning assumption is recorded; formal classification and conformity route remain open.
 - [~] **R5 - Extract deterministic calculation domain modules from Flutter UI** - patient weight, airway, umbilical line-length, mean airway pressure, oxygenation index, daily fluid volume, glucose infusion rate, electrolyte requirement, compounding, and all nine inherited named infusions are implemented as pure single-purpose modules with clinical sign-off headers; drug-bolus families are pending.
 - [ ] **R6 - Build source-derived calculation conformance vectors and independent clinical verification**
@@ -23,7 +23,7 @@ This plan deliberately puts medical-device assurance and market access last. No 
 - [x] **D1 - Establish safety, QMS, licence, specification, and agent baseline**
 - [x] **D2 - Inventory all available legacy implementations, sources, defects, and functional scope**
 - [x] **D3 - Remove obsolete unversioned development logs and archive snapshots**
-- [ ] **D4 - Confirm written provenance and redistribution rights for inherited code, content, images, and fonts**
+- [x] **D4 - Confirm provenance and redistribution rights for inherited Neomate-owned code, content, branding, images, and custom assets** - resolved through transfer from Neomate Ltd to RCPCH; third-party materials continue under their own licence terms.
 - [x] **D5 - Create a source and clinical-sign-off comment convention for every clinical code file** - the convention is enforced by `test/architecture/clinical_source_convention_test.dart`, which rejects a missing block, a malformed sign-off, and any file claiming approval without a source, named reviewer, and review-due date.
 
 Completion criteria: every inherited asset and source file has a recorded disposition; no undocumented clinical material is copied into new feature modules.
@@ -91,7 +91,7 @@ Completion criteria: test evidence is linked to source records and hazards; repr
 - [~] **D37 - Design the accessible Flutter feature modules and migrate approved functionality from the legacy interface** - the adaptive native alpha now uses a weight-first workspace, familiar clinical accordion categories, bottom navigation, physiology/fluid calculations, electrolyte compounding, nine named infusions, and typed content rendering; approved clinical feature migration remains pending.
 - [~] **D38 - Add controlled build provenance, dependency review, CI, reproducible builds, and release artefact retention** - initial pinned CI and dependency automation are complete; signed multi-platform release provenance and artefact retention remain pending.
 - [ ] **D39 - Define support, incident, issue triage, corrective-action, content-update, and product-maintenance workflows**
-- [ ] **D40 - Establish public documentation, source availability, and licence notices appropriate to AGPL-3.0-or-later distribution**
+- [~] **D40 - Establish public documentation, source availability, security reporting, and licence notices appropriate to AGPL-3.0-or-later distribution** - inherited Neomate-owned rights are resolved; a public security policy and complete third-party notices remain to be added.
 - [~] **D41 - Produce a non-clinical beta build for technical and usability evaluation only** - an internal alpha now exposes selected native calculations, all nine inherited named infusion protocols, and source status on Android, Linux, and web; broader feature migration, Apple/Windows build evidence, and a controlled beta package remain pending.
 
 Completion criteria: the product is technically mature, fully offline, reproducibly built, and has a controlled evidence trail ready to enter formal medical-device assurance.

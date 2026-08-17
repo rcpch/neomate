@@ -89,7 +89,7 @@ The proposed platform scope is Android, iOS, macOS, Windows, Linux, and web. Off
 | LEGACY-SRC-010 | OI and ECMO referral | [NHS England ECMO service specification](https://www.england.nhs.uk/publication/extra-corporeal-membrane-oxygenation-for-neonates-infants-and-children/), 16 Jul 2026; local PPHN guidance found but not adopted | A current service specification was found; no single national in-app OI threshold algorithm was verified in this review. | Keep the mathematical OI formula separate from clinical interpretation. Obtain designated ECMO/network policy and define action thresholds, population limits, and escalation wording. |
 | LEGACY-SRC-011 | Daily fluids, GIR, electrolyte addition, D5/D10/D50 compounding | No single current national source identified in this review | Legacy calculations and warnings conflict or regress across versions. | Treat as a high-risk new specification. Obtain current local neonatal parenteral-fluid protocol and pharmacy approval before implementing. |
 | LEGACY-SRC-012 | Ventilator settings, permissive hypercapnia, DOPE, NEC, respiratory distress | No single current national source identified in this review | Legacy checklists combine multiple unversioned local practices. | Decompose into distinct content items and source each to an approved national/network/local protocol. |
-| LEGACY-SRC-013 | aEEG/CFM interpretation images and thresholds | Legacy TOBY material; a current local HIE guideline was located but is not a universal authority | Existing assets/content require rights and clinical review. | Do not redistribute or rebuild from legacy images until rights and current clinical review are confirmed. |
+| LEGACY-SRC-013 | aEEG/CFM interpretation images and thresholds | Legacy TOBY material; a current local HIE guideline was located but is not a universal authority | Redistribution rights are resolved; the clinical content still requires current review. | Do not rebuild the clinical feature from legacy images until current clinical accuracy and applicability are confirmed. |
 
 ## Important Source Changes
 
@@ -104,9 +104,9 @@ The proposed platform scope is Android, iOS, macOS, Windows, Linux, and web. Off
 
 | Asset | Legacy path | Rebuild path | Status |
 | --- | --- | --- | --- |
-| Neomate wordmark and baby symbol | `../neomateapp/www/images/headertitle8-neomate.gif` | `graphics/neomate-logo.gif` | Inherited brand asset used in the internal alpha. Ownership and redistribution clearance remain part of D4. |
-| Lato Regular, Italic, Bold, and Black | `../neomateapp/www/css/lato-*.ttf` | `fonts/lato-*.ttf` | Lato is published under the SIL Open Font License, but the inherited repository does not include its font licence text. Retained for internal alpha continuity; add authoritative licence evidence and notices before distribution. |
-| Neomate icon font | Already inherited as `fonts/Neomate.ttf` | `fonts/Neomate.ttf` | Custom icon font with no licence metadata embedded. Not used for general text; ownership and redistribution clearance remain part of D4. |
+| Neomate wordmark and baby symbol | `../neomateapp/www/images/headertitle8-neomate.gif` | `graphics/neomate-logo.gif` | Inherited brand asset used in the internal alpha. Ownership and redistribution rights are resolved through the transfer to RCPCH. |
+| Lato Regular, Italic, Bold, and Black | `../neomateapp/www/css/lato-*.ttf` | `fonts/lato-*.ttf` | Lato is redistributable under the SIL Open Font License. Add the authoritative licence text and attribution as part of D40. |
+| Neomate icon font | Already inherited as `fonts/Neomate.ttf` | `fonts/Neomate.ttf` | Custom inherited asset. Ownership and redistribution rights are resolved through the transfer to RCPCH. |
 
 ## Known Defects And Risks
 
@@ -164,4 +164,3 @@ No Flutter widget may own clinical formulae, thresholds, or protocol data. No cl
 
 - Select a content-management approach that remains offline by default and supports signed/versioned updates.
 - Define deployment-specific content profiles and owners for local network referral processes.
-- Obtain written rights/provenance for inherited code, clinical content, images, font, and growth data.
