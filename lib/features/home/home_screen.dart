@@ -69,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        'Familiar Neomate categories, rebuilt as native Flutter workflows. Available items are alpha demonstrations only.',
+                        'Select a clinical task. Items marked in review remain unavailable pending independent clinical review.',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: const Color(0xff456158),
                             ),
@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             key: const Key('task-airway-aids'),
                             title: 'ETT size and lip length',
                             detail:
-                                'Inherited selection and initial-position aids with confirmation warning',
+                                'Weight-based selection and initial-position aids with confirmation warning',
                             onTap: () => _openWithWeight(
                               validWeight,
                               (weight, origin) => AirwayAndLinesScreen(
@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             key: const Key('task-central-line-aids'),
                             title: 'UVC and UAC length aids',
                             detail:
-                                'Inherited insertion length and catheter-size aids with tip-confirmation warning',
+                                'Weight-based insertion length and catheter-size aids with tip-confirmation warning',
                             onTap: () => _openWithWeight(
                               validWeight,
                               (weight, origin) => AirwayAndLinesScreen(
@@ -154,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             key: const Key('task-sedation-infusions'),
                             title: 'Morphine and vecuronium infusions',
                             detail:
-                                'Inherited protocols with explicit paralysis warning',
+                                'Dose-controlled protocols with explicit paralysis warning',
                             onTap: () => _openWithWeight(
                               validWeight,
                               (weight, origin) => NamedInfusionsScreen(
@@ -175,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             key: const Key('task-neurological-infusions'),
                             title: 'Clonazepam and midazolam infusions',
                             detail:
-                                'Inherited protocols with unresolved range discrepancies',
+                                'Dose-controlled protocols with unresolved range discrepancies',
                             onTap: () => _openWithWeight(
                               validWeight,
                               (weight, origin) => NamedInfusionsScreen(
@@ -567,7 +567,7 @@ class _ClinicalCategory extends StatelessWidget {
         ),
         subtitle: available
             ? const Text(
-                'Alpha actions available',
+                'Calculations available',
                 style: TextStyle(color: Color(0xffd7ede5)),
               )
             : null,
@@ -635,7 +635,7 @@ class _SafetyNotice extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       container: true,
-      label: 'Development safety notice',
+      label: 'Clinical approval warning',
       child: Container(
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
@@ -658,7 +658,7 @@ class _SafetyNotice extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Native rebuild in progress',
+                    'Not approved for clinical use',
                     style: TextStyle(
                       color: Color(0xff4f3500),
                       fontWeight: FontWeight.w800,
@@ -666,7 +666,7 @@ class _SafetyNotice extends StatelessWidget {
                   ),
                   SizedBox(height: 3),
                   Text(
-                    'Not approved for clinical use. Available calculations are internal alpha demonstrations only.',
+                    'Independent clinical review is incomplete. Do not use these calculations for patient care.',
                     style: TextStyle(color: Color(0xff4f3500)),
                   ),
                 ],

@@ -35,7 +35,7 @@ class ClinicalChangeLogScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 6),
                 Text(
-                  'These inherited outputs are deliberately absent from active calculators. Their original behavior remains in the legacy audit evidence.',
+                  'These outputs are unavailable because they do not align with current clinical guidance. Their retirement rationale and evidence are recorded below.',
                 ),
               ],
             );
@@ -72,10 +72,10 @@ class _RetirementCard extends StatelessWidget {
             Text('Removed $date · ${retirement.id}'),
             const SizedBox(height: 14),
             const Text(
-              'Inherited behavior',
+              'Retired output',
               style: TextStyle(fontWeight: FontWeight.w700),
             ),
-            Text(retirement.inheritedBehaviour),
+            Text(retirement.retiredOutput),
             const SizedBox(height: 12),
             const Text(
               'Reason for removal',

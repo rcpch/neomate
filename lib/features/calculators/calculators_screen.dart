@@ -30,7 +30,7 @@ class CalculatorsScreen extends StatelessWidget {
           const AlphaNotice(),
           const SizedBox(height: 24),
           Text(
-            'Native calculation demos',
+            'Clinical calculators',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   color: const Color(0xff153e33),
                   fontWeight: FontWeight.w800,
@@ -38,13 +38,13 @@ class CalculatorsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           const Text(
-            'Pure Dart calculation modules presented through Flutter-native controls. Nothing is saved or sent anywhere.',
+            'Weight-based calculations and named protocols. Nothing is saved or sent anywhere.',
           ),
           const SizedBox(height: 18),
           _CalculatorTile(
             title: 'Airway and umbilical lines',
             description:
-                'Inherited ETT size/lip-length and UVC/UAC insertion aids with confirmation warnings',
+                'ETT size/lip-length and UVC/UAC insertion aids with confirmation warnings',
             icon: Icons.air,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
@@ -74,7 +74,7 @@ class CalculatorsScreen extends StatelessWidget {
           _CalculatorTile(
             title: 'Named infusions',
             description:
-                'Nine inherited cardiac, sedation, paralysis, and neurological protocols with hard controls',
+                'Nine cardiac, sedation, paralysis, and neurological protocols with dose and concentration controls',
             icon: Icons.medication_outlined,
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(

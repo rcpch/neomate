@@ -35,7 +35,7 @@ class RetiredClinicalAlgorithm {
     required this.id,
     required this.title,
     required this.retiredOn,
-    required this.inheritedBehaviour,
+    required this.retiredOutput,
     required this.reason,
     required this.authorityTitle,
     required this.authorityUrl,
@@ -46,7 +46,7 @@ class RetiredClinicalAlgorithm {
   final String id;
   final String title;
   final DateTime retiredOn;
-  final String inheritedBehaviour;
+  final String retiredOutput;
   final String reason;
   final String authorityTitle;
   final String authorityUrl;
@@ -59,10 +59,10 @@ final List<RetiredClinicalAlgorithm> retiredBolusAlgorithms = [
     id: 'RETIRED-BOLUS-SODIUM-BICARBONATE-RESUSCITATION',
     title: 'Sodium bicarbonate during newborn resuscitation',
     retiredOn: DateTime.utc(2026, 8, 17),
-    inheritedBehaviour:
+    retiredOutput:
         'Displayed 2 mL/kg sodium bicarbonate 4.2% and a base-deficit correction formula during emergency care.',
     reason:
-        'Removed from the active migration because RCUK 2025 no longer recommends bicarbonate in newborn resuscitation. Supporting neonatal literature reports no proven resuscitation benefit and potential harms including increased carbon dioxide generation and worsened intracellular acidosis when ventilation is inadequate.',
+        'Unavailable because RCUK 2025 no longer recommends bicarbonate in newborn resuscitation. Supporting neonatal literature reports no proven resuscitation benefit and potential harms including increased carbon dioxide generation and worsened intracellular acidosis when ventilation is inadequate.',
     authorityTitle:
         'RCUK 2025: Newborn resuscitation and support of transition',
     authorityUrl:
@@ -75,10 +75,10 @@ final List<RetiredClinicalAlgorithm> retiredBolusAlgorithms = [
     id: 'RETIRED-BOLUS-EMPIRICAL-DEXTROSE-10',
     title: 'Empirical 2.5 mL/kg D10 resuscitation bolus',
     retiredOn: DateTime.utc(2026, 8, 17),
-    inheritedBehaviour:
+    retiredOutput:
         'Displayed 2.5 mL/kg of 10% dextrose as an emergency bolus without a blood-glucose condition.',
     reason:
-        'Removed from the active migration because RCUK 2025 emphasises checking blood glucose and treating only when it is low. Its specified treatment is 200 mg/kg, equivalent to 2 mL/kg of 10% glucose, not the inherited empirical 2.5 mL/kg output. No replacement dose calculator is added without clinical sign-off.',
+        'Unavailable because RCUK 2025 emphasises checking blood glucose and treating only when it is low. Its specified treatment is 200 mg/kg, equivalent to 2 mL/kg of 10% glucose, not the empirical 2.5 mL/kg output. No replacement dose calculator is available without clinical sign-off.',
     authorityTitle:
         'RCUK 2025: Newborn resuscitation and support of transition',
     authorityUrl:

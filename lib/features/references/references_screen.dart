@@ -30,9 +30,10 @@ class ReferencesScreen extends StatelessWidget {
     ),
     (
       id: 'SRC-006',
-      title: 'Inherited Neomate implementation',
-      status: 'Inherited baseline',
-      use: 'Current alpha protocol values and engineering bounds',
+      title: 'Neomate protocol record',
+      status: 'Unverified source',
+      use:
+          'Protocol values awaiting verification against current clinical sources',
     ),
     (
       id: 'SRC-008',
@@ -84,7 +85,7 @@ class ReferencesScreen extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           const Text(
-            'Sources listed here are proposed or inherited. None constitutes clinical approval for this alpha.',
+            'Sources listed here are proposed, candidate, supporting, or unverified. None constitutes clinical approval.',
           ),
           const SizedBox(height: 14),
           OutlinedButton.icon(
@@ -124,7 +125,7 @@ class ReferencesScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Text(
-              'Clinical sign-off: 0 of 25 reviewable files approved. Engineering tests demonstrate implementation behavior only and do not replace independent clinical review.',
+              'No reviewable calculation or protocol is currently clinically approved. Independent clinical review remains required.',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ),

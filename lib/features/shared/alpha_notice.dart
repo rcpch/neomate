@@ -12,7 +12,7 @@ class AlphaNotice extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       container: true,
-      label: 'Internal alpha safety warning',
+      label: 'Clinical approval warning',
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(compact ? 12 : 16),
@@ -36,7 +36,7 @@ class AlphaNotice extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Internal alpha - demonstration only',
+                    'Not approved for clinical use',
                     style: TextStyle(
                       color: Color(0xff4f3500),
                       fontWeight: FontWeight.w800,
@@ -45,7 +45,7 @@ class AlphaNotice extends StatelessWidget {
                   if (!compact) ...[
                     const SizedBox(height: 3),
                     const Text(
-                      'Not clinically reviewed or approved. Do not use these outputs for patient care.',
+                      'Independent clinical review is incomplete. Do not use these outputs for patient care.',
                       style: TextStyle(color: Color(0xff4f3500)),
                     ),
                   ],

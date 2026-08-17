@@ -91,7 +91,7 @@ class _NamedInfusionsScreenState extends State<NamedInfusionsScreen> {
           ),
           const SizedBox(height: 5),
           const Text(
-            'Inherited values are shown for author review. Current BNFC and local formulary verification remains outstanding.',
+            'Protocol values have not been verified against the current BNFC and local formulary.',
           ),
           const SizedBox(height: 18),
           DropdownButtonFormField<NamedInfusion>(
@@ -259,15 +259,15 @@ class _NamedInfusionsScreenState extends State<NamedInfusionsScreen> {
 
   String _messageFor(ProtocolCalculationIssue issue) => switch (issue) {
         ProtocolCalculationIssue.doseBelowApprovedRange =>
-          'Dose is below the inherited protocol range.',
+          'Dose is below the configured protocol range.',
         ProtocolCalculationIssue.doseAboveApprovedRange =>
-          'Dose is above the inherited protocol range.',
+          'Dose is above the configured protocol range.',
         ProtocolCalculationIssue.concentrationBelowApprovedRange =>
-          'Preparation is below the inherited concentration range.',
+          'Preparation is below the configured concentration range.',
         ProtocolCalculationIssue.concentrationAboveApprovedRange =>
-          'Preparation exceeds the inherited maximum concentration. Increase the pump rate or review the prescribed dose.',
+          'Preparation exceeds the configured maximum concentration. Increase the pump rate or review the prescribed dose.',
         ProtocolCalculationIssue.accessNotApproved =>
-          'This inherited preparation requires central or umbilical venous access.',
+          'This preparation requires central or umbilical venous access.',
         ProtocolCalculationIssue.routeNotApproved =>
           'Only the intravenous route is supported.',
         ProtocolCalculationIssue.invalidRate => 'Pump rate must be above zero.',
@@ -332,7 +332,7 @@ enum NamedInfusion {
     defaultRate: 0.1,
     minimumDose: 5,
     maximumDose: 60,
-    maximumConcentration: '30 mg/mL (unverified inherited field)',
+    maximumConcentration: '30 mg/mL (unverified)',
     rangeNote: 'Displayed usual range 5-20; narrative mentioned up to 40.',
   ),
   vecuronium(
@@ -352,7 +352,8 @@ enum NamedInfusion {
     minimumDose: 10,
     maximumDose: 40,
     maximumConcentration: '12 micrograms/mL',
-    rangeNote: 'Inherited default exceeds this ceiling at common weights.',
+    rangeNote:
+        'The default preparation exceeds this ceiling at common weights.',
   ),
   midazolam(
     label: 'Midazolam',
@@ -362,8 +363,7 @@ enum NamedInfusion {
     minimumDose: 30,
     maximumDose: 300,
     maximumConcentration: '1 mg/mL',
-    rangeNote:
-        'Displayed predecessor ranges conflict: 10-60, 30-60, and 30-300.',
+    rangeNote: 'Recorded dose ranges conflict: 10-60, 30-60, and 30-300.',
   );
 
   const NamedInfusion({
@@ -472,7 +472,7 @@ class _RangePanel extends StatelessWidget {
           children: [
             TextSpan(
               text:
-                  'Inherited range: ${drug.minimumDose.toStringAsFixed(drug.minimumDose % 1 == 0 ? 0 : 1)}-${drug.maximumDose.toStringAsFixed(drug.maximumDose % 1 == 0 ? 0 : 1)} ${drug.doseSuffix}  •  Maximum concentration: ${drug.maximumConcentration}',
+                  'Configured range: ${drug.minimumDose.toStringAsFixed(drug.minimumDose % 1 == 0 ? 0 : 1)}-${drug.maximumDose.toStringAsFixed(drug.maximumDose % 1 == 0 ? 0 : 1)} ${drug.doseSuffix}  •  Maximum concentration: ${drug.maximumConcentration}',
             ),
             if (drug.rangeNote case final note?) TextSpan(text: '\n$note'),
           ],

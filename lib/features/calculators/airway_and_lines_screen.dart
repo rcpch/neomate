@@ -124,7 +124,7 @@ class _AirwayResults extends StatelessWidget {
       EndotrachealTubeLipLengthAid(
         isAvailable: false,
       ) =>
-        'No inherited value',
+        'No configured value',
       EndotrachealTubeLipLengthAid(
         isBelowNominalValue: true,
         :final centimetres,

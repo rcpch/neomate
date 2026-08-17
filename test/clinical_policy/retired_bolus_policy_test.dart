@@ -21,7 +21,7 @@ void main() {
       expect(retirement.retiredOn, DateTime.utc(2026, 8, 17));
       expect(Uri.parse(retirement.authorityUrl).scheme, 'https');
       expect(retirement.authorityTitle, isNotEmpty);
-      expect(retirement.inheritedBehaviour, isNotEmpty);
+      expect(retirement.retiredOutput, isNotEmpty);
       expect(retirement.reason, isNotEmpty);
       if (retirement.supportingEvidenceUrl case final evidenceUrl?) {
         expect(Uri.parse(evidenceUrl).scheme, 'https');

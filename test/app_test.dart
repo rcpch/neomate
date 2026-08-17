@@ -10,7 +10,7 @@ import 'package:neomate2/features/home/home_screen.dart';
 import 'package:neomate2/features/references/clinical_change_log_screen.dart';
 
 void main() {
-  testWidgets('shows the native rebuild status', (tester) async {
+  testWidgets('shows the clinical approval status', (tester) async {
     await tester.pumpWidget(const NeomateApp());
 
     expect(
@@ -30,14 +30,14 @@ void main() {
           ?.fontFamily,
       'Lato',
     );
-    expect(find.text('Native rebuild in progress'), findsOneWidget);
+    expect(find.text('Not approved for clinical use'), findsOneWidget);
     expect(
         find.textContaining('Not approved for clinical use'), findsOneWidget);
     expect(find.byKey(const Key('home-weight-field')), findsOneWidget);
     expect(find.text('Calculators'), findsOneWidget);
     expect(find.text('Clinical tasks'), findsOneWidget);
     expect(find.text('Cardiac drugs'), findsOneWidget);
-    expect(find.text('Alpha actions available'), findsWidgets);
+    expect(find.text('Calculations available'), findsWidgets);
     expect(find.textContaining('Offline by design'), findsOneWidget);
   });
 
@@ -73,12 +73,12 @@ void main() {
     await tester.ensureVisible(calculators);
     await tester.tap(calculators);
     await tester.pumpAndSettle();
-    expect(find.text('Native calculation demos'), findsOneWidget);
+    expect(find.text('Clinical calculators'), findsOneWidget);
 
     await tester.ensureVisible(find.text('Physiology and fluids'));
     await tester.tap(find.text('Physiology and fluids'));
     await tester.pumpAndSettle();
-    expect(find.text('Internal alpha - demonstration only'), findsOneWidget);
+    expect(find.text('Not approved for clinical use'), findsOneWidget);
     await tester.drag(
       find.byWidgetPredicate(
         (widget) =>
@@ -129,7 +129,7 @@ void main() {
     await tester.enterText(find.byKey(const Key('dose-field')), '20');
     await tester.pump();
     expect(
-      find.textContaining('exceeds the inherited maximum concentration'),
+      find.textContaining('exceeds the configured maximum concentration'),
       findsOneWidget,
     );
   });
@@ -153,8 +153,7 @@ void main() {
         findsOneWidget);
   });
 
-  testWidgets('surfaces the inherited clonazepam concentration conflict',
-      (tester) async {
+  testWidgets('surfaces the clonazepam concentration conflict', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: NamedInfusionsScreen(
@@ -164,15 +163,15 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('Inherited range: 10-40'), findsOneWidget);
+    expect(find.textContaining('Configured range: 10-40'), findsOneWidget);
     expect(
-      find.textContaining('Inherited default exceeds this ceiling'),
+      find.textContaining('default preparation exceeds this ceiling'),
       findsOneWidget,
     );
     await tester.drag(find.byType(ListView), const Offset(0, -500));
     await tester.pumpAndSettle();
     expect(
-      find.textContaining('exceeds the inherited maximum concentration'),
+      find.textContaining('exceeds the configured maximum concentration'),
       findsOneWidget,
     );
   });
@@ -198,7 +197,7 @@ void main() {
     expect(find.textContaining('stock volume is invalid'), findsOneWidget);
   });
 
-  testWidgets('shows inherited airway and line aids with confirmation warnings',
+  testWidgets('shows airway and line aids with confirmation warnings',
       (tester) async {
     await tester.pumpWidget(const NeomateApp());
 
@@ -259,7 +258,8 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    expect(find.textContaining('0 of 25'), findsOneWidget);
+    expect(
+        find.textContaining('currently clinically approved'), findsOneWidget);
     expect(find.textContaining('SRC-011'), findsOneWidget);
   });
 
@@ -275,7 +275,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(tester.takeException(), isNull);
-      expect(find.text('Native rebuild in progress'), findsOneWidget);
+      expect(find.text('Not approved for clinical use'), findsOneWidget);
       expect(find.text('References'), findsOneWidget);
     });
   }
@@ -381,7 +381,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('Weight must be between 200 and 6000 g.'), findsNothing);
-    expect(find.text('No inherited value'), findsOneWidget);
+    expect(find.text('No configured value'), findsOneWidget);
     expect(find.byKey(const Key('uvc-result')), findsOneWidget);
   });
 }
