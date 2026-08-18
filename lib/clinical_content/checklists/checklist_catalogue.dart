@@ -332,4 +332,43 @@ const clinicalChecklists = <ClinicalChecklist>[
       ]),
     ],
   ),
+  ClinicalChecklist(
+    id: 'CHECKLIST-NEONATAL-ADMISSION',
+    title: 'Admission to the neonatal unit',
+    summary:
+        'Structured prompts for reviewing the content and sequence of a neonatal admission workflow.',
+    sections: [
+      ClinicalChecklistSection(title: 'Context and immediate status', items: [
+        ClinicalChecklistItem(
+            id: 'admission-1',
+            text:
+                'Confirm gestation, birth weight, delivery history, resuscitation, Apgar scores and reason for admission.'),
+        ClinicalChecklistItem(
+            id: 'admission-2',
+            text:
+                'Record current airway, breathing, circulation, temperature, glucose and neurological status.'),
+        ClinicalChecklistItem(
+            id: 'admission-3',
+            text:
+                'Document respiratory support, vascular access, fluids, infusions and medicines already given.'),
+      ]),
+      ClinicalChecklistSection(title: 'Assessment and plan', items: [
+        ClinicalChecklistItem(
+            id: 'admission-4',
+            text:
+                'Complete the planned examination, observations, investigations and monitoring.'),
+        ClinicalChecklistItem(
+            id: 'admission-5',
+            text:
+                'Record infection-risk assessment, feeding plan, fluid plan and escalation criteria.'),
+        ClinicalChecklistItem(
+            id: 'admission-6',
+            text:
+                'Confirm senior review, family communication and the next review time.'),
+      ]),
+    ],
+  ),
 ];
+
+ClinicalChecklist checklistById(String id) =>
+    clinicalChecklists.singleWhere((checklist) => checklist.id == id);

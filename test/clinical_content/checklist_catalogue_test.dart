@@ -6,7 +6,7 @@ import 'package:neomate2/clinical_content/checklists/checklist_catalogue.dart';
 
 void main() {
   test('checklist catalogue has stable unique IDs and non-empty content', () {
-    expect(clinicalChecklists, hasLength(9));
+    expect(clinicalChecklists, hasLength(10));
     expect(
       clinicalChecklists.map((checklist) => checklist.id).toSet(),
       hasLength(clinicalChecklists.length),

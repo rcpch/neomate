@@ -91,7 +91,7 @@ For every retained infusion, please confirm the indication, minimum and maximum 
 
 | ID | Question | Why it matters |
 | --- | --- | --- |
-| CRQ-60 | Which guidance/checklist family should be reviewed first: newborn resuscitation, HIE/cooling, extreme preterm birth, neonatal infection, respiratory deterioration, NEC, or transport/referral? | No checklist is active until independently sourced and reviewed. |
+| CRQ-60 | Which guidance/checklist family should be reviewed first: newborn resuscitation, HIE/cooling, admission, extreme preterm birth, neonatal infection, respiratory deterioration, NEC, or transport/referral? | Ten structured checklist workflows are available for review; none is clinically approved. |
 | CRQ-61 | Which checklist statements are universal, and which require a deployment-specific network profile? | Local phone numbers, referral pathways, and treatment rules must not leak into the core product. |
 | CRQ-62 | Which inherited images or diagrams remain clinically useful, and who can confirm their current clinical accuracy and applicability? | Redistribution rights are resolved, but legacy CFM/extreme-preterm assets are not clinically approved for reuse. |
 | CRQ-63 | Are the clinical-status warning, estimated-weight warning, placement-confirmation warnings, paralysis warning, and non-blocking protocol advisories clinically clear and appropriately prominent? | Warning wording and hierarchy are use-error controls. |

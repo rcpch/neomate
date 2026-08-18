@@ -303,6 +303,31 @@ void main() {
         findsOneWidget);
   });
 
+  testWidgets('opens cooling and admission review workflows', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(900, 1600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(const NeomateApp());
+
+    await tester.tap(find.text('Cooling criteria'));
+    await tester.pumpAndSettle();
+    final cooling = find.byKey(const Key('task-cooling-checklist'));
+    await tester.ensureVisible(cooling);
+    await tester.tap(cooling);
+    await tester.pumpAndSettle();
+    expect(find.text('Term baby with encephalopathy'), findsWidgets);
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Admission to unit'));
+    await tester.pumpAndSettle();
+    final admission = find.byKey(const Key('task-admission-checklist'));
+    await tester.ensureVisible(admission);
+    await tester.tap(admission);
+    await tester.pumpAndSettle();
+    expect(find.text('Admission to the neonatal unit'), findsWidgets);
+    expect(find.text('0 of 6 reviewed'), findsOneWidget);
+  });
+
   for (final surface in {
     'phone': const Size(390, 844),
     'desktop': const Size(1280, 800),

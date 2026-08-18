@@ -9,7 +9,7 @@ The internal alpha is a Flutter-native demonstration for the original Neomate au
 - Adaptive Flutter-native home screen for phone and desktop layouts, using the inherited Neomate logo and Lato type family.
 - Prominent session-only baby-weight context passed into available calculator workflows, with measured/estimated status visible.
 - Familiar clinical accordion categories loosely correlated with the original Neomate task layout while retaining native Flutter controls and accessibility semantics.
-- Familiar bottom navigation for workspace, calculators, checklists, and references, including nine native interactive checklist review workflows.
+- Familiar bottom navigation for workspace, calculators, checklists, and references, including ten native interactive checklist review workflows and direct cooling/admission entry points.
 - Native calculator navigation with no HTML renderer or runtime network dependency.
 - Live weight validation, mean airway pressure, oxygenation index, daily fluid volume, glucose infusion rate, electrolyte requirement, and additive stock-volume calculations.
 - Inherited ETT internal-diameter, oral lip-length, UVC insertion-length, and UAC insertion-length aids with explicit position-confirmation warnings.

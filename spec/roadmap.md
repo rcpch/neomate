@@ -64,13 +64,13 @@ Completion criteria: no calculation lives in a widget; all invalid and non-finit
 ### Clinical Content Review
 
 - [ ] **D22 - Review and specify newborn-resuscitation content against RCUK 2025 and approved local policy**
-- [ ] **D23 - Review and specify HIE/cooling content against BAPM 2025 and the selected network policy**
+- [~] **D23 - Review and specify HIE/cooling content against BAPM 2025 and the selected network policy** - a dedicated interactive review workflow is available; current-source replacement and sign-off remain pending.
 - [ ] **D24 - Review and specify extreme-preterm content against BAPM 2026**
 - [ ] **D25 - Review and specify neonatal-infection content against NICE NG195, updated May 2026**
 - [~] **D26 - Review each medicine and infusion protocol against BNFC and the approved local neonatal formulary** - nine named infusion protocols and 15 named bolus records are available in review UIs; constraints are non-blocking advisories, retired resuscitation outputs remain excluded, and current-source verification is pending.
 - [~] **D27 - Review central-line and airway content against current BAPM guidance and local policy** - inherited ETT size/lip-length and UVC/UAC aids are isolated, boundary-tested, and presented with placement-confirmation warnings; current BAPM applicability, local policy, and independent sign-off remain pending.
 - [ ] **D28 - Obtain approved local neonatal fluid/pharmacy protocol and specify the fluid calculator from it**
-- [~] **D29 - Split all clinical checklists into independently sourced clinical-content records** - all nine checklists are now immutable native records with stable checklist/item IDs and an interactive review UI; item-level current sources and clinical sign-off remain pending.
+- [~] **D29 - Split all clinical checklists into independently sourced clinical-content records** - ten checklists, including cooling and admission workflows, are immutable native records with stable checklist/item IDs and interactive review UI; item-level current sources and clinical sign-off remain pending.
 - [~] **D30 - Retire or replace unconfirmed content, including legacy CFM images, “Need to confirm” text, and contradictory thresholds** - inherited resuscitation bicarbonate and empirical 2.5 mL/kg D10 outputs are retired against RCUK 2025 and recorded in the in-app clinical change log; remaining obsolete and contradictory content is pending.
 
 Completion criteria: every retained clinical statement and protocol has a named clinical reviewer, source/version, sign-off date, expiry date, and controlled test evidence.

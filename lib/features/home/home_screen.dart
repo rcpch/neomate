@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../calculations/patient_context.dart';
+import '../../clinical_content/checklists/checklist_catalogue.dart';
 import '../../clinical_policy/neonatal_weight_policy.dart';
 import '../calculators/airway_and_lines_screen.dart';
 import '../calculators/bolus_review_screen.dart';
@@ -71,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        'Select a clinical task. Items without an active workflow are marked as not implemented.',
+                        'Select a clinical task or open a checklist for structured review.',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: const Color(0xff456158),
                             ),
@@ -215,24 +216,39 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      const _ClinicalCategory(
+                      _ClinicalCategory(
                         title: 'Cooling criteria',
                         icon: Icons.ac_unit,
+                        available: true,
                         children: [
-                          _NotImplementedAction(
+                          _AvailableAction(
+                            key: const Key('task-cooling-checklist'),
                             title: 'HIE and therapeutic hypothermia guidance',
                             detail:
-                                'Not implemented: guidance review interface',
+                                'Assessment and referral checklist for content review',
+                            onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                    builder: (_) => ChecklistDetailScreen(
+                                        checklist: checklistById(
+                                            'CHECKLIST-ENCEPHALOPATHY')))),
                           ),
                         ],
                       ),
-                      const _ClinicalCategory(
+                      _ClinicalCategory(
                         title: 'Admission to unit',
                         icon: Icons.login_outlined,
+                        available: true,
                         children: [
-                          _NotImplementedAction(
+                          _AvailableAction(
+                            key: const Key('task-admission-checklist'),
                             title: 'Admission checklist and medicines',
-                            detail: 'Not implemented: admission workflow',
+                            detail:
+                                'Context, immediate status, assessment and planning prompts',
+                            onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                    builder: (_) => ChecklistDetailScreen(
+                                        checklist: checklistById(
+                                            'CHECKLIST-NEONATAL-ADMISSION')))),
                           ),
                         ],
                       ),
@@ -613,24 +629,6 @@ class _AvailableAction extends StatelessWidget {
       subtitle: Text(detail),
       trailing: const Icon(Icons.chevron_right),
       onTap: onTap,
-    );
-  }
-}
-
-class _NotImplementedAction extends StatelessWidget {
-  const _NotImplementedAction({required this.title, required this.detail});
-
-  final String title;
-  final String detail;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-      leading:
-          const Icon(Icons.construction_outlined, color: Color(0xff6d7d77)),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
-      subtitle: Text(detail),
     );
   }
 }
