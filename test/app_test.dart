@@ -284,6 +284,25 @@ void main() {
     expect(find.text('1 of 9 reviewed'), findsOneWidget);
   });
 
+  testWidgets('opens named bolus values for review', (tester) async {
+    await tester.pumpWidget(const NeomateApp());
+
+    final boluses = find.byKey(const Key('task-medicine-boluses'));
+    await tester.scrollUntilVisible(
+      boluses,
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(boluses);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Medicine boluses'), findsOneWidget);
+    expect(find.textContaining('15.0\nmicrograms'), findsOneWidget);
+    expect(find.textContaining('Retired resuscitation bicarbonate'),
+        findsOneWidget);
+  });
+
   for (final surface in {
     'phone': const Size(390, 844),
     'desktop': const Size(1280, 800),

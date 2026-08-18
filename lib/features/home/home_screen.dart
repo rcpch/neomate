@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import '../../calculations/patient_context.dart';
 import '../../clinical_policy/neonatal_weight_policy.dart';
 import '../calculators/airway_and_lines_screen.dart';
+import '../calculators/bolus_review_screen.dart';
 import '../calculators/calculators_screen.dart';
 import '../calculators/electrolyte_compounding_screen.dart';
 import '../calculators/named_infusions_screen.dart';
@@ -94,10 +95,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                          const _NotImplementedAction(
+                          _AvailableAction(
+                            key: const Key('task-premedication-boluses'),
                             title: 'Premedication boluses',
-                            detail:
-                                'Not implemented: active bolus protocols and review UI',
+                            detail: 'Named intubation medicine values',
+                            onTap: () => _openWithWeight(
+                                validWeight,
+                                (weight, _) => BolusReviewScreen(
+                                    initialWeightGrams: weight)),
                           ),
                         ],
                       ),
@@ -140,10 +145,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                          const _NotImplementedAction(
-                            title: 'Reviewed fluid and medicine boluses',
-                            detail:
-                                'Not implemented: active bolus protocols and review UI',
+                          _AvailableAction(
+                            key: const Key('task-medicine-boluses'),
+                            title: 'Fluid and medicine boluses',
+                            detail: 'Named circulation and medicine values',
+                            onTap: () => _openWithWeight(
+                                validWeight,
+                                (weight, _) => BolusReviewScreen(
+                                    initialWeightGrams: weight)),
                           ),
                         ],
                       ),
@@ -189,14 +198,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      const _ClinicalCategory(
+                      _ClinicalCategory(
                         title: 'Emergency drugs',
                         icon: Icons.emergency_outlined,
+                        available: true,
                         children: [
-                          _NotImplementedAction(
+                          _AvailableAction(
+                            key: const Key('task-emergency-boluses'),
                             title: 'Newborn resuscitation medicines',
                             detail:
-                                'Not implemented: active emergency medicine protocols',
+                                'Named emergency values with retired outputs excluded',
+                            onTap: () => _openWithWeight(
+                                validWeight,
+                                (weight, _) => BolusReviewScreen(
+                                    initialWeightGrams: weight)),
                           ),
                         ],
                       ),

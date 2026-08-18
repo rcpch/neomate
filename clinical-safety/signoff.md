@@ -36,6 +36,8 @@ A tick here records that the header block has been completed with a named review
 
 Carried forward from the shipped Neomate product (SRC-006), which has been in live clinical use internationally, with concentration advice the inherited code attributes to BNFc 2015 (SRC-008) and Medusa 2015 (SRC-009). The reviewer's task is to confirm each figure against the current edition, not to derive it afresh. All are restricted to central or umbilical venous access.
 
+- [ ] `lib/clinical_protocols/boluses/bolus_catalogue.dart` - named weight-based intubation, circulation, sedation, neurological and emergency bolus values; retired resuscitation bicarbonate and empirical D10 are excluded.
+
 - [ ] `lib/clinical_protocols/infusions/dopamine_infusion.dart` - 5-20 micrograms/kg/min; maximum 1.6 mg/mL.
 - [ ] `lib/clinical_protocols/infusions/dobutamine_infusion.dart` - 2-20 micrograms/kg/min; maximum 10 mg/mL.
 - [ ] `lib/clinical_protocols/infusions/adrenaline_infusion.dart` - 50-500 nanograms/kg/min; maximum 0.24 mg/mL.

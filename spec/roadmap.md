@@ -67,7 +67,7 @@ Completion criteria: no calculation lives in a widget; all invalid and non-finit
 - [ ] **D23 - Review and specify HIE/cooling content against BAPM 2025 and the selected network policy**
 - [ ] **D24 - Review and specify extreme-preterm content against BAPM 2026**
 - [ ] **D25 - Review and specify neonatal-infection content against NICE NG195, updated May 2026**
-- [~] **D26 - Review each medicine and infusion protocol against BNFC and the approved local neonatal formulary** - all nine inherited named infusion protocols are implemented as isolated reviewable files with non-blocking constraint advisories; discrepancies are explicit, while verification against current BNFC/local formulary and drug boluses are pending.
+- [~] **D26 - Review each medicine and infusion protocol against BNFC and the approved local neonatal formulary** - nine named infusion protocols and 15 named bolus records are available in review UIs; constraints are non-blocking advisories, retired resuscitation outputs remain excluded, and current-source verification is pending.
 - [~] **D27 - Review central-line and airway content against current BAPM guidance and local policy** - inherited ETT size/lip-length and UVC/UAC aids are isolated, boundary-tested, and presented with placement-confirmation warnings; current BAPM applicability, local policy, and independent sign-off remain pending.
 - [ ] **D28 - Obtain approved local neonatal fluid/pharmacy protocol and specify the fluid calculator from it**
 - [~] **D29 - Split all clinical checklists into independently sourced clinical-content records** - all nine checklists are now immutable native records with stable checklist/item IDs and an interactive review UI; item-level current sources and clinical sign-off remain pending.
