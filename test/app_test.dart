@@ -10,6 +10,21 @@ import 'package:neomate2/features/home/home_screen.dart';
 import 'package:neomate2/features/references/clinical_change_log_screen.dart';
 
 void main() {
+  testWidgets('shows the alpha banner and dismissible startup warning',
+      (tester) async {
+    await tester.pumpWidget(const NeomateApp(showStartupWarning: true));
+    await tester.pumpAndSettle();
+
+    expect(tester.widget<Banner>(find.byType(Banner)).message, 'ALPHA');
+    expect(find.text('Evaluation and clinical review version'), findsOneWidget);
+    expect(find.textContaining('not ready for clinical use'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('dismiss-evaluation-warning')));
+    await tester.pumpAndSettle();
+    expect(find.text('Evaluation and clinical review version'), findsNothing);
+    expect(find.byKey(const Key('home-weight-field')), findsOneWidget);
+  });
+
   testWidgets('shows the clinical approval status', (tester) async {
     await tester.pumpWidget(const NeomateApp());
 

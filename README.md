@@ -1,10 +1,10 @@
 # Neomate 2
 
-Neomate 2 is a Flutter rebuild of the legacy Neomate neonatal reference and calculation app for NICU clinical staff.
+Neomate 2 is a neonatal reference and calculation app for NICU clinical staff.
 
 ## Status
 
-This repository contains inherited clinical content and calculation logic that is being modernised. It is **not approved for clinical deployment or clinical decision-making**. Do not distribute a build, use it in patient care, or represent its outputs as clinically validated until the clinical-safety, quality-management, evidence-review, and release gates in [SAFETY.md](SAFETY.md) are complete.
+**This is an alpha evaluation and clinical review version. It is not ready or approved for clinical use.** Do not use its content or calculations for patient care, distribute a build for clinical use, or represent its outputs as clinically validated until the clinical-safety, quality-management, evidence-review, and release gates in [SAFETY.md](SAFETY.md) are complete.
 
 ## Development
 

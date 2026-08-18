@@ -6,5 +6,5 @@ import 'package:flutter/widgets.dart';
 import 'app/neomate_app.dart';
 
 void main() {
-  runApp(const NeomateApp());
+  runApp(const NeomateApp(showStartupWarning: true));
 }
