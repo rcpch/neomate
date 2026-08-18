@@ -54,11 +54,16 @@ These files hold the numeric limits and presentation decisions that the calculat
 - [ ] `lib/clinical_policy/display_precision.dart` - decimal places used when displaying fluid volumes and rates, currently 1 d.p. on the grounds that no syringe dispenses more accurately than 0.1 mL.
 - [ ] `lib/clinical_policy/retired_bolus_policy.dart` - retirement of inherited resuscitation bicarbonate and empirical 2.5 mL/kg D10 outputs against RCUK 2025, with supporting neonatal evidence.
 
+## Clinical Content
+
+- [ ] `lib/clinical_content/checklists/checklist_catalogue.dart` - nine structured neonatal checklists exposed for clinical review; all statements, thresholds and actions require current-source review.
+
 ## Files Exempt From Clinical Sign-Off
 
 These contain only generic value types or technical infrastructure, with no formula, threshold, dose, or clinical statement. The exemption is asserted in the test named above, so removing or weakening it is a visible change.
 
 - `lib/calculations/calculation_outcome.dart` - generic result and error types shared by the calculation modules.
+- `lib/clinical_content/checklists/checklist.dart` - generic immutable checklist value types containing no clinical statements.
 
 ## Not Yet Written
 

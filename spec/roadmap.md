@@ -70,7 +70,7 @@ Completion criteria: no calculation lives in a widget; all invalid and non-finit
 - [~] **D26 - Review each medicine and infusion protocol against BNFC and the approved local neonatal formulary** - all nine inherited named infusion protocols are implemented as isolated reviewable files with non-blocking constraint advisories; discrepancies are explicit, while verification against current BNFC/local formulary and drug boluses are pending.
 - [~] **D27 - Review central-line and airway content against current BAPM guidance and local policy** - inherited ETT size/lip-length and UVC/UAC aids are isolated, boundary-tested, and presented with placement-confirmation warnings; current BAPM applicability, local policy, and independent sign-off remain pending.
 - [ ] **D28 - Obtain approved local neonatal fluid/pharmacy protocol and specify the fluid calculator from it**
-- [ ] **D29 - Split all legacy checklists into independently sourced clinical-content records**
+- [~] **D29 - Split all clinical checklists into independently sourced clinical-content records** - all nine checklists are now immutable native records with stable checklist/item IDs and an interactive review UI; item-level current sources and clinical sign-off remain pending.
 - [~] **D30 - Retire or replace unconfirmed content, including legacy CFM images, “Need to confirm” text, and contradictory thresholds** - inherited resuscitation bicarbonate and empirical 2.5 mL/kg D10 outputs are retired against RCUK 2025 and recorded in the in-app clinical change log; remaining obsolete and contradictory content is pending.
 
 Completion criteria: every retained clinical statement and protocol has a named clinical reviewer, source/version, sign-off date, expiry date, and controlled test evidence.

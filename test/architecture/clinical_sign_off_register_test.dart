@@ -25,6 +25,7 @@ const _clinicalSourceDirectories = <String>[
   'lib/calculations',
   'lib/clinical_policy',
   'lib/clinical_protocols',
+  'lib/clinical_content/checklists',
 ];
 
 /// Files that carry no clinical meaning and so need no sign-off. This list is
@@ -32,6 +33,7 @@ const _clinicalSourceDirectories = <String>[
 /// code alone.
 const _exemptFiles = <String>{
   'lib/calculations/calculation_outcome.dart',
+  'lib/clinical_content/checklists/checklist.dart',
 };
 
 /// Matches a markdown checkbox entry naming a Dart file in backticks, for

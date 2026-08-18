@@ -20,7 +20,8 @@ import 'package:flutter_test/flutter_test.dart';
 /// Directories whose Dart files are treated as clinical source files.
 const _clinicalSourceDirectories = <String>[
   'lib/calculations',
-  'lib/clinical_policy'
+  'lib/clinical_policy',
+  'lib/clinical_content/checklists',
 ];
 
 /// Files exempt from the convention, each with the reason it qualifies under
@@ -30,6 +31,8 @@ const _exemptFiles = <String, String>{
   'lib/calculations/calculation_outcome.dart':
       'Generic result and error value types. Contains no formula, threshold, '
           'dose, or clinical statement.',
+  'lib/clinical_content/checklists/checklist.dart':
+      'Generic immutable checklist value types. Contains no clinical text.',
 };
 
 /// The fields the convention requires, in the order it specifies them.

@@ -11,6 +11,7 @@ import '../calculators/calculators_screen.dart';
 import '../calculators/electrolyte_compounding_screen.dart';
 import '../calculators/named_infusions_screen.dart';
 import '../calculators/physiology_calculators_screen.dart';
+import '../checklists/checklists_screen.dart';
 import '../references/references_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -326,7 +327,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             case 2:
-              _showNotImplemented('Checklists');
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                    builder: (_) => const ChecklistsScreen()),
+              );
             case 3:
               Navigator.of(context).push(
                 MaterialPageRoute<void>(
@@ -347,6 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Calculators',
           ),
           NavigationDestination(
+            key: Key('destination-checklists'),
             icon: Icon(Icons.checklist_outlined),
             label: 'Checklists',
           ),
@@ -388,14 +393,6 @@ class _HomeScreenState extends State<HomeScreen> {
           weight,
           _estimatedWeight ? WeightOrigin.estimated : WeightOrigin.measured,
         ),
-      ),
-    );
-  }
-
-  void _showNotImplemented(String feature) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$feature are not implemented yet.'),
       ),
     );
   }

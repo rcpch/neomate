@@ -267,6 +267,23 @@ void main() {
     expect(find.textContaining('SRC-011'), findsOneWidget);
   });
 
+  testWidgets('opens and completes a clinical checklist', (tester) async {
+    await tester.pumpWidget(const NeomateApp());
+
+    await tester.tap(find.byKey(const Key('destination-checklists')));
+    await tester.pumpAndSettle();
+    expect(find.text('Clinical checklists'), findsOneWidget);
+    expect(find.text('Referral for transport'), findsOneWidget);
+
+    await tester.tap(find.text('Referral for transport'));
+    await tester.pumpAndSettle();
+    expect(find.text('0 of 9 reviewed'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('checklist-item-transport-1')));
+    await tester.pump();
+    expect(find.text('1 of 9 reviewed'), findsOneWidget);
+  });
+
   for (final surface in {
     'phone': const Size(390, 844),
     'desktop': const Size(1280, 800),
