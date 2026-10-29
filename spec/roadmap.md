@@ -33,7 +33,7 @@ Completion criteria: every inherited asset and source file has a recorded dispos
 - [x] **D6 - Remove incompatible legacy Flutter dependencies and restore a clean Flutter 3.44 test build**
 - [x] **D7 - Replace legacy global state, navigation, HTML rendering, and page-transition patterns with current Flutter architecture**
 - [x] **D8 - Enforce a no-network runtime boundary in all application targets** - architecture tests reject networking dependencies, active Dart networking APIs, Android release internet permission, and Apple release network entitlements.
-- [ ] **D9 - Define and test offline startup, restart, and full feature operation on Android, iOS, macOS, Windows, Linux, and web**
+- [~] **D9 - Define and test offline startup, restart, and full feature operation on Android, iOS, macOS, Windows, Linux, and web** - `s/setup` and a pinned `.mise.toml` give a reproducible one-command developer build for Android, Linux, and web; iOS, macOS, and Windows builds remain unverified pending those platforms' build environments.
 - [ ] **D10 - Define release signing, installation, update, and rollback procedures for every target platform without making clinical operation network-dependent**
 
 Completion criteria: the app has no runtime network dependency, no analytics, no telemetry, no feedback collection, no patient persistence, and clean lint/test/build checks on supported developer targets.
@@ -89,10 +89,10 @@ Completion criteria: test evidence is linked to source records and hazards; repr
 ### Product Readiness
 
 - [~] **D37 - Design the accessible Flutter feature modules and migrate approved functionality from the legacy interface** - the adaptive native alpha now uses a weight-first workspace, familiar clinical accordion categories, bottom navigation, physiology/fluid calculations, electrolyte compounding, nine named infusions, and typed content rendering; approved clinical feature migration remains pending.
-- [~] **D38 - Add controlled build provenance, dependency review, CI, reproducible builds, and release artefact retention** - initial pinned CI and dependency automation are complete; signed multi-platform release provenance and artefact retention remain pending.
+- [~] **D38 - Add controlled build provenance, dependency review, CI, reproducible builds, and release artefact retention** - pinned CI, a mise-managed reproducible toolchain shared by local development and CI, dependency automation, and a manually triggered internal-alpha release workflow are complete; signed multi-platform release provenance and long-term artefact retention remain pending.
 - [ ] **D39 - Define support, incident, issue triage, corrective-action, content-update, and product-maintenance workflows**
 - [~] **D40 - Establish public documentation, source availability, security reporting, and licence notices appropriate to AGPL-3.0-or-later distribution** - inherited Neomate-owned rights are resolved; a public security policy and complete third-party notices remain to be added.
-- [~] **D41 - Produce a non-clinical beta build for technical and usability evaluation only** - an internal alpha now exposes selected native calculations, all nine inherited named infusion protocols, and source status on Android, Linux, and web; broader feature migration, Apple/Windows build evidence, and a controlled beta package remain pending.
+- [~] **D41 - Produce a non-clinical beta build for technical and usability evaluation only** - an internal alpha now exposes selected native calculations, all nine inherited named infusion protocols, and source status; manual-only workflows prepare GitHub Pages web deployment and Android/Linux GitHub Releases, with publication requiring separate approval and public access explicitly documented; broader feature migration, Apple/Windows build evidence, and a controlled beta package remain pending.
 
 Completion criteria: the product is technically mature, fully offline, reproducibly built, and has a controlled evidence trail ready to enter formal medical-device assurance.
 

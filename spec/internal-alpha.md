@@ -26,12 +26,14 @@ Checklist completion state is ephemeral and resets when a checklist is closed. I
 
 ## Run Locally
 
+Install [mise](https://mise.jdx.dev), which pins the exact Flutter SDK version this project uses (see `.mise.toml`), then run:
+
 ```sh
-flutter pub get --enforce-lockfile
+s/setup
 s/lint
 s/test
-flutter run -d linux
-flutter run -d chrome
+mise exec -- flutter run -d linux
+mise exec -- flutter run -d chrome
 ```
 
 For Flutter MCP interaction, use the isolated development entrypoint:
@@ -42,14 +44,14 @@ s/linux-driver
 
 The production entrypoint never enables Flutter Driver; the driver target is isolated under `test_driver/driver_main.dart`.
 
-Use `flutter devices` to list locally available Android or Apple devices and simulators.
+Use `mise exec -- flutter devices` to list locally available Android or Apple devices and simulators.
 
 ## Build Demonstration Artefacts
 
 ```sh
-flutter build apk --release
-flutter build linux --release
-flutter build web --release
+mise exec -- flutter build apk --release
+mise exec -- flutter build linux --release
+mise exec -- flutter build web --release
 ```
 
 Successful artefacts are written to:
@@ -61,6 +63,16 @@ Successful artefacts are written to:
 The internal-alpha Android APK falls back to the standard debug signing key when `android/key.properties` is absent. This makes local installation possible but is not acceptable for distribution or clinical release. A controlled release key, provenance record, and rollback procedure remain release gates.
 
 iOS and macOS must be built and exercised on macOS with Xcode. Windows must be built and exercised on Windows. Successful compilation on Linux does not provide evidence for those platforms.
+
+## Distribution To Named Alpha Testers
+
+The intended evaluation audience is the project's named contributors and other individually agreed collaborators. Both workflows are manual-only and require explicit publication approval before dispatch. GitHub Pages and Releases in this public repository do not restrict access to named testers: any approved publication through these channels is publicly accessible and must never be represented as approved for clinical use.
+
+- **Web**: `.github/workflows/deploy-web.yml` can build and publish the web demonstration to GitHub Pages at <https://rcpch.github.io/neomate/> after an approved manual dispatch. A push does not deploy the app.
+- **Android and Linux**: `.github/workflows/release-alpha.yml` is a manually triggered (`workflow_dispatch`) workflow that builds a debug-signed Android APK and an unsigned Linux `tar.gz` bundle and attaches them to a prerelease GitHub Release. It is never triggered automatically; publishing a release remains an explicit, approved action.
+- **macOS, Windows, iOS**: not yet built or distributed. Verifying these requires macOS and Windows build environments respectively (see Known Limitations).
+
+Every build carries the persistent evaluation warning. Release notes link to this document for scope and known limitations. Adding these workflows does not approve publication or change the safety status in `SAFETY.md`.
 
 ## Demo Script
 
