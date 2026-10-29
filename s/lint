@@ -1,8 +1,9 @@
+#!/usr/bin/env bash
 # SPDX-FileCopyrightText: 2026 Neomate team and RCPCH
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-#!/usr/bin/env bash
 set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
 
-dart format --set-exit-if-changed .
-flutter analyze --fatal-infos
+mise exec -- dart format --output=none --set-exit-if-changed .
+exec mise exec -- flutter analyze --fatal-infos "$@"

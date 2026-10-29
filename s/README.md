@@ -2,6 +2,10 @@
 
 The `s/` directory contains small convenience scripts that standardise common development tasks.
 
+## `s/setup`
+
+One-command environment bootstrap. Installs the pinned Flutter SDK via [mise](https://mise.jdx.dev) (reading `.mise.toml`) and runs `flutter pub get --enforce-lockfile`. Requires `mise` to be installed first.
+
 ## `s/lint`
 
 Format-check and statically analyse the project.

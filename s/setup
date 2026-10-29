@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 Neomate team and RCPCH
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+if ! command -v mise >/dev/null 2>&1; then
+  echo "mise is required: https://mise.jdx.dev/getting-started.html" >&2
+  exit 1
+fi
+
+mise install
+exec mise exec -- flutter pub get --enforce-lockfile "$@"

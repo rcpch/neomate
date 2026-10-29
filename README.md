@@ -8,13 +8,15 @@ Neomate 2 is a neonatal reference and calculation app for NICU clinical staff.
 
 ## Development
 
-Install a current stable Flutter SDK, then run:
+Install [mise](https://mise.jdx.dev), then run:
 
 ```sh
-flutter pub get
+s/setup
 s/lint
 s/test
 ```
+
+`.mise.toml` pins the exact Flutter SDK version; `s/setup` installs it and fetches dependencies.
 
 The current non-clinical demonstration scope, build commands, and limitations are documented in [spec/internal-alpha.md](spec/internal-alpha.md).
 
