@@ -5,18 +5,18 @@ Legend: [x] done, [~] in progress, [ ] not started
 - [x] **R1 - Establish clinical safety, QMS, agent, and validation baseline**
 - [x] **R2 - Establish current Flutter/Dart build compatibility and remove obsolete project assumptions** - the native shell has no legacy UI, state-management, navigation, HTML-rendering, or networking dependencies; strict analysis and the full test suite pass on Flutter 3.44.
 - [x] **R3 - Inventory inherited calculations, checklists, reference content, sources, and licences** - captured in `spec/legacy-inventory-and-source-review.md`; inherited Neomate-owned rights are resolved, while item-level clinical-source approval remains a clinical release gate.
-- [~] **R4 - Define approved intended purpose, system boundaries, users, deployment environment, and regulatory classification** - UK-first, free-to-use, likely Class IIa planning assumption is recorded; formal classification and conformity route remain open.
+- [~] **R4 - Define approved intended purpose, system boundaries, users, deployment environment, and regulatory classification** - UK-first and free-to-use; requested Class I GB route is under assessment in qms/regulatory-assessment.md, replacing the earlier Class IIa planning assumption. Formal classification, GB/NI scope and conformity route remain open.
 - [~] **R5 - Extract deterministic calculation domain modules from Flutter UI** - patient weight, airway, umbilical line-length, mean airway pressure, oxygenation index, daily fluid volume, glucose infusion rate, electrolyte requirement, compounding, and all nine inherited named infusions are implemented as pure single-purpose modules with clinical sign-off headers; drug-bolus families are pending.
 - [ ] **R6 - Build source-derived calculation conformance vectors and independent clinical verification**
 - [ ] **R7 - Replace legacy presentation with accessible, usability-tested Flutter feature modules**
 - [~] **R8 - Establish controlled CI, dependency management, security scanning, and reproducible release builds** - pinned Flutter CI, workflow security scanning, Pub/GitHub Actions Dependabot, lockfile enforcement, tests, and web release build are configured; full platform release provenance remains pending.
-- [ ] **R9 - Complete clinical safety case, QMS design controls, and release readiness review**
+- [~] **R9 - Complete clinical safety case, QMS design controls, and release readiness review** - draft repository-native QMS procedures, evaluation/risk/PMS plans and evidence/readiness indexes are established; adoption, executed evidence and approvals remain open.
 - [x] **R10 - Decide the growth/clinic feature scope and approved growth-data source** - native growth functionality is out of scope; potential Rust RCPCH Digital Growth Charts FFI integration is deferred to D49.
 - [~] **R11 - Create the versioned clinical-content and protocol registries with provenance enforcement** - typed records and registry validation are implemented; approved real content and protocol records remain to be added.
 
 ## Delivery Plan
 
-This plan deliberately puts medical-device assurance and market access last. No interim build is approved for clinical use. Each phase produces controlled technical and clinical evidence that is reused by the final medical-device work.
+Medical-device assurance is developed alongside implementation, including the draft QMS baseline started on 2026-10-29. Final conformity, registration and market access remain gated on completed evidence and approvals. No interim build is approved for clinical use. Each phase produces controlled technical and clinical evidence reused by the medical-device work.
 
 ### Foundation
 
@@ -90,7 +90,7 @@ Completion criteria: test evidence is linked to source records and hazards; repr
 
 - [~] **D37 - Design the accessible Flutter feature modules and migrate approved functionality from the legacy interface** - the adaptive native alpha now uses a weight-first workspace, familiar clinical accordion categories, bottom navigation, physiology/fluid calculations, electrolyte compounding, nine named infusions, and typed content rendering; approved clinical feature migration remains pending.
 - [~] **D38 - Add controlled build provenance, dependency review, CI, reproducible builds, and release artefact retention** - pinned CI, a mise-managed reproducible toolchain shared by local development and CI, dependency automation, and a manually triggered internal-alpha release workflow are complete; signed multi-platform release provenance and long-term artefact retention remain pending.
-- [ ] **D39 - Define support, incident, issue triage, corrective-action, content-update, and product-maintenance workflows**
+- [~] **D39 - Define support, incident, issue triage, corrective-action, content-update, and product-maintenance workflows** - draft PMS/vigilance/CAPA and lifecycle controls are in qms/; operational contacts, cover, exercises and approvals remain open.
 - [~] **D40 - Establish public documentation, source availability, security reporting, and licence notices appropriate to AGPL-3.0-or-later distribution** - inherited Neomate-owned rights are resolved; a public security policy and complete third-party notices remain to be added.
 - [~] **D41 - Produce a non-clinical beta build for technical and usability evaluation only** - an internal alpha now exposes selected native calculations, all nine inherited named infusion protocols, and source status; manual-only workflows prepare GitHub Pages web deployment and Android/Linux GitHub Releases, with publication requiring separate approval and public access explicitly documented; broader feature migration, Apple/Windows build evidence, and a controlled beta package remain pending.
 
@@ -98,8 +98,8 @@ Completion criteria: the product is technically mature, fully offline, reproduci
 
 ### Medical Device And Market Access
 
-- [ ] **D42 - Confirm UK classification, intended purpose, claims, applicable legislation, standards, and conformity-assessment route**
-- [ ] **D43 - Establish the required quality-management system, design-history file, requirements traceability, risk-management file, and clinical-evaluation plan**
+- [~] **D42 - Confirm UK classification, intended purpose, claims, applicable legislation, standards, and conformity-assessment route** - REG-001 records the requested Class I route, dated MHRA sources and unresolved assessment; classification and final market scope are not approved.
+- [~] **D43 - Establish the required quality-management system, design-history file, requirements traceability, risk-management file, and clinical-evaluation plan** - draft quality manual, document/supplier/change controls, risk/evaluation/PMS plans, technical-file index, record templates and QMS action register are in qms/; adoption and executed evidence remain open.
 - [ ] **D44 - Complete DCB0129 clinical-safety documentation and define deployer DCB0160 responsibilities**
 - [ ] **D45 - Complete formal risk management, cybersecurity, privacy, human-factors/usability, software lifecycle, and clinical evaluation evidence**
 - [ ] **D46 - Obtain independent clinical, safety, quality, and regulatory review of the final release candidate**

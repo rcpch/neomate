@@ -27,6 +27,8 @@ At the direction of the Clinical Safety Officer, locally run development builds 
 - [clinical-safety/SAFETY-PLAN.md](clinical-safety/SAFETY-PLAN.md) - lifecycle, responsibilities, and release gates.
 - [clinical-safety/SAFETY-CASE.md](clinical-safety/SAFETY-CASE.md) - safety argument and evidence status.
 - [clinical-safety/HAZARD-LOG.md](clinical-safety/HAZARD-LOG.md) - initial hazards and required controls.
+- [qms/regulatory-assessment.md](qms/regulatory-assessment.md) - draft medical-device applicability and requested Class I route assessment, sources, decision owners and reassessment triggers.
+- [qms/README.md](qms/README.md) - draft quality system, evidence controls, evaluation/risk/PMS plans and registration-readiness register.
 
 ## Change Rule
 

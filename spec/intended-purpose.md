@@ -12,4 +12,6 @@ Neomate 2 is not intended to diagnose disease, prescribe treatment, replace clin
 
 ## Current Status
 
-The initial target market is the United Kingdom. The intended product is likely to require classification as a Class IIa medical device, but this is a planning assumption rather than a regulatory determination. The product is intended to be free to use. European Union and other market entry are deferred until after the UK route is established. Regulatory classification, clinical evaluation route, conformity assessment, and release labelling require formal assessment before deployment.
+The initial target market is the United Kingdom. On 2026-10-29, Class I registration/QMS preparation was requested. The working assessment route is Great Britain Class I UKCA, conditional on a documented qualification and classification assessment of the actual functions and claims. This replaces the earlier “likely Class IIa” planning assumption as the route to investigate, not as an approved classification. The [regulatory assessment](../qms/regulatory-assessment.md) records the open questions, sources and decision requirements.
+
+The product is intended to be free to use. Great Britain and Northern Ireland have different regulatory routes; inclusion of Northern Ireland in the initial supply remains to be confirmed. European Union and other market entry are deferred. Final population limits, feature/claim scope, classification, clinical evaluation, conformity route and release labelling require approval before deployment.
